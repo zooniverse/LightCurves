@@ -1,0 +1,28 @@
+{
+  "name": "lightcurve",
+  "private": true,
+  "version": "0.0.1",
+  "author": "mizzao",
+  "repository": {
+    "type" : "git",
+    "url": "https://github.com/zooniverse/LightCurves.git"
+  },
+  "scripts": {
+    "pretest": "hem server --port 9290 & echo $! > ./hem.pid",
+    "test": "jasmine-phantom-node --port 9290",
+    "posttest": "kill `cat hem.pid`; rm hem.pid"
+  },
+  "dependencies": {
+    "serveup": "~0.0.5",
+    "hem": "~0.1.8",
+    "es5-shimify": "~0.0.1",
+    "json2ify": "~0.0.1",
+    "jqueryify": "~0.0.1",
+    "spine": "~1.0.7",
+    "clean-css": "0.6.0",
+  }
+  "devDependencies": {
+    "jasmine-phantom-node": "git://github.com/edpaget/jasmine-phantom-node.git"
+  }
+
+}
