@@ -1,0 +1,8 @@
+<div id="graph"></div>
+<div id="yZoom_help"><%=t('lightcurve.y_zoom_help')%></div>
+<div id="xZoom_help"><%=t('lightcurve.x_zoom_help')%> </div>
+<div id="drag_help"><%=t('lightcurve.drag_help')%></div>
+
+<div id="zoom">
+	<a class="more" href="#"></a>
+</div>
