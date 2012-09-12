@@ -1,16 +1,19 @@
 Spine = require('spine')
 
-Sources = require('controllers/sources')
+Home = require 'controllers/home'
+Sources = require 'controllers/sources'
 
 class Main extends Spine.Stack
   el: "#main"
 
   controllers:
+    home: Home
     sources: Sources
     
-  default: 'sources'
+  default: 'home'
     
   routes:
-    '/sources/:id': 'sources'
+    '/': 'home'
+    '/sources/:zooniverse_id': 'sources'
     
 module.exports = Main

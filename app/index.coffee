@@ -2,7 +2,6 @@ require('lib/setup')
 
 Spine = require('spine')
 
-Lang = require 'lib/en'
 Main = require 'controllers/main'
 
 class App extends Spine.Controller
@@ -10,8 +9,8 @@ class App extends Spine.Controller
     super
     
     @main = new Main
+    @append @main.active()
     
-    @append @main
     Spine.Route.setup()
 
 module.exports = App

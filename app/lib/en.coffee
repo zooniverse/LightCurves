@@ -1,4 +1,6 @@
-{
+# Direct translation from PH ruby i18n with some minor fixes.
+
+window.lang = {
  en:
     {
      workflow:

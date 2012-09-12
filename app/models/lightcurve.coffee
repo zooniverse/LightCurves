@@ -4,7 +4,7 @@ class Lightcurve extends Spine.Model
   @configure 'Lightcurve', 'source', 'priority', 'rel_start_time'
   
   @lookup: (zooniverse_id, callback, error) ->
-    $.jsonp
+    jQuery.jsonp
       url: "http://www.planethunters.org/light_curves/next_light_curve?lightcurve_id=#{ zooniverse_id }?callback=?"
       success:  callback
       error:    error  

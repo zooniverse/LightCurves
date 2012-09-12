@@ -1,1 +1,56 @@
 @import './mixin'
+
+@import 'application'
+@import 'fonts'
+
+.stack > *:not(.active)
+  display: none
+
+#home
+  position: relative
+  display: inline-block
+  vertical-align: top
+  zoom: 1
+  *display: inline
+  margin: 150px auto
+  width: 960px
+
+#home h2
+  font-size: 25px
+  font-weight: lighter
+  line-height: 2
+
+#home h1
+  font-size: 55px
+  font-weight: lighter
+  width: 850px
+
+#home .start_hunting
+  position: absolute
+  top: 200px
+  right: 102px
+
+#home .start_hunting .button
+  display: block
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll -312px -286px transparent
+  width: 296px
+  height: 50px
+  color: white
+  font-size: 21px
+  line-height: 50px
+  text-indent: 15px
+  text-decoration: none
+
+#home .start_hunting .button:hover
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll -312px -337px transparent
+
+#home .start_hunting p
+  font-family: Arial
+  font-size: 13px
+  font-weight: lighter
+  margin: 10px 15px
+  text-align: right
+
+#home .start_hunting p a
+  color: #0099CC
+

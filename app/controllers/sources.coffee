@@ -3,12 +3,16 @@ Lightcurve = require 'models/lightcurve'
 Viewer = require 'controllers/viewer'
 
 class Sources extends Spine.Controller
+
+  el: '#lightcurve'
+  
   constructor: ->
     super
+    @active
   
   active: (params) ->
     super
-    @zooniverse_id = params.id
+    @zooniverse_id = params.zooniverse_id
     @refresh()
     @render()
   
@@ -24,6 +28,7 @@ class Sources extends Spine.Controller
       @zooniverse_id, 
       @getJSON,
       ( => @error = true )
+    @render
   
   render: =>
     @html require('views/source')(@)

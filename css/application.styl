@@ -1,0 +1,437 @@
+body
+  background-color: black
+  font-family: 'TitilliumText14L600wt', 'Myriad Pro', 'Arial'
+  color: white
+  overflow-x: hidden
+
+.background
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+
+/* STAR FIELD aka LAGGY AS BALLS */
+/*
+@-webkit-keyframes starfield1 {
+   from {
+     background-position: -10px -50px;
+   }
+   to {
+     background-position:  10px -50px;
+   }
+}
+
+@-webkit-keyframes starfield2 {
+   from {
+     background-position:  15px 125px;
+   }
+   to {
+     background-position: -15px 125px;
+   }
+}
+*/
+
+#starfield1
+  -webkit-animation-name: starfield1
+  -webkit-animation-duration: 15s
+  -webkit-animation-iteration-count: infinite
+  -webkit-animation-direction: alternate
+  -webkit-animation-timing-function: ease-in-out
+
+#starfield2
+  -webkit-animation-name: starfield2
+  -webkit-animation-duration: 15s
+  -webkit-animation-iteration-count: infinite
+  -webkit-animation-direction: alternate
+  -webkit-animation-timing-function: ease-in-out
+
+.background.back.blue
+  background: transparent url('/images/bg/neb.blue.jpg') no-repeat scroll 0 -1px
+
+.background.back.red
+  background: transparent url('/images/bg/neb.red.jpg') no-repeat scroll 0 -1px
+
+.background.middle
+  background: transparent url('/images/bg/stars.png') repeat scroll -50px -50px
+
+.background.front
+  background: transparent url('/images/bg/stars.png') repeat scroll -75px 125px
+
+/* COMMON */
+#spinner
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  position: fixed
+  background: rgba(0, 0, 0, .6) url('/images/spinner.gif') no-repeat scroll center center
+  z-index: 100
+
+/* LAYOUT */
+#content
+  width: 960px
+  margin: 0 auto
+  padding: 0
+  position: relative
+  clear: both
+
+#zooniverse
+  background: transparent url('/images/bg/zooniverse_bar.jpg') repeat-x scroll center center
+  width: 100%
+  height: 35px
+  position: relative
+
+#zooniverse .top_content
+  width: 960px
+  margin: 0 auto
+
+#zooniverse .top_content .left
+  padding-top: 2px
+  float: left
+  margin-left: 0px
+
+#zooniverse .top_content .right
+  padding-top: 2px
+  float: right
+
+a img
+  border: none
+
+#zooniverse .top_content ul
+  list-style: none
+  text-align: left
+  margin: 0px
+  padding: 0px 0px
+
+#zooniverse .top_content ul li
+  display: inline
+  font-size: 0.7em
+  margin-left: 0px
+  margin-top: 0px
+  padding-top: 0px
+  padding-right: 5px
+  padding-bottom: 0px
+  padding-left: 2px
+  font-family: Verdana, Arial, Helvetica, sans-serif
+  font-weight: normal
+  color: #FFFFFF
+  line-height: 36px
+
+#zooniverse .top_content ul li.language
+  padding-top: 0px
+  padding-right: 0px
+  padding-bottom: 0px
+  padding-left: 0px
+  margin-top: 0px
+
+#top-zooniverse .top_content img a
+  border: none
+
+#header
+  width: 960px
+  margin: 0 auto
+  padding: 5px 0
+  clear: both
+
+#header #logo
+  position: relative
+  float: left
+  font-weight: normal
+  font-size: 19px
+  margin: 29px 0 0 5px
+
+#header #logo a
+  color: white
+  text-decoration: none
+  display: block
+  width: 173px
+  height: 25px
+
+#header #nav
+  position: relative
+  float: right
+  margin: 35px 8px 0 0
+
+#header #nav .item
+  display: inline
+  margin: 0 0 0 10px
+  text-transform: uppercase
+
+#header #nav .item a
+  color: white
+  text-decoration: none
+  opacity: .6
+
+#header #nav .item a:hover
+  text-decoration: none
+  opacity: 1.0
+
+#header #nav .item.active
+  color: white
+
+#header #nav .item.username
+  display: inline-block
+  vertical-align: top
+  zoom: 1
+  *display: inline
+  overflow: visible
+  position: relative
+  color: white
+
+#header #nav .item.username a
+  text-transform: uppercase
+  font-size: inherit
+
+#header #nav .item.username:hover
+  border-bottom: 1px solid white
+
+#header #nav .item.username .arrow
+  display: inline-block
+  vertical-align: middle
+  zoom: 1
+  *display: inline
+  background: transparent url("/images/sprites/css_sprites.png") no-repeat scroll -476px -246px
+  width: 6px
+  height: 4px
+
+#header #nav .item.username .settings_logout
+  display: none
+  position: absolute
+  width: 90px
+  top: 0
+  left: 0
+  padding: 18px 0 0
+  cursor: pointer
+  z-index: 100
+
+#header #nav .item.username:hover .settings_logout,
+#header #nav .item.username .settings_logout:hover
+  display: block
+  opacity: 1
+
+#header #nav .item .settings_logout li
+  margin: 8px 0
+  font-size: 13px
+
+#header #nav .item .settings_logout li a
+  text-transform: none
+
+#header #nav .icons
+  display: inline
+  margin-left: 20px
+
+#header #nav .icons a
+  background-color: transparent
+  background-image: url("/images/sprites/css_sprites.png")
+  background-repeat: no-repeat
+  background-attachment: scroll
+  width: 16px
+  height: 16px
+  display: inline-block
+  vertical-align: top
+  zoom: 1
+  *display: inline
+  margin: 0
+
+#header #nav .icons a.facebook
+  background-position: -631px -270px
+
+#header #nav .icons a.facebook:hover
+  background-position: -631px -286px
+
+#header #nav .icons a.twitter
+  background-position: -647px -270px
+
+#header #nav .icons a.twitter:hover
+  background-position: -647px -286px
+
+#header #nav .icons a.blog
+  background-position: -663px -270px
+
+#header #nav .icons a.blog:hover
+  background-position: -663px -286px
+
+#footer
+  width: 960px
+  margin: 60px auto 10px
+  height: 50px
+  position: relative
+
+p a
+  color: #09C
+
+#footer a
+  color: #09C
+
+#footer .zooniverse
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll -24px -329px transparent
+  width: 117px
+  height: 40px
+
+#footer .kepler
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll -143px -328px transparent
+  height: 27px
+  width: 144px
+
+ul.browsers
+  position: relative
+  width: 960px
+  padding-left: 280px
+  text-align: center
+
+ul.browsers li
+  display: block
+  float: left
+  margin: 20px 5px
+  height: 90px
+  width: 90px
+  text-align: center
+  color: #999
+
+ul.browsers li:hover
+  color: #fff
+
+#home h2.browsers
+  font-size: 90%
+  clear: both
+
+#top_bar
+  height: 36px
+  width: 100%
+  border-bottom-width: 1px
+  border-bottom-style: solid
+  border-bottom-color: #000000
+  background-image: url(/images/header_bkg.png)
+  background-repeat: repeat-x
+  padding: 0px
+  margin: 0px
+
+#top_bar_container
+  height: 36px
+  width: 900px
+  border-bottom-width: 1px
+  border-bottom-style: solid
+  border-bottom-color: #000000
+  background-image: url(/images/header_bkg.png)
+  background-repeat: repeat-x
+  padding: 0px
+  margin-top: 0px
+  margin-right: auto
+  margin-bottom: 0px
+  margin-left: auto
+
+#top_bar ul
+  list-style: none
+  text-align: left
+  margin: 0px
+  padding: 0px 0px
+
+#top_bar ul li
+  display: inline
+  font-size: 0.7em
+  margin-left: 0px
+  margin-top: 0px
+  padding-top: 0px
+  padding-right: 5px
+  padding-bottom: 0px
+  padding-left: 2px
+  font-family: Verdana, Arial, Helvetica, sans-serif
+  font-weight: normal
+  color: #FFFFFF
+  line-height: 36px
+
+#top_bar #m1
+  z-index: 10
+  margin-top: 7px
+  background: none
+
+#top_bar #m1 a
+  position: relative
+  top: -7px
+  font-size: 10px
+  color: white
+  padding-bottom: 7px
+
+#top_bar #m1 img
+  position: relative
+  top: 7px
+  padding-right: 4px
+
+#top_bar ul li.language
+  padding-top: 0px
+  padding-right: 0px
+  padding-bottom: 0px
+  padding-left: 0px
+  margin-top: 0px
+
+#top_bar ul li img.language
+  padding-bottom: 0px
+
+#top_bar ul li.highlight
+  color: #fba21c
+
+#top-bar img a
+  border: none
+
+#languages
+  position: relative
+  margin: 0
+  padding: 0
+  z-index: 1000
+
+#languages li
+  margin: 0
+  padding: 0
+  list-style: none
+  float: left
+  font: bold 11px arial
+
+#languages li a
+  display: block
+  margin: 3px 0px 0px 0px
+  padding: 1px 1px 3px 3px
+  height: 20px
+  background: none
+  color: #FFF
+  text-align: center
+  text-decoration: none
+  vertical-align: top
+
+#languages li:hover
+  background: #5A5F55
+
+#languages div
+  position: absolute
+  visibility: hidden
+  margin: 0
+  padding: 0
+  background: #000
+
+#languages div a
+  position: relative
+  display: block
+  margin: 0
+  padding: 2px 4px 0px 3px
+  width: auto
+  white-space: nowrap
+  text-align: left
+  text-decoration: none
+  background: #5A5F55
+  color: #000
+  font: 9px arial
+  font-weight: normal
+  text-transform: uppercase
+
+#languages div span
+  position: relative
+  top: -7px
+  color: #fff
+
+#languages div a:hover
+  background: #FFB942
+  color: #FFF
+
+#languages .current-language
+  border: 2px white
+
