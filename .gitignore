@@ -1,3 +1,5 @@
 node_modules
 hem.pid
 
+public/application.css
+public/application.js

@@ -1,0 +1,40 @@
+<div id="lightcurve">
+
+  <!-- not shown for now, commented out
+    <ul id="quarter_select">
+  	  <li>View : </li>
+	  <%# @source.light_curves.order(:release_id).each do |lc|%>
+		  <li> <%# = link_to "Q #{lc.release_id}", "#", :class=>(@release==lc.release_id ? "selected" : ""), :id=>"#{lc.id}"  %></li>
+	  <%# end %>
+    </ul> 
+  -->
+  
+  <div class="graph_background"></div> 
+  <div id ="starmap"></div>
+
+  <div id="star_info">
+      <h3 class="name"></h3>
+      <ul>
+        <li>
+          <span class="label"><%= t('.star_info.type') %></span>
+          <span class="value star_type"></span>
+        </li>
+        <li>
+          <span class="label"><%= t('.star_info.apparent_visual_mag') %></span>
+          <span class="value star_mag"></span>
+        </li>
+        <li>
+          <span class="label"><%= t('.star_info.temperature') %></span>
+          <span class="value star_temp"></span>
+        </li>
+        <li>
+          <span class="label"><%= t('.star_info.radius') %></span>
+          <span class="value star_radius"></span>
+        </li>
+      </ul>
+      <!-- <a class="more_info" href="#" title="view more info">view more info</a> -->
+  </div>
+
+	<%# = render :partial => '/light_curves/lightcurve', :locals => {:lightcurve => "#{@light_curve.id}"} %>
+
+</div>
