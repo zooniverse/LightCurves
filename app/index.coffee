@@ -9,7 +9,6 @@ class App extends Spine.Controller
     super
     
     @main = new Main
-    @append @main.active()
     
     Spine.Route.setup()
 

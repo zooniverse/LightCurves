@@ -4,7 +4,11 @@ Home = require 'controllers/home'
 Sources = require 'controllers/sources'
 
 class Main extends Spine.Stack
-  el: "#main"
+  el: "#carrousel"  
+  className: "main stack"
+
+  constructor: ->
+    super
 
   controllers:
     home: Home

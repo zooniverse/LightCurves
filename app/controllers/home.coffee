@@ -1,7 +1,10 @@
 Spine = require('spine')
 
 class Home extends Spine.Controller
-  el: "#carrousel"
+  el: "#home"
+
+  events:
+    "click .start_hunting .button": "start"
 
   constructor: ->
     super
@@ -12,5 +15,9 @@ class Home extends Spine.Controller
     
   render: =>
     @html require('views/home')(@)
+    
+  start: (ev) ->
+    ev.preventDefault()
+    @navigate '/sources', 'APH10154043'
         
 module.exports = Home
