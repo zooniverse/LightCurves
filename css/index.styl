@@ -1,20 +1,24 @@
 @import './mixin'
 
-@import 'application'
 // @import 'floor_splash // Laggy butt hole on non-webkit
 
-@import 'carrousel'
+@import 'reset'
+
+@import 'application'
+// @import 'carrousel'
 @import 'fonts'
+@import 'sources'
+@import 'viewer'
 
 .stack > *:not(.active)
-  display: none
+  display: none !important
 
 #home
   position: relative
-  // display: inline-block
+  display: inline-block
   vertical-align: top
   zoom: 1
-  // *display: inline
+  *display: inline
   margin: 150px auto
   width: 960px
 

@@ -1,40 +1,40 @@
 Spine = require('spine')
-Lightcurve = require 'models/lightcurve'
+LightcurveMeta = require 'models/lightcurveMeta'
 Viewer = require 'controllers/viewer'
 
 class Sources extends Spine.Controller
-  el: '#lightcurve'
   
   constructor: ->
     super
+    @el.attr('id', 'lightcurve')
+    
+    @viewer = new Viewer()
   
   active: (params) ->
     super
     @zooniverse_id = params.zooniverse_id
     @refresh()
-    @render()
-  
+    @render()    
+
   deactivate: ->
     super
     @viewer?.teardown()
   
   refresh: =>
     return unless @isActive() and @zooniverse_id
-    @loading = true
     
     uri = "http://www.planethunters.org/light_curves/next_light_curve?lightcurve_id=#{ @zooniverse_id }&format=json"
     jqxhr = $.getJSON \
       "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" \
         + encodeURIComponent(uri) + "%22&format=json&callback=?"
               
-    jqxhr.success @loadLCMeta    
-    # Somehow, these all get called?
-#    jqxhr.success alert("got the yql!")
-#    jqxhr.error alert("error getting proxied lightcurve json") # change to some error view      
-    @render()  
+    jqxhr.success @loadLCMeta
+    jqxhr.error( -> alert "error getting proxied lightcurve json" ) # change to some error view  
   
-  render: =>
+  render: ->
     @html require('views/source')(@)
+    @append @viewer
+    @viewer.render()
   
   loadLCMeta: (yql) =>
     unless yql.query.results
@@ -42,7 +42,7 @@ class Sources extends Spine.Controller
       return      
     json = $
     .parseJSON(yql.query.results.body.p)
-    @lightcurve = new Lightcurve(json.light_curve)
+    @lightcurve = new LightcurveMeta(json.light_curve)
         
     xopt = $.jsonp
       url: @lightcurve.light_curve_url
@@ -53,7 +53,7 @@ class Sources extends Spine.Controller
     @render()
     
   loadLCData: (json) =>
-    console.log json  
+    @viewer.loadData(json, @lightcurve)
     
   round_float: (x, n) ->
     n = 0  unless parseInt(n)

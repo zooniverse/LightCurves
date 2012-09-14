@@ -13,3 +13,7 @@ require 'lib/en'
 require 'lib/simple_trans'
 
 require 'lib/jquery.jsonp-2.4.0.min'
+
+# Something is wrong with d3
+require 'lib/d3.v2'
+#require 'd3'

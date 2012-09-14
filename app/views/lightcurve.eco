@@ -1,13 +1,14 @@
-<div id="graph">  
-  <% if @loading: %>
-    <img src="spinner.gif" class=>"spinner" />
-  <% end %>
-</div>
+<% if @loading: %>
+  <img src="images/spinner.gif" class="spinner">
+<% end %>
+
+<canvas id="graph_canvas"></canvas>
 
 <div id="yZoom_help"><%=t('lightcurve.y_zoom_help')%></div>
 <div id="xZoom_help"><%=t('lightcurve.x_zoom_help')%></div>
 <div id="drag_help"><%=t('lightcurve.drag_help')%></div>
 
 <div id="zoom">
-	<a class="more" href="#"></a>
+  <a class="more" href="#"></a>
 </div>
+

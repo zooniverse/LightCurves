@@ -1,15 +1,15 @@
 
 
-  <h2><%= t('workflows.floor_splash.welcome') %></h2>
-  <h1><%= t('workflows.floor_splash.looking_for_planets') %></h1>
+<h2><%= t('workflows.floor_splash.welcome') %></h2>
+<h1><%= t('workflows.floor_splash.looking_for_planets') %></h1>
 
-  <div class="start_hunting">
-    <a class="button" href="#" title="<%= t('workflows.floor_splash.start_hunting') %>">
-    <%= t('workflows.floor_splash.start_hunting') %></a>
-    <p class="login_signup">
-      <%#= get_welcome_or_login %>
-    </p>
-  </div>
+<div class="start_hunting">
+  <a class="button" href="#" title="<%= t('workflows.floor_splash.start_hunting') %>">
+  <%= t('workflows.floor_splash.start_hunting') %></a>
+  <p class="login_signup">
+    <%#= get_welcome_or_login %>
+  </p>
+</div>
 
 <%#= render get_tutorial_or_lightcurve %>
 

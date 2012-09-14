@@ -3,6 +3,7 @@
     "es5-shimify", 
     "json2ify", 
     "jqueryify", 
+    "d3",
     "spine",
     "spine/lib/local",
     "spine/lib/ajax",

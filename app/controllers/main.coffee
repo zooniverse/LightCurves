@@ -4,10 +4,12 @@ Home = require 'controllers/home'
 Sources = require 'controllers/sources'
 
 class Main extends Spine.Stack
-  el: "#carrousel"  
+  el: "#content"  
   className: "main stack"
 
   constructor: ->
+    # remove browser warnings before calling super
+    $(@el).empty()
     super
 
   controllers:
