@@ -1,7 +1,95 @@
+top-padding = 5px
+left-margin = 50px
 
 .overlay
   fill: none
   pointer-events: all
 
+// Absolute elements inside will be positioned properly
+#lightcurve #graph
+  display: inline-block
+  position: relative
 
+// SVG and Canvas will be overlaid on each other
+#lightcurve #graph svg
+  z-index: 0
+  position: absolute
+  top: 0px
+  left: 0px
 
+#lightcurve #graph canvas
+  z-index: 1
+  position: absolute
+  top: top-padding
+  left: left-margin
+
+#graph .chart-xaxis line
+  stroke: #444444
+  stroke-dasharray: 1,4
+
+#graph .chart-xaxis text
+  fill: #616161
+  font-size: 10px
+
+#graph .chart-yaxis line
+  stroke: #444444
+  stroke-dasharray: 1,4
+
+#graph .chart-yaxis text
+  fill: #616161
+  font-size: 10px
+
+#yZoom_help
+  position: absolute
+  color: white
+  font-size: 12pt
+  top: 45px
+  left: 50px
+  z-index: 15
+  display: none
+
+#xZoom_help
+  position: absolute
+  color: white
+  font-size: 12pt
+  top: 420px
+  left: 240px
+  z-index: 15
+  display: none
+
+#drag_help
+  position: absolute
+  color: white
+  font-size: 12pt
+  top: 40px
+  left: 220px
+  z-index: 15
+  display: none
+
+#zoom
+  position: absolute
+  top: 50px
+  left: 15px
+  z-index: 100
+
+#zoom a
+  display: block
+  width: 22px
+  height: 22px
+  background-image: url("/images/sprites/css_sprites.png")
+  background-color: transparent
+  background-repeat: no-repeat
+  margin: 0 0 10px
+
+#zoom a.more
+  background-position: -629px -219px
+
+#zoom a.more:hover
+  background-position: -651px -219px
+
+#zoom a.less
+  background-position: -629px -241px
+
+#zoom a.less:hover
+  background-position: -651px -241px
+  

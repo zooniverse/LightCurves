@@ -1,11 +1,10 @@
 Spine = require('spine')
 
 class LightcurveData extends Spine.Model
-  @configure 'LightcurveData'
+  @configure 'LightcurveData', 'data'
   
-  constructor: (stuff) ->
-    super    
-    @data = stuff.data
+  constructor: ->
+    super
 
     ymax = 0
     ymin = 1000000

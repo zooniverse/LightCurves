@@ -3,6 +3,7 @@
 <% end %>
 
 <canvas id="graph_canvas"></canvas>
+<svg id="graph_svg"></svg>
 
 <div id="yZoom_help"><%=t('lightcurve.y_zoom_help')%></div>
 <div id="xZoom_help"><%=t('lightcurve.x_zoom_help')%></div>
