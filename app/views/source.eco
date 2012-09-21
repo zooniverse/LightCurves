@@ -37,6 +37,3 @@
 <% end %>
 </div>
 
-<%# = render :partial => '/light_curves/lightcurve', :locals => {:lightcurve => "#{@light_curve.id}"} %>
-
-

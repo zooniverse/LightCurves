@@ -42,6 +42,11 @@ class Viewer extends Spine.Controller
   render: =>    
     @html require('views/lightcurve')(@)          
   
+  zoom: (ev) ->
+    ev.preventDefault()
+    alert "click"
+    # do stuff
+  
   loadData: (json, meta) =>
     alert(t('lightcurve.problem')) if not json or json.length <= 0
     
@@ -82,8 +87,8 @@ class Viewer extends Spine.Controller
       .tickSize(-@width, 0, 0)
 
     @svg = d3.select("#graph_svg")
-    .attr("width", @width + @left_margin)
-    .attr("height", @height + @top_padding + 20)
+      .attr("width", @width + @left_margin)
+      .attr("height", @height + @top_padding + 20)
 
     @svg_xaxis = @svg.append("g")
       .attr("class", "chart-xaxis")
@@ -115,19 +120,24 @@ class Viewer extends Spine.Controller
       .orient("bottom")
       .scale(@x_bottom)
       .ticks(@n_contextticks)
-      .tickSize(-@h_bottom, 0, 0)      
+      .tickSize(-@h_bottom, 0, 0)
+            
     @bottom_xaxis = @svg.append("g")
       .attr("class", "context-xaxis")
-      .attr("transform", "translate(" + @left_margin + "," + (@top_padding + @height) + ")")
-    @bottom_xaxis.call(@bottomAxis)
+      .attr("transform", "translate(" + @left_margin + "," + (@top_padding + @height) + ")")      
+      .call(@bottomAxis)
+    
+    # Focus area and interaction on bottom
+    @context_left = @bottom.append("svg:rect")
+      .attr("class", "context-shaded")
+      .attr("height", @h_bottom)
+        
+    @context_right = @bottom.append("svg:rect")
+      .attr("class", "context-shaded")
+      .attr("height", @h_bottom)
         
     # Draw everything (this runs fast and can be re-called for changes!)    
     @graph_zoom() 
-    
-  zoom: (ev) ->
-    ev.preventDefault()
-    alert "click"
-    # do stuff
   
   graph_zoom: =>
     # Adjust scales and zoom to enforce panning extent
@@ -148,11 +158,19 @@ class Viewer extends Spine.Controller
     @zoom_graph
       .scale( (@lcData.end - @lcData.start) / (d[1] - d[0]) )
       .translate([t[0] - Math.max(0, ext[0]), t[1] - Math.max(0, ext[1])])
+    
+    # Adjust context area stuff
+    @context_left
+      .attr("width", @x_bottom(d[0]))
+    @context_right
+      .attr("x", @x_bottom(d[1]))
+      .attr("width", @width - @x_bottom(d[1]) )
   
-    # Adjust axes and gridlines
+    # Adjust main area axes and gridlines
     @svg_xaxis.call(@xAxis)
     @svg_yaxis.call(@yAxis)
   
+    # Draw dots!
     data = @lcData.data    
     @canvas.clearRect(0, 0, @width, @h_graph)
             
