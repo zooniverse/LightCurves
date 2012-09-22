@@ -4,15 +4,13 @@ LightcurveMeta = require 'models/lightcurveMeta'
 LightcurveData = require 'models/lightcurveData'
 Viewer = require 'controllers/viewer'
 
-class Sources extends Spine.Controller
-  
+class Classify extends Spine.Controller
   constructor: ->
     super
     @el.attr('id', 'lightcurve')
     
-    @viewer = new Viewer
-      annotations: false
-  
+    @viewer = new Viewer()
+
   active: (params) ->
     super
     @zooniverse_id = params.zooniverse_id
@@ -24,15 +22,14 @@ class Sources extends Spine.Controller
     @viewer?.teardown()
   
   refresh: =>
-    return unless @isActive() and @zooniverse_id
-    
+    return unless @isActive() and @zooniverse_id    
     jqxhr = LightcurveMeta.loadWithProxy @zooniverse_id
                 
     jqxhr.success @loadLCMeta
     jqxhr.error( -> alert "error getting proxied lightcurve json" ) # change to some error view  
   
   render: ->
-    @html require('views/source')(@)
+    @html require('views/classify')(@)
     @append @viewer
     @viewer.render()
   
@@ -42,9 +39,8 @@ class Sources extends Spine.Controller
       return      
       
     json = $.parseJSON(yql.query.results.body.p)
-    @lightcurve = new LightcurveMeta(json.light_curve)
-        
-    LightcurveData.loadData @lightcurve.light_curve_url, @loadLCData
+    @lightcurve = new LightcurveMeta(json.light_curve)        
+    LightcurveData.loadData @lightcurve.light_curve_url, @loadLCData    
     
     @render()
     
@@ -56,4 +52,4 @@ class Sources extends Spine.Controller
     return false  unless parseFloat(x)
     Math.round(x * Math.pow(10, n)) / Math.pow(10, n)
     
-module.exports = Sources
+module.exports = Classify

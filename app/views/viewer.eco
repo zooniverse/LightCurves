@@ -1,6 +1,5 @@
-<% if @loading: %>
-  <img src="images/spinner.gif" class="spinner">
-<% end %>
+
+<img src="images/spinner.gif" class="spinner">
 
 <div id="zoom">
   <a class="more" href="#"></a>

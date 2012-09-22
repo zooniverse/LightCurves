@@ -1,0 +1,33 @@
+
+
+<div class="graph_background"></div> 
+
+<div id="dialog">
+  <div class="workflow"></div>
+</div>
+
+<div id="star_info">
+<% if @lightcurve: %>
+  <h3 class="name"></h3>
+  <ul>
+    <li>
+      <span class="label"><%= t('workflows.classify.star_info.type') %></span>
+      <span class="value star_type"><%= @lightcurve.source.star_type %></span>
+    </li>
+    <li>
+      <span class="label"><%= t('workflows.classify.star_info.apparent_visual_mag') %></span>
+      <span class="value star_mag"><%= @round_float(@lightcurve.source.kepler_mag, 1) %></span>
+    </li>
+    <li>
+      <span class="label"><%= t('workflows.classify.star_info.temperature') %></span>
+      <span class="value star_temp"><%= @round_float(@lightcurve.source.eff_temp, 1) %> (K)</span>
+    </li>
+    <li>
+      <span class="label"><%= t('workflows.classify.star_info.radius') %></span>
+      <span class="value star_radius"><%= @round_float(@lightcurve.source.stellar_rad, 1) %>x Sol</span>
+    </li>
+  </ul>
+  <!-- <a class="more_info" href="#" title="view more info">view more info</a> -->
+<% end %>
+</div>
+

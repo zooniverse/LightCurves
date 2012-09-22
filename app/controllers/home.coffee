@@ -18,6 +18,6 @@ class Home extends Spine.Controller
     
   start: (ev) ->
     ev.preventDefault()
-    @navigate '/sources', 'APH10154043'
+    @navigate '/classify', 'APH10154043'
         
 module.exports = Home

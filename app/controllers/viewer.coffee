@@ -9,50 +9,71 @@ class Viewer extends Spine.Controller
     '#zoom': 'zoomBtn'
     
   events:
+    # Why are these not working? Something nuts.
     'click #zoom a': 'zoom'
     'mouseenter #zoom a': -> $("#yZoom_help").show()
     'mouseleave #zoom a': -> $("#yZoom_help").delay(1600).fadeOut 1600
-    
-    'click .context #context-leftdot': -> alert "Left click"
-    'click .context #context-rightdot': -> alert "Right click"
-  
+      
   constructor: ->
     super
     @el.attr("id", "graph")
+    @self = this # For when we have a thin arrow but need to reference fatness
 
     # Copied variables from stylus, fix in future
     @left_margin = 50
     @top_padding = 5
     
-    @width = 670
-    @height = 450
-    @h_graph = 400
-    @h_bottom = 30
+    @width ?= 670
+    @height ?= 450
+    @h_graph ?= 400
+    @h_bottom ?= 30
+    @max_zoom ?= 10
     
     @h_to_context = @top_padding + @height - @h_bottom
-      
-    @max_zoom = 10
-    
+          
     @n_xticks = 10
     @n_yticks = 6
     @n_contextticks = 7
       
-    # Add spinner in future  
-    @loading = false
+    # Stuff for marking transits  
+    @annotations ?= true
+    @current_box = null
   
-  teardown: -> # Clean things up 
+  teardown: -> 
+    # TODO: Clean things up 
+
     
   render: =>    
-    @html require('views/lightcurve')(@)          
+    @html require('views/viewer')(@)          
   
   zoom: (ev) ->
     ev.preventDefault()
     alert "click"
     # do stuff
   
-  loadData: (json, meta) =>
-    alert(t('lightcurve.problem')) if not json or json.length <= 0
+  # clicked in the context of canvas  
+  plot_click: =>
+    [x, y] = d3.mouse(@canvas)
     
+    if @current_box
+      
+    else        
+      
+    
+  plot_mousemove: =>
+    return unless @current_box
+    [x, y] = d3.mouse(@canvas)
+
+    if @current_box
+      
+    else          
+    
+  loadData: (json, meta) =>
+    if not json or json.length <= 0 
+      alert(t('lightcurve.problem')) 
+      return
+    
+    $(".spinner").remove()
     @lcData = new LightcurveData(data: json)
     
     # Scale for focus area.
@@ -90,7 +111,7 @@ class Viewer extends Spine.Controller
       .tickSize(-@width, 0, 0)
 
     @svg = d3.select("#graph_svg")
-      .attr("width", @width + @left_margin)
+      .attr("width", @width + @left_margin * 2)
       .attr("height", @height + @top_padding + 20)
 
     @svg_xaxis = @svg.append("g")
@@ -105,10 +126,12 @@ class Viewer extends Spine.Controller
     @canvas = d3.select("#graph_canvas")   
       .attr("width", @width)
       .attr("height", @h_graph)
+      .on("click", @plot_click )
       .on("mousedown.drag", @plot_drag )
       .on("touchstart.drag", @plot_drag )
       .call(@zoom_graph)
-      .node().getContext("2d")        
+      .node()
+    @canvas_2d = @canvas.getContext("2d")        
   
     # Bottom line graph, axes, ticks, and labels
     @lcLine = d3.svg.line()
@@ -168,10 +191,17 @@ class Viewer extends Spine.Controller
       .attr("r", 7)
       .call(drag_rightdot)
 
+    # Container for annotations
+    @svg_annotations = @svg.append("g")
+      .attr("class", "chart-annotations")
+      .attr("transform", "translate(" + @left_margin + "," + @top_padding + ")")
+
     # Register global event fixers
-    d3.select("body")
+    d3.select("body")      
       .on("mouseup.drag", @mouseup)
       .on("touchend.drag", @mouseup)
+        
+    @show_tooltips()
         
     # Draw everything (this runs fast and can be re-called for changes!)    
     @graph_zoom() 
@@ -221,7 +251,7 @@ class Viewer extends Spine.Controller
     # First, check if we panned out if bounds, if so fix it
     dom = @x_scale.domain()
     dt = dom[1] - dom[0]
-    if dom[0] < @lcData.start  
+    if dom[0] < @lcData.start
       dom[0] = @lcData.start
       dom[1] = dom[0] + dt 
     if dom[1] > @lcData.end
@@ -260,22 +290,27 @@ class Viewer extends Spine.Controller
     @svg_xaxis.call(@xAxis)
     @svg_yaxis.call(@yAxis)
   
-    # Draw dots!
+    # Plot dots!
+    # FIXME: may only want to draw viewport dots for even faster!
     data = @lcData.data    
-    @canvas.clearRect(0, 0, @width, @h_graph)
+    @canvas_2d.clearRect(0, 0, @width, @h_graph)
             
     i = -1
     n = data.length
     h = @h_graph
-    @canvas.beginPath()    
+    @canvas_2d.beginPath()    
     while ++i < n
       d = data[i]
       cx = @x_scale(d.x)
       cy = @y_scale(d.y)
-      @canvas.moveTo(cx, cy)
-      @canvas.arc(cx, cy, 2.5, 0, 2 * Math.PI)
+      @canvas_2d.moveTo(cx, cy)
+      @canvas_2d.arc(cx, cy, 2.5, 0, 2 * Math.PI)
     
-    @canvas.fillStyle = "#FFFFFF"          
-    @canvas.fill()
+    @canvas_2d.fillStyle = "#FFFFFF"          
+    @canvas_2d.fill()
+
+  show_tooltips: ->
+    $("#xZoom_help").show().delay(3200).fadeOut 1600
+    $("#yZoom_help").show().delay(3200).fadeOut 1600
           
 module.exports = Viewer

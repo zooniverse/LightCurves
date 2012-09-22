@@ -3,6 +3,13 @@ Spine = require('spine')
 class LightcurveData extends Spine.Model
   @configure 'LightcurveData', 'data'
   
+  @loadData = (lcUrl, callback) ->
+    $.jsonp
+      url: lcUrl
+      callback: 'light_curve_data'
+      error: -> alert(t('lightcurve.failed_to_get') + lcUrl)
+      success: callback
+      
   constructor: ->
     super
 
@@ -27,5 +34,5 @@ class LightcurveData extends Spine.Model
     @ymin = ymin - 0.15 * @yrange
     
 #    console.log @ymin, @ymax, @data
-          
+            
 module.exports = LightcurveData
