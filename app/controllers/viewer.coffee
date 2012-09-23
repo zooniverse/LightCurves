@@ -9,7 +9,7 @@ class Viewer extends Spine.Controller
     '#zoom': 'zoomBtn'
     
   events:
-    # Why are these not working? Something nuts.
+    # Why are these not working? Something to do with d3, probably.
     'click #zoom a': 'zoom'
     'mouseenter #zoom a': -> $("#yZoom_help").show()
     'mouseleave #zoom a': -> $("#yZoom_help").delay(1600).fadeOut 1600
@@ -37,6 +37,8 @@ class Viewer extends Spine.Controller
       
     # Stuff for marking transits  
     @annotations ?= true
+
+    @transits = []
     @current_box = null
   
   teardown: -> 
@@ -50,23 +52,6 @@ class Viewer extends Spine.Controller
     ev.preventDefault()
     alert "click"
     # do stuff
-  
-  # clicked in the context of canvas  
-  plot_click: =>
-    [x, y] = d3.mouse(@canvas)
-    
-    if @current_box
-      
-    else        
-      
-    
-  plot_mousemove: =>
-    return unless @current_box
-    [x, y] = d3.mouse(@canvas)
-
-    if @current_box
-      
-    else          
     
   loadData: (json, meta) =>
     if not json or json.length <= 0 
@@ -95,7 +80,6 @@ class Viewer extends Spine.Controller
     @zoom_graph = d3.behavior.zoom()
       .x(@x_scale)
       .scaleExtent([1, @max_zoom])
-      .on("zoom", @graph_zoom)
     
     # Chart axes, ticks, and labels
     @xAxis = d3.svg.axis()
@@ -126,11 +110,7 @@ class Viewer extends Spine.Controller
     @canvas = d3.select("#graph_canvas")   
       .attr("width", @width)
       .attr("height", @h_graph)
-      .on("click", @plot_click )
-      .on("mousedown.drag", @plot_drag )
-      .on("touchstart.drag", @plot_drag )
-      .call(@zoom_graph)
-      .node()
+    .node()
     @canvas_2d = @canvas.getContext("2d")        
   
     # Bottom line graph, axes, ticks, and labels
@@ -157,19 +137,14 @@ class Viewer extends Spine.Controller
     # Focus area and interaction on bottom
     drag_context = d3.behavior.drag()
       .origin(Object)
-      .on("drag", @contextDrag)
     drag_leftdot = d3.behavior.drag()
       .origin(Object)
-      .on("drag", @leftDotDrag)
     drag_rightdot = d3.behavior.drag()
       .origin(Object)
-      .on("drag", @rightDotDrag)
       
     @context_drag = @bottom.append("svg:rect")
       .attr("class", "context-drag")
       .attr("height", @h_bottom)
-#      .call(@zoom_graph) # Enable zoom actions on here too!            
-      .call(drag_context)
     
     @context_left = @bottom.append("svg:rect")
       .attr("class", "context-shaded")
@@ -179,7 +154,6 @@ class Viewer extends Spine.Controller
       .attr("class", "context-dragdot")
       .attr("cy", 0.5 * @h_bottom)
       .attr("r", 7)
-      .call(drag_leftdot)
     
     @context_right = @bottom.append("svg:rect")
       .attr("class", "context-shaded")
@@ -189,27 +163,104 @@ class Viewer extends Spine.Controller
       .attr("class", "context-dragdot")
       .attr("cy", 0.5 * @h_bottom)
       .attr("r", 7)
-      .call(drag_rightdot)
 
     # Container for annotations
     @svg_annotations = @svg.append("g")
       .attr("class", "chart-annotations")
       .attr("transform", "translate(" + @left_margin + "," + @top_padding + ")")
 
-    # Register global event fixers
+    # Defined behaviors
+    @zoom_graph
+      .on("zoom", @graph_zoom)
+    drag_leftdot
+      .on("drag", @leftDotDrag)
+    drag_context
+      .on("drag", @contextDrag)
+    drag_rightdot
+      .on("drag", @rightDotDrag)
+
+    # What we do with the behaviors
+    @svg
+      .call(@zoom_graph)
+      .on("click", @plot_click )
+      .on("mousemove", @plot_mousemove )
+      .on("mousedown.drag", @plot_drag )
+      .on("touchstart.drag", @plot_drag )
+    @context_drag
+      .call(drag_context)
+    @context_leftDot
+      .call(drag_leftdot)
+    @context_rightDot
+      .call(drag_rightdot)
+    
+    # Global event detectors
     d3.select("body")      
       .on("mouseup.drag", @mouseup)
-      .on("touchend.drag", @mouseup)
+      .on("touchend.drag", @mouseup)      
         
     @show_tooltips()
         
-    # Draw everything (this runs fast and can be re-called for changes!)    
+    # Call draw function once 
+    # it runs fast and can be called for changes/animations
     @graph_zoom() 
-  
+    
   # When plot is dragged
   plot_drag: -> 
     d3.select("body").style("cursor", "move")
   
+  # When mouse is released     
+  mouseup: ->
+    d3.select("body").style("cursor", "auto")
+  
+  plot_click: =>
+    # calculate coords relative to canvas  
+    [x, y] = d3.mouse(@canvas)
+
+    if @current_box
+      @current_box = null
+      d3.select("body").style("cursor", "auto")
+    else
+      @current_box = @svg_annotations
+        .append("svg:g")
+        .attr("class", "transit-temp")
+        .attr("transform", "translate(" + x + "," + y + ")")
+        .datum
+          x: @x_scale.invert x
+          y: @y_scale.invert y
+          dx: 0
+          dy: 0
+      @transits.push @current_box
+
+      @current_box.append("svg:rect")
+      d3.select("body").style("cursor", "crosshair")
+    
+  plot_mousemove: =>
+    return unless @current_box
+    [x, y] = d3.mouse(@canvas)
+
+    if @current_box
+      d = @current_box.datum()      
+      d.dx = Math.abs(@x_scale.invert(x) - d.x)
+      d.dy = Math.abs(@y_scale.invert(y) - d.y)
+      
+      @redraw_transits @current_box
+
+  redraw_transits: (selection) =>
+    selection ?= @svg_annotations.selectAll("g")
+    
+    xs = @x_scale
+    ys = @y_scale
+    
+    selection.each (d) ->
+      half_w = xs(d.dx) - xs(0)
+      half_h = ys(0) - ys(d.dy) # Because y-scale is reversed
+          
+      d3.select(this).select("rect")
+        .attr("x", -half_w)
+        .attr("y", -half_h)
+        .attr("width", 2 * half_w)
+        .attr("height", 2 * half_h)        
+      
   # Drag context (pan) with boundaries
   contextDrag: (d) =>
     dom = @x_scale.domain()
@@ -242,10 +293,6 @@ class Viewer extends Spine.Controller
     
     @graph_zoom()
 
-  # When mouse is released     
-  mouseup: ->
-    d3.select("body").style("cursor", "auto")
-  
   graph_zoom: =>
     # Make consistent scales and zoom to enforce panning extent
     # First, check if we panned out if bounds, if so fix it
@@ -289,6 +336,11 @@ class Viewer extends Spine.Controller
     # Adjust main area axes and gridlines
     @svg_xaxis.call(@xAxis)
     @svg_yaxis.call(@yAxis)
+    
+    # Adjust transit annotations
+    @svg_annotations.selectAll("g")
+      .attr("transform", (d) => "translate(" + @x_scale(d.x) + "," + @y_scale(d.y) + ")")
+    @redraw_transits()
   
     # Plot dots!
     # FIXME: may only want to draw viewport dots for even faster!

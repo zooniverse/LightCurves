@@ -12,29 +12,27 @@ left-margin = 50px
 
 // SVG and Canvas will be overlaid on each other
 #lightcurve #graph svg
-  z-index: 0
+  z-index: 1
   position: absolute
   top: 0px
   left: 0px
 
 #lightcurve #graph canvas
-  z-index: 1
+  z-index: 0
   position: absolute
   top: top-padding
   left: left-margin
 
+#graph .chart-annotations .transit-temp rect
+  fill: #FFFFFF
+  opacity: 0.2
+
 #graph .chart-xaxis line
-  stroke: #444444
-  stroke-dasharray: 1,4
-
-#graph .chart-xaxis text
-  fill: #616161
-  font-size: 10px
-
 #graph .chart-yaxis line
   stroke: #444444
   stroke-dasharray: 1,4
 
+#graph .chart-xaxis text
 #graph .chart-yaxis text
   fill: #616161
   font-size: 10px
