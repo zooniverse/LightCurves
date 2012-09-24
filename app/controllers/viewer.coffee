@@ -75,11 +75,7 @@ class Viewer extends Spine.Controller
       .range([0, @width])
     @y_bottom = d3.scale.linear()
       .domain([@lcData.ymin, @lcData.ymax])
-      .range([@h_bottom, 0])
-          
-    @zoom_graph = d3.behavior.zoom()
-      .x(@x_scale)
-      .scaleExtent([1, @max_zoom])
+      .range([@h_bottom, 0])        
     
     # Chart axes, ticks, and labels
     @xAxis = d3.svg.axis()
@@ -97,7 +93,7 @@ class Viewer extends Spine.Controller
     @svg = d3.select("#graph_svg")
       .attr("width", @width + @left_margin * 2)
       .attr("height", @height + @top_padding + 20)
-
+      
     @svg_xaxis = @svg.append("g")
       .attr("class", "chart-xaxis")
       .attr("transform", "translate(" + @left_margin + "," + (@top_padding + @h_graph) + ")")
@@ -106,7 +102,7 @@ class Viewer extends Spine.Controller
       .attr("class", "chart-yaxis")
       .attr("transform", "translate(" + @left_margin + "," + @top_padding + ")")
 
-    # Size canvas and position at right spot relative to SVG
+    # Size canvas and position at right spot relative to SVG - done in CSS
     @canvas = d3.select("#graph_canvas")   
       .attr("width", @width)
       .attr("height", @h_graph)
@@ -134,14 +130,7 @@ class Viewer extends Spine.Controller
       .attr("transform", "translate(" + @left_margin + "," + (@top_padding + @height) + ")")      
       .call(@bottomAxis)
     
-    # Focus area and interaction on bottom
-    drag_context = d3.behavior.drag()
-      .origin(Object)
-    drag_leftdot = d3.behavior.drag()
-      .origin(Object)
-    drag_rightdot = d3.behavior.drag()
-      .origin(Object)
-      
+    # Focus area and interaction on bottom      
     @context_drag = @bottom.append("svg:rect")
       .attr("class", "context-drag")
       .attr("height", @h_bottom)
@@ -170,8 +159,21 @@ class Viewer extends Spine.Controller
       .attr("transform", "translate(" + @left_margin + "," + @top_padding + ")")
 
     # Defined behaviors
+    @zoom_graph = d3.behavior.zoom()
+      .x(@x_scale)
+      .scaleExtent([1, @max_zoom])
+      
+    drag_context = d3.behavior.drag().origin(Object)
+    drag_leftdot = d3.behavior.drag().origin(Object)    
+    drag_rightdot = d3.behavior.drag().origin(Object)
+    
+    @drag_transit = d3.behavior.drag().origin((d) => x: @x_scale(d.x), y: @y_scale(d.y))
+    @resize_transit = d3.behavior.drag().origin(Object) 
+
+    # Functions called by behaviors
     @zoom_graph
       .on("zoom", @graph_zoom)
+      
     drag_leftdot
       .on("drag", @leftDotDrag)
     drag_context
@@ -179,13 +181,19 @@ class Viewer extends Spine.Controller
     drag_rightdot
       .on("drag", @rightDotDrag)
 
-    # What we do with the behaviors
+    @drag_transit
+      .on("drag", @transitDrag)
+    @resize_transit
+      .on("drag", @transitResize)
+
+    # What we do with the behaviors    
     @svg
       .call(@zoom_graph)
       .on("click", @plot_click )
       .on("mousemove", @plot_mousemove )
       .on("mousedown.drag", @plot_drag )
       .on("touchstart.drag", @plot_drag )
+      
     @context_drag
       .call(drag_context)
     @context_leftDot
@@ -216,23 +224,51 @@ class Viewer extends Spine.Controller
     # calculate coords relative to canvas  
     [x, y] = d3.mouse(@canvas)
 
-    if @current_box
+    if @current_box # Make box permanent
+      d3.select("body").style("cursor", "auto")      
+      # TODO: cancel if box is too small
+      
+      d = @current_box.datum()
+      d.num = @transits.length
+      @current_box
+        .attr("class", "transit")
+        
+      # Center dot  
+      @current_box
+      .append("svg:circle")
+        .attr("class", "transit-center")
+        .attr("r", 2)
+      # Top circle and label
+      @current_box
+      .append("svg:circle")
+        .attr("class", "transit-label")
+        .attr("cx", @x_scale(d.dx) - @x_scale(0))
+        .attr("r", 10)        
+      @current_box
+      .append("svg:text")
+        .attr("class", "transit-text")
+        .attr("text-anchor", "middle")
+        .attr("x", @x_scale(d.dx) - @x_scale(0))
+        .text((d) -> d.num)
+      # Drag and resize handles
+      @current_box
+        .call(@drag_transit)
+
+      @transits.push @current_box        
       @current_box = null
-      d3.select("body").style("cursor", "auto")
     else
+      d3.select("body").style("cursor", "crosshair")
       @current_box = @svg_annotations
         .append("svg:g")
         .attr("class", "transit-temp")
         .attr("transform", "translate(" + x + "," + y + ")")
         .datum
-          x: @x_scale.invert x
-          y: @y_scale.invert y
+          x: @x_scale.invert(x)
+          y: @y_scale.invert(y)
           dx: 0
           dy: 0
-      @transits.push @current_box
 
       @current_box.append("svg:rect")
-      d3.select("body").style("cursor", "crosshair")
     
   plot_mousemove: =>
     return unless @current_box
@@ -255,11 +291,25 @@ class Viewer extends Spine.Controller
       half_w = xs(d.dx) - xs(0)
       half_h = ys(0) - ys(d.dy) # Because y-scale is reversed
           
-      d3.select(this).select("rect")
+      box = d3.select(this)
+      
+      box.select("rect")
         .attr("x", -half_w)
         .attr("y", -half_h)
         .attr("width", 2 * half_w)
         .attr("height", 2 * half_h)        
+      box.select("circle.transit-label")
+        .attr("cx", half_w)
+      box.select("text.transit-text")
+        .attr("x", half_w)
+
+  transitDrag: (d) =>
+    [x, y] = [d3.event.x, d3.event.y]
+    d.x = @x_scale.invert x
+    d.y = @y_scale.invert y
+    @transits[d.num].attr("transform", "translate(" + x + "," + y + ")")
+    
+  transitResize: (d) =>
       
   # Drag context (pan) with boundaries
   contextDrag: (d) =>

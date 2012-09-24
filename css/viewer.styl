@@ -25,7 +25,31 @@ left-margin = 50px
 
 #graph .chart-annotations .transit-temp rect
   fill: #FFFFFF
-  opacity: 0.2
+  opacity: 0.4
+  
+transit-p1-color = #0099CC
+transit-solid-opacity = 0.9
+
+#graph .chart-annotations .transit rect
+  stroke: transit-p1-color // To be replaced with per-player colors
+  stroke-width: 3
+  stroke-opacity: transit-solid-opacity
+  fill: #FFFFFF
+  fill-opacity: 0.1
+
+#graph .chart-annotations .transit .transit-center
+  fill: transit-p1-color
+  fill-opacity: transit-solid-opacity
+
+#graph .chart-annotations .transit .transit-label
+  stroke: transit-p1-color // To be replaced with per-player colors
+  stroke-width: 3
+  fill: #FFFFFF
+  opacity: transit-solid-opacity
+
+#graph .chart-annotations .transit .transit-text
+  font: 14px sans-serif
+  dominant-baseline: central
 
 #graph .chart-xaxis line
 #graph .chart-yaxis line
