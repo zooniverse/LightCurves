@@ -23,33 +23,60 @@ left-margin = 50px
   top: top-padding
   left: left-margin
 
-#graph .chart-annotations .transit-temp rect
+.chart-annotations .transit-temp rect
   fill: #FFFFFF
   opacity: 0.4
   
 transit-p1-color = #0099CC
 transit-solid-opacity = 0.9
 
-#graph .chart-annotations .transit rect
+.chart-annotations .transit .transit-rect
+  cursor: move
   stroke: transit-p1-color // To be replaced with per-player colors
   stroke-width: 3
   stroke-opacity: transit-solid-opacity
   fill: #FFFFFF
   fill-opacity: 0.1
 
-#graph .chart-annotations .transit .transit-center
+.chart-annotations .transit .transit-center
   fill: transit-p1-color
   fill-opacity: transit-solid-opacity
 
-#graph .chart-annotations .transit .transit-label
+.chart-annotations .transit .transit-label
   stroke: transit-p1-color // To be replaced with per-player colors
   stroke-width: 3
   fill: #FFFFFF
   opacity: transit-solid-opacity
 
-#graph .chart-annotations .transit .transit-text
+.chart-annotations .transit .transit-text
   font: 14px sans-serif
   dominant-baseline: central
+
+.chart-annotations .transit .n-resize
+.chart-annotations .transit .s-resize
+.chart-annotations .transit .e-resize
+.chart-annotations .transit .w-resize
+.chart-annotations .transit .ne-resize
+.chart-annotations .transit .sw-resize
+.chart-annotations .transit .nw-resize
+.chart-annotations .transit .se-resize
+  fill: transparent
+  stroke: none
+
+.chart-annotations .transit .n-resize
+.chart-annotations .transit .s-resize
+  cursor: ns-resize
+.chart-annotations .transit .e-resize
+.chart-annotations .transit .w-resize
+  cursor: ew-resize
+.chart-annotations .transit .ne-resize
+  cursor: ne-resize
+.chart-annotations .transit .sw-resize
+  cursor: sw-resize
+.chart-annotations .transit .nw-resize
+  cursor: nw-resize
+.chart-annotations .transit .se-resize
+  cursor: se-resize
 
 #graph .chart-xaxis line
 #graph .chart-yaxis line

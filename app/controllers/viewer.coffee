@@ -36,6 +36,7 @@ class Viewer extends Spine.Controller
     @n_contextticks = 7
       
     # Stuff for marking transits  
+    @resize_half_width = 3
     @annotations ?= true
 
     @transits = []
@@ -168,7 +169,9 @@ class Viewer extends Spine.Controller
     drag_rightdot = d3.behavior.drag().origin(Object)
     
     @drag_transit = d3.behavior.drag().origin((d) => x: @x_scale(d.x), y: @y_scale(d.y))
-    @resize_transit = d3.behavior.drag().origin(Object) 
+    @resize_transit = d3.behavior.drag().origin(null)
+    @resize_transit_ew = d3.behavior.drag().origin(null)
+    @resize_transit_ns = d3.behavior.drag().origin(null)
 
     # Functions called by behaviors
     @zoom_graph
@@ -185,6 +188,10 @@ class Viewer extends Spine.Controller
       .on("drag", @transitDrag)
     @resize_transit
       .on("drag", @transitResize)
+    @resize_transit_ew
+      .on("drag", @transitResizeEW)
+    @resize_transit_ns
+      .on("drag", @transitResizeNS)
 
     # What we do with the behaviors    
     @svg
@@ -210,7 +217,7 @@ class Viewer extends Spine.Controller
         
     # Call draw function once 
     # it runs fast and can be called for changes/animations
-    @graph_zoom() 
+    @graph_zoom()
     
   # When plot is dragged
   plot_drag: -> 
@@ -229,10 +236,13 @@ class Viewer extends Spine.Controller
       # TODO: cancel if box is too small
       
       d = @current_box.datum()
+      d.dx = Math.abs(@x_scale.invert(x) - d.x)
+      d.dy = Math.abs(@y_scale.invert(y) - d.y)
       d.num = @transits.length
+      
       @current_box
         .attr("class", "transit")
-        
+
       # Center dot  
       @current_box
       .append("svg:circle")
@@ -242,19 +252,64 @@ class Viewer extends Spine.Controller
       @current_box
       .append("svg:circle")
         .attr("class", "transit-label")
-        .attr("cx", @x_scale(d.dx) - @x_scale(0))
         .attr("r", 10)        
       @current_box
       .append("svg:text")
         .attr("class", "transit-text")
         .attr("text-anchor", "middle")
-        .attr("x", @x_scale(d.dx) - @x_scale(0))
         .text((d) -> d.num)
       # Drag and resize handles
       @current_box
-        .call(@drag_transit)
+        .call(@drag_transit)  
+              
+      @current_box
+      .append("svg:rect") # Top handle
+        .attr("class", "n-resize")
+        .attr("height", @resize_half_width * 2)
+        .call(@resize_transit_ns)
+      @current_box
+      .append("svg:rect") # Bottom handle
+        .attr("class", "s-resize")
+        .attr("height", @resize_half_width * 2)
+        .call(@resize_transit_ns)
+      @current_box
+      .append("svg:rect") # Right handle
+        .attr("class", "e-resize")
+        .attr("width", @resize_half_width * 2)
+        .call(@resize_transit_ew)
+      @current_box
+      .append("svg:rect") # Left handle
+        .attr("class", "w-resize")
+        .attr("width", @resize_half_width * 2)
+        .call(@resize_transit_ew)
 
-      @transits.push @current_box        
+      @current_box
+      .append("svg:rect") # Top right handle
+        .attr("class", "ne-resize")
+        .attr("width", @resize_half_width * 2)
+        .attr("height", @resize_half_width * 2)
+        .call(@resize_transit)
+      @current_box
+      .append("svg:rect") # Bot right handle
+        .attr("class", "se-resize")
+        .attr("width", @resize_half_width * 2)
+        .attr("height", @resize_half_width * 2)
+        .call(@resize_transit)
+      @current_box
+      .append("svg:rect") # Top right handle
+        .attr("class", "sw-resize")
+        .attr("width", @resize_half_width * 2)
+        .attr("height", @resize_half_width * 2)
+        .call(@resize_transit)
+      @current_box
+      .append("svg:rect") # Top right handle
+        .attr("class", "nw-resize")
+        .attr("width", @resize_half_width * 2)
+        .attr("height", @resize_half_width * 2)
+        .call(@resize_transit)
+
+      @transits.push @current_box
+      @redraw_transits @current_box
       @current_box = null
     else
       d3.select("body").style("cursor", "crosshair")
@@ -268,7 +323,9 @@ class Viewer extends Spine.Controller
           dx: 0
           dy: 0
 
-      @current_box.append("svg:rect")
+      @current_box
+      .append("svg:rect")
+        .attr("class", "transit-rect")
     
   plot_mousemove: =>
     return unless @current_box
@@ -286,6 +343,7 @@ class Viewer extends Spine.Controller
     
     xs = @x_scale
     ys = @y_scale
+    adj = @resize_half_width
     
     selection.each (d) ->
       half_w = xs(d.dx) - xs(0)
@@ -293,7 +351,7 @@ class Viewer extends Spine.Controller
           
       box = d3.select(this)
       
-      box.select("rect")
+      box.select(".transit-rect")
         .attr("x", -half_w)
         .attr("y", -half_h)
         .attr("width", 2 * half_w)
@@ -302,7 +360,37 @@ class Viewer extends Spine.Controller
         .attr("cx", half_w)
       box.select("text.transit-text")
         .attr("x", half_w)
+        
+      box.select("rect.n-resize")
+        .attr("x", -half_w)
+        .attr("y", -half_h - adj)
+        .attr("width", 2 * half_w)
+      box.select("rect.s-resize")
+        .attr("x", -half_w)
+        .attr("y", half_h - adj)
+        .attr("width", 2 * half_w)
+      box.select("rect.e-resize")
+        .attr("x", half_w - adj)
+        .attr("y", -half_h)
+        .attr("height", 2 * half_h)
+      box.select("rect.w-resize")
+        .attr("x", -half_w - adj)
+        .attr("y", -half_h)
+        .attr("height", 2 * half_h)
 
+      box.select("rect.ne-resize")
+        .attr("x", half_w - adj)
+        .attr("y", -half_h - adj)
+      box.select("rect.se-resize")
+        .attr("x", half_w - adj)
+        .attr("y", half_h - adj)
+      box.select("rect.sw-resize")
+        .attr("x", -half_w - adj)
+        .attr("y", half_h - adj)
+      box.select("rect.nw-resize")
+        .attr("x", -half_w - adj)
+        .attr("y", -half_h - adj)
+        
   transitDrag: (d) =>
     [x, y] = [d3.event.x, d3.event.y]
     d.x = @x_scale.invert x
@@ -310,6 +398,17 @@ class Viewer extends Spine.Controller
     @transits[d.num].attr("transform", "translate(" + x + "," + y + ")")
     
   transitResize: (d) =>
+    d.dx = Math.abs(@x_scale.invert(d3.event.x) - @x_scale.invert(0))
+    d.dy = Math.abs(@y_scale.invert(d3.event.y) - @y_scale.invert(0))
+    @redraw_transits @transits[d.num]
+
+  transitResizeEW: (d) =>
+    d.dx = Math.abs(@x_scale.invert(d3.event.x) - @x_scale.invert(0))
+    @redraw_transits @transits[d.num]
+    
+  transitResizeNS: (d) =>
+    d.dy = Math.abs(@y_scale.invert(d3.event.y) - @y_scale.invert(0))
+    @redraw_transits @transits[d.num]
       
   # Drag context (pan) with boundaries
   contextDrag: (d) =>
