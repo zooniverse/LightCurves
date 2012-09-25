@@ -5,13 +5,16 @@ LightcurveData = require 'models/lightcurveData'
 Viewer = require 'controllers/viewer'
 
 class Sources extends Spine.Controller
+  className: "lightcurve"
   
   constructor: ->
     super
-    @el.attr('id', 'lightcurve')
+    @el.attr('id', 'sources')
     
     @viewer = new Viewer
-      annotations: false
+      containerSelector: "#sources.lightcurve"
+      allow_annotations: false
+      show_simulations: true
   
   active: (params) ->
     super

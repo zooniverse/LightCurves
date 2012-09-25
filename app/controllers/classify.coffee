@@ -5,11 +5,14 @@ LightcurveData = require 'models/lightcurveData'
 Viewer = require 'controllers/viewer'
 
 class Classify extends Spine.Controller
+  className: "lightcurve"
+  
   constructor: ->
     super
-    @el.attr('id', 'lightcurve')
+    @el.attr('id', 'classify')
     
-    @viewer = new Viewer()
+    @viewer = new Viewer
+      containerSelector: "#classify.lightcurve"
 
   active: (params) ->
     super

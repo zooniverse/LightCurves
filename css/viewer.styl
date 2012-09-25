@@ -5,19 +5,19 @@ left-margin = 50px
   fill: none
   pointer-events: all
 
-#lightcurve #graph
+.lightcurve #graph
   // display: inline-block
   // Absolute elements inside will be positioned properly
   position: relative
 
 // SVG and Canvas will be overlaid on each other
-#lightcurve #graph svg
+.lightcurve #graph svg
   z-index: 1
   position: absolute
   top: 0px
   left: 0px
 
-#lightcurve #graph canvas
+.lightcurve #graph canvas
   z-index: 0
   position: absolute
   top: top-padding

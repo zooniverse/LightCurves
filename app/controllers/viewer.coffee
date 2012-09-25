@@ -17,7 +17,9 @@ class Viewer extends Spine.Controller
   constructor: ->
     super
     @el.attr("id", "graph")
-    @self = this # For when we have a thin arrow but need to reference fatness
+    @containerSelector ?= ".lightcurve"
+    @allow_annotations ?= true
+    @show_simulations ?= false
 
     # Copied variables from stylus, fix in future
     @left_margin = 50
@@ -37,17 +39,17 @@ class Viewer extends Spine.Controller
       
     # Stuff for marking transits  
     @resize_half_width = 3
-    @annotations ?= true
 
     @transits = []
     @current_box = null
-  
-  teardown: -> 
-    # TODO: Clean things up 
-
     
   render: =>    
     @html require('views/viewer')(@)          
+  
+  teardown: -> 
+    # TODO: Better job of clean things up 
+    @canvas_2d?.clearRect(0, 0, @width, @h_graph)
+    @svg?.empty()
   
   zoom: (ev) ->
     ev.preventDefault()
@@ -91,7 +93,7 @@ class Viewer extends Spine.Controller
       .ticks(@n_yticks)
       .tickSize(-@width, 0, 0)
 
-    @svg = d3.select("#graph_svg")
+    @svg = d3.select(@containerSelector).select("#graph_svg")
       .attr("width", @width + @left_margin * 2)
       .attr("height", @height + @top_padding + 20)
       
@@ -104,7 +106,7 @@ class Viewer extends Spine.Controller
       .attr("transform", "translate(" + @left_margin + "," + @top_padding + ")")
 
     # Size canvas and position at right spot relative to SVG - done in CSS
-    @canvas = d3.select("#graph_canvas")   
+    @canvas = d3.select(@containerSelector).select("#graph_canvas")   
       .attr("width", @width)
       .attr("height", @h_graph)
     .node()
@@ -229,6 +231,7 @@ class Viewer extends Spine.Controller
     d3.select("body").style("cursor", "auto")
   
   plot_click: =>
+    return unless @allow_annotations
     # calculate coords relative to canvas  
     [x, y] = d3.mouse(@canvas)
 
@@ -261,7 +264,8 @@ class Viewer extends Spine.Controller
         .text((d) -> d.num)
       # Drag and resize handles
       @current_box
-        .call(@drag_transit)  
+        .call(@drag_transit)
+        .on("click", @transitZoom)
               
       @current_box
       .append("svg:rect") # Top handle
@@ -391,6 +395,25 @@ class Viewer extends Spine.Controller
       box.select("rect.nw-resize")
         .attr("x", -half_w - adj)
         .attr("y", -half_h - adj)
+  
+  transitZoom: (d) =>
+    # Stop a second box from being drawn
+    d3.event.stopPropagation()
+
+    # Arbitrary rule: scale transit to 1/7 of horz area
+    current_dom = @x_scale.domain()
+    box_w = 6 * d.dx
+    [target_dom, scale] = @getZoomPanFix [d.x - d.dx - box_w, d.x + d.dx + box_w]
+
+    return if current_dom[0] == target_dom[0] and current_dom[1] == target_dom[1]
+        
+    # FIXME: disable zoom and other events during this
+    gz = @graph_zoom
+    d3.transition()
+      .duration(1000)
+      .tween "zoom", -> 
+          interp = d3.interpolate(current_dom, target_dom)
+          (t) -> gz interp(t)
         
   transitDrag: (d) =>
     [x, y] = [d3.event.x, d3.event.y]
@@ -443,22 +466,40 @@ class Viewer extends Spine.Controller
     
     @graph_zoom()
 
-  graph_zoom: =>
+  getZoomPanFix: (dom) ->
     # Make consistent scales and zoom to enforce panning extent
-    # First, check if we panned out if bounds, if so fix it
-    dom = @x_scale.domain()
+    
+    # Check if we would pan out if bounds, if so fix it
     dt = dom[1] - dom[0]
     if dom[0] < @lcData.start
       dom[0] = @lcData.start
       dom[1] = dom[0] + dt 
     if dom[1] > @lcData.end
       dom[1] = @lcData.end
-      dom[0] = dom[1] - dt 
-    @x_scale.domain(dom)
+      dom[0] = dom[1] - dt
+    if dom[0] < @lcData.start
+      dom[0] = @lcData.start
   
-    # Second, fix zoom translation vector for adjusted x-scale 
+    # Compute new zoom x-scale 
     # This can happen from above, or from drags without zooming 
-    new_scale = (@lcData.end - @lcData.start) / (dom[1] - dom[0])
+    extent = @lcData.end - @lcData.start
+    new_scale = extent / (dom[1] - dom[0])    
+    
+    # Don't allow zooming beyond max zoom
+    if new_scale > @max_zoom
+      new_scale = @max_zoom
+      midpt = 0.5 * (dom[1] + dom[0])
+      ext_scale = (extent / new_scale) / 2
+      dom = [ midpt - ext_scale, midpt + ext_scale ]
+    
+    [dom, new_scale]
+
+  graph_zoom: (target_dom) =>
+    target_dom ?= @x_scale.domain()
+    [dom, new_scale] = @getZoomPanFix target_dom
+
+    # Set domain and fix zoom translation vector accordingly
+    @x_scale.domain(dom)
     @zoom_graph
       .scale( new_scale )
       .translate([ -@x_bottom(dom[0]) * new_scale , 0])
@@ -498,15 +539,14 @@ class Viewer extends Spine.Controller
     xs = @x_scale
     ys = @y_scale
     canvas = @canvas_2d
-    twopi = 2 * Math.PI
-
-    data = @lcData.data    
+    data = @lcData.data
+        
     canvas.clearRect(0, 0, @width, @h_graph)
     
-    n = data.length
     h = @h_graph
     # Draw error bars
     i = -1
+    n = data.length
     canvas.beginPath()
     while ++i < n
       d = data[i]
@@ -520,16 +560,59 @@ class Viewer extends Spine.Controller
     canvas.stroke()
     
     # Draw dots
-    i = -1
     canvas.lineWidth = 0
+    if @show_simulations then @drawDotsSimul() else @drawDotsNormal()
+
+  # Faster when we don't have to draw transits
+  drawDotsNormal: ->
+    xs = @x_scale
+    ys = @y_scale
+    canvas = @canvas_2d
+    data = @lcData.data
+    twopi = 2 * Math.PI
+    
+    i = -1
+    n = data.length
     canvas.beginPath()    
     while ++i < n
       d = data[i]
       cx = xs(d.x)
-      cy = ys(d.y)
+      cy = ys(d.y)  
       canvas.moveTo(cx, cy)
-      canvas.arc(cx, cy, 2.5, 0, twopi)    
-    canvas.fillStyle = "#FFFFFF"          
+      canvas.arc(cx, cy, 2.5, 0, twopi)      
+    canvas.fillStyle = "#FFFFFF"
+    canvas.fill()
+    
+  drawDotsSimul: ->
+    xs = @x_scale
+    ys = @y_scale
+    canvas = @canvas_2d
+    data = @lcData.data
+    twopi = 2 * Math.PI
+    
+    i = -1
+    n = data.length
+    was_transit = no
+    canvas.beginPath()    
+    while ++i < n
+      d = data[i]
+      cx = xs(d.x)
+      cy = ys(d.y)        
+      # Close not transit with white
+      if d.tr > 0 and !was_transit
+        was_transit = yes
+        canvas.fillStyle = "#FFFFFF"          
+        canvas.fill()
+        canvas.beginPath()
+      # Close transit with red
+      if was_transit and d.tr == 0
+        was_transit = no
+        canvas.fillStyle = "#BF4040"
+        canvas.fill()
+        canvas.beginPath()        
+      canvas.moveTo(cx, cy)
+      canvas.arc(cx, cy, 2.5, 0, twopi)      
+    canvas.fillStyle = "#FFFFFF"
     canvas.fill()
 
   show_tooltips: ->
