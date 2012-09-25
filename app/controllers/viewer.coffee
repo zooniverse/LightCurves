@@ -169,6 +169,7 @@ class Viewer extends Spine.Controller
     drag_rightdot = d3.behavior.drag().origin(Object)
     
     @drag_transit = d3.behavior.drag().origin((d) => x: @x_scale(d.x), y: @y_scale(d.y))
+    # Null is actually better than an explicit origin accessor, to preserve cursor consistency
     @resize_transit = d3.behavior.drag().origin(null)
     @resize_transit_ew = d3.behavior.drag().origin(null)
     @resize_transit_ns = d3.behavior.drag().origin(null)
@@ -493,22 +494,43 @@ class Viewer extends Spine.Controller
   
     # Plot dots!
     # FIXME: may only want to draw viewport dots for even faster!
+    # Premature optimization right here:
+    xs = @x_scale
+    ys = @y_scale
+    canvas = @canvas_2d
+    twopi = 2 * Math.PI
+
     data = @lcData.data    
-    @canvas_2d.clearRect(0, 0, @width, @h_graph)
-            
-    i = -1
+    canvas.clearRect(0, 0, @width, @h_graph)
+    
     n = data.length
     h = @h_graph
-    @canvas_2d.beginPath()    
+    # Draw error bars
+    i = -1
+    canvas.beginPath()
     while ++i < n
       d = data[i]
-      cx = @x_scale(d.x)
-      cy = @y_scale(d.y)
-      @canvas_2d.moveTo(cx, cy)
-      @canvas_2d.arc(cx, cy, 2.5, 0, 2 * Math.PI)
+      x = xs(d.x)
+      bot = ys(d.y - d.dy)
+      top = ys(d.y + d.dy)
+      canvas.moveTo(x, bot)
+      canvas.lineTo(x, top)
+    canvas.lineWidth = 1
+    canvas.strokeStyle = "rgba(255,255,255,0.1)"
+    canvas.stroke()
     
-    @canvas_2d.fillStyle = "#FFFFFF"          
-    @canvas_2d.fill()
+    # Draw dots
+    i = -1
+    canvas.lineWidth = 0
+    canvas.beginPath()    
+    while ++i < n
+      d = data[i]
+      cx = xs(d.x)
+      cy = ys(d.y)
+      canvas.moveTo(cx, cy)
+      canvas.arc(cx, cy, 2.5, 0, twopi)    
+    canvas.fillStyle = "#FFFFFF"          
+    canvas.fill()
 
   show_tooltips: ->
     $("#xZoom_help").show().delay(3200).fadeOut 1600

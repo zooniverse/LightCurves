@@ -12,6 +12,8 @@ class LightcurveData extends Spine.Model
       
   constructor: ->
     super
+    # FIXME: Display this, the real meta data for these curves which are different.
+    @data = @data.data if @data.meta_data
 
     ymax = 0
     ymin = 1000000
