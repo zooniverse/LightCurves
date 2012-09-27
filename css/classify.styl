@@ -1,17 +1,8 @@
-.lightcurve #dialog
-  background: url("/images/sprites/css_sprites.png") no-repeat scroll 0 0 transparent
-  height: 326px
-  overflow: hidden
-  position: absolute
-  right: -66px
-  top: -30px
-  width: 311px
-  z-index: 1
-
-#dialog .step
+#classify .dialog .step
   display: none
 
-#dialog .step #help
+#classify .dialog .step #help
+#classify .dialog .step #restart
   background-attachment: scroll
   background-color: transparent
   background-image: url("/images/sprites/css_sprites.png")
@@ -19,39 +10,24 @@
   background-repeat: no-repeat
   position: absolute
   left: 50%
+  top: 30px
+  color: #888888
+  display: block
+  font-size: 11px
+  height: 17px
+  line-height: 17px
+  text-align: center
+  text-decoration: none
+  text-transform: uppercase
+  width: 55px
+
+#classify .dialog .step #help
   margin-left: -60px
-  top: 30px
-  color: #888888
-  display: block
-  font-size: 11px
-  height: 17px
-  line-height: 17px
-  text-align: center
-  text-decoration: none
-  text-transform: uppercase
-  width: 55px
-
-#dialog .step #restart
-  background-attachment: scroll
-  background-color: transparent
-  background-image: url("/images/sprites/css_sprites.png")
-  background-position: -675px -219px
-  background-repeat: no-repeat
-  position: absolute
-  left: 50%
+  
+#classify .dialog .step #restart
   margin-left: 5px
-  top: 30px
-  color: #888888
-  display: block
-  font-size: 11px
-  height: 17px
-  line-height: 17px
-  text-align: center
-  text-decoration: none
-  text-transform: uppercase
-  width: 55px
 
-#dialog .step #periodogram_button
+#classify .dialog .step #periodogram_button
   background-attachment: scroll
   background-color: transparent
   background-image: url("/images/sprites/periodogram_button.png")
@@ -70,7 +46,7 @@
   text-transform: uppercase
   width: 90px
 
-#dialog .step .question
+#classify .dialog .step .question
   color: #333333
   font-size: 21px
   margin: 100px auto 0
@@ -78,23 +54,23 @@
   text-shadow: 0 1px 0 #FFFFFF
   width: 218px
 
-#dialog .step .question.small
+#classify .dialog .step .question.small
   font-size: 17px
 
-#dialog .step .actions
+#classify .dialog .step .actions
   text-align: center
 
-#dialog .short .step6 .actions
+#classify .dialog .short .step6 .actions
   width: 168px
   margin: 25px auto
 
-#dialog .long .step1 .actions,
-#dialog .long .step2 .actions,
-#dialog .long .step3 .actions,
-#dialog .long .step4 .actions
+#classify .dialog .long .step1 .actions,
+#classify .dialog .long .step2 .actions,
+#classify .dialog .long .step3 .actions,
+#classify .dialog .long .step4 .actions
   margin: 25px auto
 
-#dialog .step .actions .button
+#classify .dialog .step .actions .button
   background-attachment: scroll
   background-color: transparent
   background-image: url("/images/sprites/css_sprites.png")
@@ -108,67 +84,67 @@
   text-transform: uppercase
   vertical-align: top
 
-#dialog .step .actions .button.yes,
-#dialog .step .actions .button.no,
-#dialog .step .actions .button.discuss,
-#dialog .step .actions .button.next,
-#dialog .step .actions .button.done
+#classify .dialog .step .actions .button.yes,
+#classify .dialog .step .actions .button.no,
+#classify .dialog .step .actions .button.discuss,
+#classify .dialog .step .actions .button.next,
+#classify .dialog .step .actions .button.done
   font-size: 17px
   height: 82px
   width: 82px
   line-height: 82px
 
-#dialog .step .actions .button.discuss
+#classify .dialog .step .actions .button.discuss
   background-position: -312px 0
   text-shadow: 0 -1px 0 #669900
 
-#dialog .step .actions .button.discuss:hover
+#classify .dialog .step .actions .button.discuss:hover
   background-position: -312px -82px
 
-#dialog .step .actions .button.discuss:active
+#classify .dialog .step .actions .button.discuss:active
   background-position: -312px -164px
 
-#dialog .step .actions .button.done
+#classify .dialog .step .actions .button.done
   background-position: -312px 0
   text-shadow: 0 -1px 0 #669900
 
-#dialog .step .actions .button.done:hover
+#classify .dialog .step .actions .button.done:hover
   background-position: -312px -82px
 
-#dialog .step .actions .button.done:active
+#classify .dialog .step .actions .button.done:active
   background-position: -312px -164px
 
-#dialog .step .actions .button.next
+#classify .dialog .step .actions .button.next
   background-position: -394px 0
   text-shadow: 0 -1px 0 #AA4400
 
-#dialog .step .actions .button.next:hover
+#classify .dialog .step .actions .button.next:hover
   background-position: -394px -82px
 
-#dialog .step .actions .button.next:active
+#classify .dialog .step .actions .button.next:active
   background-position: -394px -164px
 
-#dialog .step .actions .button.yes
+#classify .dialog .step .actions .button.yes
   background-position: -312px 0
   text-shadow: 0 -1px 0 #669900
 
-#dialog .step .actions .button.yes:hover
+#classify .dialog .step .actions .button.yes:hover
   background-position: -312px -82px
 
-#dialog .step .actions .button.yes:active
+#classify .dialog .step .actions .button.yes:active
   background-position: -312px -164px
 
-#dialog .step .actions .button.no
+#classify .dialog .step .actions .button.no
   background-position: -394px 0
   text-shadow: 0 -1px 0 #AA4400
 
-#dialog .step .actions .button.no:hover
+#classify .dialog .step .actions .button.no:hover
   background-position: -394px -82px
 
-#dialog .step .actions .button.no:active
+#classify .dialog .step .actions .button.no:active
   background-position: -394px -164px
 
-#dialog .step .actions .edit
+#classify .dialog .step .actions .edit
   width: 270px
   display: inline-block
   vertical-align: top
@@ -176,13 +152,13 @@
   *display: inline
   margin: 0 auto
 
-#dialog .step .actions .button.add
+#classify .dialog .step .actions .button.add
   font-size: 17px
   height: 40px
   width: 40px
   line-height: 40px
 
-#dialog .step .actions .button.transit
+#classify .dialog .step .actions .button.transit
   font-size: 14px
   height: 40px
   width: 40px
@@ -190,28 +166,28 @@
   margin-right: 10px
   margin-top: 3px
 
-#dialog .step .actions .button.add
+#classify .dialog .step .actions .button.add
   background-image: url("/images/sprites/add.png")
   text-shadow: 0 -1px 0 #0066AA
   margin-top: 3px
   color: white
 
-#dialog .step .actions .button.add:hover
+#classify .dialog .step .actions .button.add:hover
   background-image: url("/images/sprites/add_hover.png")
 
-#dialog .step .actions .button.add:active
+#classify .dialog .step .actions .button.add:active
   background-image: url("/images/sprites/add_active.png")
 
-#dialog .step .actions .button.transit
+#classify .dialog .step .actions .button.transit
   background-image: url("/images/sprites/transit_small.png")
   color: #666666
   display: none
 
-#dialog .step .actions .button.transit.focus
+#classify .dialog .step .actions .button.transit.focus
   background-image: url("/images/sprites/transit_selected_small.png")
   color: #0099CC
 
-#dialog .step .actions .button.transit .delete
+#classify .dialog .step .actions .button.transit .delete
   background: url("/images/sprites/css_sprites.png") no-repeat scroll -568px -161px transparent
   height: 62px
   left: 50%
@@ -221,7 +197,7 @@
   width: 53px
   display: none
 
-#dialog .step .actions .button.finish
+#classify .dialog .step .actions .button.finish
   display: block
   margin: 0 auto
   font-size: 12px
@@ -231,20 +207,20 @@
   background-position: -313px 0
   text-shadow: 0 -1px 0 #669900
 
-#dialog .step .actions .button.finish:hover
+#classify .dialog .step .actions .button.finish:hover
   background-position: -313px -82px
 
-#dialog .step .actions .button.finish:active
+#classify .dialog .step .actions .button.finish:active
   background-position: -313px -164px
 
-#dialog .long .actions .button .icon
+#classify .dialog .long .actions .button .icon
   background-color: transparent
   background-image: url("/images/sprites/css_sprites.png")
   background-repeat: no-repeat
   background-attachment: scroll
   display: block
 
-#dialog .long .actions .button .label
+#classify .dialog .long .actions .button .label
   display: none
   position: absolute
   top: 85px
@@ -259,91 +235,83 @@
   text-decoration: none
   text-shadow: 0 1px 0 #FFFFFF
 
-#dialog .long .actions .button:hover .label,
-#dialog .long .actions .button:active .label
+#classify .dialog .long .actions .button:hover .label,
+#classify .dialog .long .actions .button:active .label
   display: block
 
-#dialog .long .step2 .button.variable,
-#dialog .long .step2 .button.quiet,
-#dialog .long .step3 .button.regular,
-#dialog .long .step3 .button.pulsating,
-#dialog .long .step3 .button.irregular
+#classify .dialog .long .step2 .button.variable,
+#classify .dialog .long .step2 .button.quiet,
+#classify .dialog .long .step3 .button.regular,
+#classify .dialog .long .step3 .button.pulsating,
+#classify .dialog .long .step3 .button.irregular
   background-position: -312px 0
   color: #99CC00
   height: 82px
   width: 82px
 
-#dialog .long .step2 .button.variable:hover,
-#dialog .long .step2 .button.quiet:hover,
-#dialog .long .step3 .button.regular:hover,
-#dialog .long .step3 .button.pulsating:hover,
-#dialog .long .step3 .button.irregular:hover
+#classify .dialog .long .step2 .button.variable:hover,
+#classify .dialog .long .step2 .button.quiet:hover,
+#classify .dialog .long .step3 .button.regular:hover,
+#classify .dialog .long .step3 .button.pulsating:hover,
+#classify .dialog .long .step3 .button.irregular:hover
   background-position: -476px -82px
   color: #0099FF
 
-#dialog .long .step2 .button.variable:active,
-#dialog .long .step2 .button.quiet:active,
-#dialog .long .step3 .button.regular:active,
-#dialog .long .step3 .button.pulsating:active,
-#dialog .long .step3 .button.irregular:active
+#classify .dialog .long .step2 .button.variable:active,
+#classify .dialog .long .step2 .button.quiet:active,
+#classify .dialog .long .step3 .button.regular:active,
+#classify .dialog .long .step3 .button.pulsating:active,
+#classify .dialog .long .step3 .button.irregular:active
   background-position: -476px -164px
   color: #0099FF
 
-#dialog .long .step2 .actions .button.variable .icon
+#classify .dialog .long .step2 .actions .button.variable .icon
   background-position: -312px -246px
   height: 14px
   margin: 35px auto
   width: 34px
 
-#dialog .long .step2 .actions .button.quiet .icon
+#classify .dialog .long .step2 .actions .button.quiet .icon
   background-position: -347px -245px
   height: 6px
   margin: 35px auto
   width: 34px
 
-#dialog .long .step2 .button.dont_know
+#classify .dialog .long .step2 .button.dont_know
   background-position: -396px 0
   color: #FF6600
   height: 82px
   width: 82px
 
-#dialog .long .step2 .actions .button.dont_know .icon
+#classify .dialog .long .step2 .actions .button.dont_know .icon
   background-position: -382px -246px
   height: 15px
   margin: 35px auto
   width: 14px
 
-#dialog .long .step2 .button.dont_know:hover
+#classify .dialog .long .step2 .button.dont_know:hover
   background-position: -396px -82px
 
-#dialog .long .step2 .button.dont_know:active
+#classify .dialog .long .step2 .button.dont_know:active
   background-position: -396px -164px
 
-#dialog .long .step3 .actions .button.regular .icon
+#classify .dialog .long .step3 .actions .button.regular .icon
   background-image: url("/images/sprites/regular_curve.png")
   margin: 6px 6px
   height: 70px
   width: 70px
 
-#dialog .long .step3 .actions .button.pulsating .icon
+#classify .dialog .long .step3 .actions .button.pulsating .icon
   background-image: url("/images/sprites/pulsating_curve.png")
   height: 70px
   margin: 6px 6px
   width: 70px
 
-#dialog .long .step3 .actions .button.irregular .icon
+#classify .dialog .long .step3 .actions .button.irregular .icon
   background-position: -427px -247px
   height: 20px
   margin: 32px auto
   width: 34px
-
-.lightcurve #star_info
-  font-size: 13px
-  font-weight: lighter
-  position: absolute
-  right: 25px
-  top: 300px
-  width: 224px
 
 #transits
   height: 440px

@@ -14,7 +14,6 @@ window.t = (key) ->
 
   if not comp and console
     console.debug "No translation found for key: " + key
-    console.log cont
     return "N/A"
     
   comp

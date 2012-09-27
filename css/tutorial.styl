@@ -1,0 +1,267 @@
+
+#tutorial .dialog .step #help
+  background-attachment: scroll
+  background-color: transparent
+  background-image: url("/images/sprites/css_sprites.png")
+  background-position: -675px -219px
+  background-repeat: no-repeat
+  position: absolute
+  left: 50%
+  margin-left: -20px
+  top: 30px
+  color: #888888
+  display: block
+  font-size: 11px
+  height: 17px
+  line-height: 17px
+  text-align: center
+  text-decoration: none
+  text-transform: uppercase
+  width: 40px
+
+#tutorial .dialog .step
+  display: none
+  margin: 75px 0
+
+#tutorial .dialog .step .step_image
+  background-color: transparent
+  background-image: url("/images/sprites/css_sprites.png")
+  background-attachment: scroll
+  background-repeat: no-repeat
+  width: 40px
+  height: 9px
+  margin: 40px auto
+
+#tutorial .dialog .stepIntro .step_image
+  background-position: -143px -329px
+
+#tutorial .dialog .stepDescribe .step_image
+  background-position: -143px -339px
+
+#tutorial .dialog .stepAnnotate .step_image
+  background-position: -143px -349px
+
+#tutorial .dialog .stepShowTransits .step_image
+  background-position: -143px -359px
+  margin: 30px auto
+
+#tutorial .dialog .step .question
+  color: #333333
+  font-size: 21px
+  margin: 10px auto
+  text-align: center
+  text-shadow: 0 1px 0 #FFFFFF
+  width: 245px
+
+#tutorial .dialog .step .question.small
+  font-size: 17px
+  margin: 5px auto
+
+#tutorial .dialog .step .actions
+  width: 168px
+  margin: 15px auto
+  text-align: center
+
+#tutorial .dialog .stepAnnotate .actions
+  margin: 0px auto
+  width: 260px
+
+#tutorial .dialog .stepAnnotate .actions .button
+  margin: -5px
+
+#tutorial .dialog .step .actions .button
+  background-attachment: scroll
+  background-color: transparent
+  background-image: url("/images/sprites/css_sprites.png")
+  background-repeat: no-repeat
+  display: inline-block
+  position: relative
+  margin: 0 -9px
+  text-align: center
+  color: #ffffff
+  text-decoration: none
+  text-transform: uppercase
+  vertical-align: top
+
+#tutorial .dialog .step .actions .button.next,
+#tutorial .dialog .step .actions .button.finish,
+#tutorial .dialog .step .actions .button.start
+  font-size: 13px
+  height: 82px
+  width: 82px
+  line-height: 82px
+  background-position: -312px 0
+  text-shadow: 0 -1px 0 #669900
+
+#tutorial .dialog .step .actions .button.finish
+  display: block
+  margin: 0 auto
+
+#tutorial .dialog .step .actions .button.next:hover,
+#tutorial .dialog .step .actions .button.finish:hover,
+#tutorial .dialog .step .actions .button.start:hover
+  background-position: -312px -82px
+
+#tutorial .dialog .step .actions .button.next:active,
+#tutorial .dialog .step .actions .button.finish:active,
+#tutorial .dialog .step .actions .button.start:active
+  background-position: -312px -164px
+
+#tutorial .dialog .step .actions .edit
+  display: inline-block
+  vertical-align: top
+  zoom: 1
+  *display: inline
+  margin: 0 auto
+
+#tutorial .dialog .step .actions .button.add,
+#tutorial .dialog .step .actions .button.transit
+  font-size: 14px
+  height: 40px
+  width: 40px
+  line-height: 40px
+  margin-right: 10px
+  margin-top: 3px
+
+#tutorial .dialog .step .actions .button.add:hover
+  background-image: url("/images/sprites/add_hover.png")
+
+#tutorial .dialog .step .actions .button.add:active
+  background-image: url("/images/sprites/add_active.png")
+
+#tutorial .dialog .step .actions .button.transit
+  background-image: url("/images/sprites/transit_small.png")
+  color: #666666
+  display: none
+
+#tutorial .dialog .step .actions .button.add
+  background-image: url("/images/sprites/add.png")
+  text-shadow: 0 -1px 0 #0066AA
+  margin-top: 3px
+  color: white
+
+#tutorial .dialog .step .actions .button.transit.focus
+  background-image: url("/images/sprites/transit_selected_small.png")
+  color: #0099CC
+
+#tutorial .dialog .step .actions .button.transit .delete
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll -568px -161px transparent
+  height: 62px
+  left: 50%
+  margin-left: -25px
+  position: absolute
+  top: -40px
+  width: 53px
+  display: none
+
+#favorite_and_download a
+  color: white
+  text-decoration: none
+
+#favorite_and_download .separator
+  padding-left: 1px
+  background-color: #999999
+  margin: 0 10px
+  font-size: 10px
+
+#favorite_and_download .fav,
+#favorite_and_download .download
+  display: inline-block
+
+#favorite_and_download .fav
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll 0 -327px transparent
+  height: 12px
+  margin: 0 5px -1px 0
+  width: 14px
+
+#favorite_and_download .download
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll -14px -329px transparent
+  height: 9px
+  margin: 0 6px 0 1px
+  vertical-align: middle
+  width: 9px
+
+#transits
+  height: 440px
+  left: 50px
+  position: absolute
+  overflow: hidden
+  top: 5px
+  width: 580px
+  z-index: 10
+
+#transits .transit
+  border: 3px solid #FFCC00
+  background-color: rgba(255,255,255,0.1)
+  position: absolute
+  z-index: 15
+
+#transits .transit.focus
+  border-color: #0099CC
+
+#transits .transit .number
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll -312px -266px transparent
+  display: none
+  height: 20px
+  left: -11px
+  margin-top: -10px
+  position: absolute
+  text-align: center
+  top: 50%
+  width: 20px
+  color: black
+  line-height: 20px
+  font-family: Tahoma
+  font-size: 12px
+  font-weight: bold
+
+#transits .transit.focus .number
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll -332px -266px transparent
+
+#transits .transit .resize_width,
+#transits .transit .resize_height
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll -312px -266px transparent
+  display: none
+  position: absolute
+  width: 20px
+  height: 20px
+
+#transits .transit .resize_width
+  background-position: -372px -266px
+  margin-top: -10px
+  right: -12px
+  top: 50%
+
+#transits .transit .resize_height
+  background-position: -352px -266px
+  bottom: -11px
+  left: 50%
+  margin-left: -10px
+
+#transits .transit.focus .resize_width,
+#transits .transit.focus .resize_height
+  display: block
+
+.mag_glass
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll -705px -1px transparent
+  color: #333333
+  display: none
+  font-size: 15px
+  height: 170px
+  padding: 13px 10px
+  position: absolute
+  text-shadow: 0 1px 0 #EECC60
+  width: 152px
+  z-index: 20
+
+#mag_glass
+  top: 0px
+  left: 0px
+
+.spinner
+  margin-left: 390px
+  margin-top: 215px
+  z-index: 100
+  position: relative
+
+

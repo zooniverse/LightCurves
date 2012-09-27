@@ -1,7 +1,6 @@
 Spine = require('spine')
 
-LightcurveData = require 'models/lightcurveData'
-LightcurveMeta = require 'models/lightcurveMeta'
+Lightcurve = require 'models/lightcurve'
 
 class Viewer extends Spine.Controller
   
@@ -23,7 +22,9 @@ class Viewer extends Spine.Controller
 
     # Copied variables from stylus, fix in future
     @left_margin = 50
+    @right_margin = 10
     @top_padding = 5
+    @bottom_padding = 20
     
     @width ?= 670
     @height ?= 450
@@ -56,28 +57,24 @@ class Viewer extends Spine.Controller
     alert "click"
     # do stuff
     
-  loadData: (json, meta) =>
-    if not json or json.length <= 0 
-      alert(t('lightcurve.problem')) 
-      return
-    
-    $(".spinner").remove()
-    @lcData = new LightcurveData(data: json)
+  loadData: (lightcurve) =>    
+    $(".spinner")?.remove()
+    @lightcurve = lightcurve
     
     # Scale for focus area.
     @x_scale = d3.scale.linear() 
-      .domain([@lcData.start, @lcData.end])
+      .domain([@lightcurve.start, @lightcurve.end])
       .range([0, @width])    
     @y_scale = d3.scale.linear()
-      .domain([@lcData.ymin, @lcData.ymax])
+      .domain([@lightcurve.ymin, @lightcurve.ymax])
       .range([@h_graph, 0])
   
     # Scale for bottom area.
     @x_bottom = d3.scale.linear()
-      .domain([@lcData.start, @lcData.end])
+      .domain([@lightcurve.start, @lightcurve.end])
       .range([0, @width])
     @y_bottom = d3.scale.linear()
-      .domain([@lcData.ymin, @lcData.ymax])
+      .domain([@lightcurve.ymin, @lightcurve.ymax])
       .range([@h_bottom, 0])        
     
     # Chart axes, ticks, and labels
@@ -94,8 +91,8 @@ class Viewer extends Spine.Controller
       .tickSize(-@width, 0, 0)
 
     @svg = d3.select(@containerSelector).select("#graph_svg")
-      .attr("width", @width + @left_margin * 2)
-      .attr("height", @height + @top_padding + 20)
+      .attr("width", @width + @left_margin + @right_margin)
+      .attr("height", @height + @top_padding + @bottom_padding)
       
     @svg_xaxis = @svg.append("g")
       .attr("class", "chart-xaxis")
@@ -120,7 +117,7 @@ class Viewer extends Spine.Controller
     @bottom = @svg.append("g")
       .attr("class", "context")
       .attr("transform", "translate(" + @left_margin + "," + @h_to_context + ")")
-    @bottom.append("svg:path").attr("d", @lcLine(@lcData.data))
+    @bottom.append("svg:path").attr("d", @lcLine(@lightcurve.data))
     
     @bottomAxis = d3.svg.axis()
       .orient("bottom")
@@ -235,9 +232,10 @@ class Viewer extends Spine.Controller
     # calculate coords relative to canvas  
     [x, y] = d3.mouse(@canvas)
 
-    if @current_box # Make box permanent
+    if @current_box 
+      # Make box permanent
       d3.select("body").style("cursor", "auto")      
-      # TODO: cancel if box is too small
+      # TODO: cancel if box is too small (square size)
       
       d = @current_box.datum()
       d.dx = Math.abs(@x_scale.invert(x) - d.x)
@@ -395,28 +393,36 @@ class Viewer extends Spine.Controller
       box.select("rect.nw-resize")
         .attr("x", -half_w - adj)
         .attr("y", -half_h - adj)
+
+  animateZoom: (target_dom) =>
+    current_dom = @x_scale.domain()
+    [target_dom, scale] = @getZoomPanFix target_dom
+    return if current_dom[0] == target_dom[0] and current_dom[1] == target_dom[1]
+        
+    # FIXME: disable zoom and other events during this
+    gz = @graph_zoom
+    @svg.transition()
+      .duration(1000)
+      .tween "zoom", -> 
+          interp = d3.interpolate(current_dom, target_dom)
+          (t) -> gz interp(t)
   
   transitZoom: (d) =>
     # Stop a second box from being drawn
     d3.event.stopPropagation()
 
     # Arbitrary rule: scale transit to 1/7 of horz area
-    current_dom = @x_scale.domain()
-    box_w = 6 * d.dx
-    [target_dom, scale] = @getZoomPanFix [d.x - d.dx - box_w, d.x + d.dx + box_w]
 
-    return if current_dom[0] == target_dom[0] and current_dom[1] == target_dom[1]
-        
-    # FIXME: disable zoom and other events during this
-    gz = @graph_zoom
-    d3.transition()
-      .duration(1000)
-      .tween "zoom", -> 
-          interp = d3.interpolate(current_dom, target_dom)
-          (t) -> gz interp(t)
-        
+    box_w = 6 * d.dx
+    target_dom = [d.x - d.dx - box_w, d.x + d.dx + box_w]
+    @animateZoom target_dom
+    
   transitDrag: (d) =>
     [x, y] = [d3.event.x, d3.event.y]
+    # Don't allow transit to be dragged outside canvas
+    x = Math.max(0, Math.min(x, @width))
+    y = Math.max(0, Math.min(y, @h_graph))
+    
     d.x = @x_scale.invert x
     d.y = @y_scale.invert y
     @transits[d.num].attr("transform", "translate(" + x + "," + y + ")")
@@ -471,18 +477,18 @@ class Viewer extends Spine.Controller
     
     # Check if we would pan out if bounds, if so fix it
     dt = dom[1] - dom[0]
-    if dom[0] < @lcData.start
-      dom[0] = @lcData.start
+    if dom[0] < @lightcurve.start
+      dom[0] = @lightcurve.start
       dom[1] = dom[0] + dt 
-    if dom[1] > @lcData.end
-      dom[1] = @lcData.end
+    if dom[1] > @lightcurve.end
+      dom[1] = @lightcurve.end
       dom[0] = dom[1] - dt
-    if dom[0] < @lcData.start
-      dom[0] = @lcData.start
+    if dom[0] < @lightcurve.start
+      dom[0] = @lightcurve.start
   
     # Compute new zoom x-scale 
     # This can happen from above, or from drags without zooming 
-    extent = @lcData.end - @lcData.start
+    extent = @lightcurve.end - @lightcurve.start
     new_scale = extent / (dom[1] - dom[0])    
     
     # Don't allow zooming beyond max zoom
@@ -539,7 +545,7 @@ class Viewer extends Spine.Controller
     xs = @x_scale
     ys = @y_scale
     canvas = @canvas_2d
-    data = @lcData.data
+    data = @lightcurve.data
         
     canvas.clearRect(0, 0, @width, @h_graph)
     
@@ -568,7 +574,7 @@ class Viewer extends Spine.Controller
     xs = @x_scale
     ys = @y_scale
     canvas = @canvas_2d
-    data = @lcData.data
+    data = @lightcurve.data
     twopi = 2 * Math.PI
     
     i = -1
@@ -587,7 +593,7 @@ class Viewer extends Spine.Controller
     xs = @x_scale
     ys = @y_scale
     canvas = @canvas_2d
-    data = @lcData.data
+    data = @lightcurve.data
     twopi = 2 * Math.PI
     
     i = -1

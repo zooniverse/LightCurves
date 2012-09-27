@@ -1,7 +1,7 @@
 Spine = require('spine')
 
-LightcurveMeta = require 'models/lightcurveMeta'
-LightcurveData = require 'models/lightcurveData'
+Lightcurve = require 'models/lightcurve'
+
 Viewer = require 'controllers/viewer'
 
 class Sources extends Spine.Controller
@@ -20,7 +20,6 @@ class Sources extends Spine.Controller
     super
     @zooniverse_id = params.zooniverse_id
     @refresh()
-    @render()    
 
   deactivate: ->
     super
@@ -29,30 +28,19 @@ class Sources extends Spine.Controller
   refresh: =>
     return unless @isActive() and @zooniverse_id
     
-    jqxhr = LightcurveMeta.loadWithProxy @zooniverse_id
-                
-    jqxhr.success @loadLCMeta
-    jqxhr.error( -> alert "error getting proxied lightcurve json" ) # change to some error view  
+    @lightcurve = new Lightcurve(zooniverse_id: @zooniverse_id)
+    @lightcurve.fetchWithProxy @lcMetaLoaded, @lcDataLoaded    
   
   render: ->
     @html require('views/source')(@)
     @append @viewer
     @viewer.render()
   
-  loadLCMeta: (yql) =>
-    unless yql.query.results
-      alert("Failed to get metadata for " + @zooniverse_id)
-      return      
-      
-    json = $.parseJSON(yql.query.results.body.p)
-    @lightcurve = new LightcurveMeta(json.light_curve)
-        
-    LightcurveData.loadData @lightcurve.light_curve_url, @loadLCData
-    
+  lcMetaLoaded: =>
     @render()
     
-  loadLCData: (json) =>
-    @viewer.loadData(json, @lightcurve)
+  lcDataLoaded: =>
+    @viewer.loadData @lightcurve 
     
   round_float: (x, n) ->
     n = 0  unless parseInt(n)

@@ -1,0 +1,91 @@
+// Shared CSS for all controllers that use a lightcurve viewer
+
+.graph_background
+  -moz-border-radius: 4px
+  -webkit-border-radius: 4px
+  border-radius: 4px
+  background-color: rgba(0, 0, 0, .6)
+  position: absolute
+  left: 5px
+  top: 20px
+  width: 960px
+  height: 475px
+
+.lightcurve
+  display: inline-block
+  vertical-align: top
+  zoom: 1
+  *display: inline
+  width: 960px
+  height: 483px
+  position: relative
+  margin: 20px 0 0
+  padding-top: 20px
+
+.lightcurve .star_name
+  font-family: 'Myriad Pro', Arial
+  font-weight: lighter
+  color: #999999
+  top: -25px
+  left: 300px
+  position: absolute
+  
+.lightcurve .days_from
+  font-family: 'Myriad Pro', Arial
+  font-size: 13px
+  font-weight: lighter
+  color: #999999
+  text-transform: uppercase
+  position: absolute
+  top: 470px
+  left: 230px
+
+.lightcurve .dialog
+  background: url("/images/sprites/css_sprites.png") no-repeat scroll 0 0 transparent
+  height: 326px
+  overflow: hidden
+  position: absolute
+  right: -66px
+  top: -30px
+  width: 311px
+  z-index: 1
+  
+.lightcurve #favorite_and_download
+  color: #666666
+  font-size: 11px
+  font-weight: lighter
+  position: absolute
+  right: 38px
+  text-transform: uppercase
+  top: 452px
+
+.lightcurve #star_info
+  font-size: 13px
+  font-weight: lighter
+  position: absolute
+  right: 10px
+  top: 320px
+  width: 214px
+
+#star_info .name
+  font-size: 17px
+
+#star_info ul
+  overflow: hidden
+  line-height: 1.5
+  margin: 10px 0
+
+#star_info ul, .more_info
+  font-family: Arial
+
+#star_info ul .label
+  color: #535353
+  float: left
+  clear: left
+
+#star_info ul .value
+  float: right
+
+#star_info .more_info
+  color: white
+  

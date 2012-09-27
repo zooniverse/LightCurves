@@ -1,0 +1,128 @@
+<div class="graph_background"></div> 
+
+<div id="mag_glass" class='mag_glass'></div>
+
+<div class="dialog">
+  <div class="workflow">
+    <div class="step stepIntro">
+      <p class="question"><%= t('workflows.tutorial.workflow.questions.we_find_planets') %></p>
+      <div class="actions">
+        <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+          <%= t('workflows.tutorial.workflow.actions.next') %>
+        </a>
+      </div>
+    </div>
+
+    <div class="step stepDescribe">
+      <p class="question small"><%= t('workflows.tutorial.workflow.questions.as_the_planet') %></p>
+      <div class="actions">
+        <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+          <%= t('workflows.tutorial.workflow.actions.next') %>
+        </a>
+      </div>
+    </div>
+
+    <div class="step stepExample">
+      <p class="question">Transits</p>
+      <p class="question small">
+        Here's what a planet transit looks like. It appears as a sequence of dots that are lower than their surroundings.
+      </p>
+      <div class="actions">
+        <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+          <%= t('workflows.tutorial.workflow.actions.next') %>
+        </a>
+      </div>
+    </div>
+
+    <div class="step stepFalsePos">
+      <p class="question">False Positives</p>
+      <p class="question small">
+        This single low point is almost never a transit! Instead, it is probably caused by measurement error.
+        Don't be tricked into marking it!
+      </p>
+      <div class="actions">
+        <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+          <%= t('workflows.tutorial.workflow.actions.next') %>
+        </a>
+      </div>
+    </div>
+
+    <div class="step stepFlare">
+      <p class="question">Solar Flares</p>
+      <p class="question small">
+        Similarly, single or sequences of higher points are not transits, but are usually caused by solar flares or measurement errors.
+      </p>
+      <div class="actions">
+        <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+          <%= t('workflows.tutorial.workflow.actions.next') %>
+        </a>
+      </div>
+    </div>
+
+    <div class="step stepShowGaps">
+      <p class="question"><%= t('workflows.tutorial.workflow.questions.gaps') %></p>
+      <p class="question small"><%= t('workflows.tutorial.workflow.questions.gaps_small')%></p >
+      <div class="actions">
+        <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+          <%= t('workflows.tutorial.workflow.actions.next') %>
+        </a>
+      </div>
+    </div>
+
+    <div class="step stepZoomInst">
+    	<%# <a href="#" id="help">Help</a> %>
+      <p class="question small">You can use the bottom sliders or your mouse wheel to zoom, and drag to pan.</p>
+      <p class="question"><%= t('workflows.tutorial.workflow.questions.play') %></p>
+    	<p class="question small">
+    	  <%#= t('workflows.tutorial.workflow.questions.help_button')%>
+    	  The bottom panel will show the current zoom area.
+    	</p	>
+      <div class="actions">
+        <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+          <%= t('workflows.tutorial.workflow.actions.next') %>
+        </a>
+      </div>
+    </div>
+
+    <div class="step stepAnnotate">
+      <p class="question"><%= t('workflows.tutorial.workflow.questions.can_you_spot_transit') %></p>
+      <p class="question small">
+        Mark a transit by clicking twice on the graph. 
+        Click once to select the center of a transit, and move your mouse.
+        Click again to mark the height and width.</p>
+      <div class="actions">
+        <div class="edit">
+          <a class="button transit" href="#" title="0">0</a>
+          <%# <a class="button add" href="#" title="+">&nbsp;</a> %>
+        </div>
+        <a class="button finish" href="#" title="<%= t('workflows.tutorial.workflow.actions.finish') %>">
+          <%= t('workflows.tutorial.workflow.actions.finish') %>
+        </a>
+      </div>
+    </div>
+
+    <div class="step stepShowTransits">
+      <p class="question small"><%= t('workflows.tutorial.workflow.questions.did_you_spot') %></p>
+      <p class="question"><%= t('workflows.tutorial.workflow.questions.transit_locations') %></p>
+    	<p class="question small"><%= t('workflows.tutorial.workflow.questions.dont_worry')%></p	>
+      <div class="actions">
+        <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+          <%= t('workflows.tutorial.workflow.actions.next') %>
+        </a>
+      </div>
+    </div>
+  
+  
+    <div class="step stepFinal">
+      <p class="question"><%= t('workflows.tutorial.workflow.questions.final') %></p>
+      <p class="question small"><%= t('workflows.tutorial.workflow.questions.good_luck') %></p>
+      <div class="actions">
+        <a class="button finish" href="/classify" title="<%= t('workflows.tutorial.workflow.actions.finish') %>">
+          <%= t('workflows.tutorial.workflow.actions.finish') %>
+        </a>
+      </div>
+    </div>
+  
+  </div>
+</div>
+
