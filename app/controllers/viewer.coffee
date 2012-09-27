@@ -12,6 +12,9 @@ class Viewer extends Spine.Controller
     'click #zoom a': 'zoom'
     'mouseenter #zoom a': -> $("#yZoom_help").show()
     'mouseleave #zoom a': -> $("#yZoom_help").delay(1600).fadeOut 1600
+    
+    'mouseenter .context': -> $("#xZoom_help").show()
+    'mouseleave .context': -> $("#xZoom_help").delay(1600).fadeOut 1600
       
   constructor: ->
     super

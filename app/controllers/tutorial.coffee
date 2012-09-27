@@ -142,6 +142,6 @@ class Tutorial extends Spine.Controller
         
   stepFinal: (ev) -> 
     ev.preventDefault()
-    alert 'done'
+    @navigate '/classify', 'APH10154043'
     
 module.exports = Tutorial

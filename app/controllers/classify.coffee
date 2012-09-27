@@ -30,7 +30,7 @@ class Classify extends Spine.Controller
     @lightcurve.fetchWithProxy @lcMetaLoaded, @lcDataLoaded    
   
   render: ->
-    @html require('views/source')(@)
+    @html require('views/classify')(@)
     @append @viewer
     @viewer.render()
   
