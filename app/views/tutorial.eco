@@ -5,7 +5,25 @@
 <div class="dialog">
   <div class="workflow">
     <div class="step stepIntro">
-      <p class="question"><%= t('workflows.tutorial.workflow.questions.we_find_planets') %></p>
+      <p class="question">
+        Welcome to Planet Hunters!
+      </p>
+      <p class="question small">Click the 'NEXT' button to continue.</p>
+      <div class="actions">
+        <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+          <%= t('workflows.tutorial.workflow.actions.next') %>
+        </a>
+      </div>
+    </div>
+
+    <div class="step stepExposition">
+      <p class="question small">
+        The graph that you see is a 'light curve', a chart showing the brightness of a star.
+        This was measured by a telescope over about a month of time.
+      </p>
+      <p class="question small">
+        We can find new planets by looking at how the star's brightness changes.
+      </p>
       <div class="actions">
         <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
           <%= t('workflows.tutorial.workflow.actions.next') %>
@@ -14,7 +32,12 @@
     </div>
 
     <div class="step stepDescribe">
-      <p class="question small"><%= t('workflows.tutorial.workflow.questions.as_the_planet') %></p>
+      <p class="question small">
+      As a planet passes in front of the star and partially obscures it, the measured brightness drops.
+      </p>
+      <p class="question small">
+      These events are called 'transits' and show up as dips in the light curve.
+      </p>
       <div class="actions">
         <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
           <%= t('workflows.tutorial.workflow.actions.next') %>
@@ -25,7 +48,24 @@
     <div class="step stepExample">
       <p class="question">Transits</p>
       <p class="question small">
-        Here's what a planet transit looks like. It appears as a sequence of dots that are lower than their surroundings.
+        Here's what a planet transit looks like. When zoomed out, it looks like a 'stick' below the light curve.
+      </p>
+      <div class="actions">
+        <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+          <%= t('workflows.tutorial.workflow.actions.next') %>
+        </a>
+      </div>
+    </div>
+
+    <div class="step stepExampleZoom">
+      <p class="question">
+        Let's take a closer look.
+      </p>
+      <p class="question small">
+        We can see that the transit appears as a sequence of dots that are lower than their surroundings.
+      </p>
+      <p class="question small">
+        By zooming in, it's easier to see transits for smaller planets.
       </p>
       <div class="actions">
         <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
@@ -35,10 +75,11 @@
     </div>
 
     <div class="step stepFalsePos">
-      <p class="question">False Positives</p>
       <p class="question small">
-        This single low point is almost never a transit! Instead, it is probably caused by measurement error.
-        Don't be tricked into marking it!
+        Some things look like transits, but can fool you. For example, you may see a single dot below the light curve by itself.
+      </p>
+      <p class="question small">
+        This it is usually caused by natural measurement error in the telescope, and is not a transit.
       </p>
       <div class="actions">
         <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
@@ -50,7 +91,7 @@
     <div class="step stepFlare">
       <p class="question">Solar Flares</p>
       <p class="question small">
-        Similarly, single or sequences of higher points are not transits, but are usually caused by solar flares or measurement errors.
+        Similarly, single or sequences of higher points are not transits, but can be caused by solar flares or measurement errors.
       </p>
       <div class="actions">
         <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
@@ -71,11 +112,11 @@
 
     <div class="step stepZoomInst">
     	<%# <a href="#" id="help">Help</a> %>
-      <p class="question small">You can use the bottom sliders or your mouse wheel to zoom, and drag to pan.</p>
-      <p class="question"><%= t('workflows.tutorial.workflow.questions.play') %></p>
+      <p class="question small">You can use the bottom sliders or your mouse wheel to zoom, then drag the chart to pan.</p>
+      <p class="question small"><%= t('workflows.tutorial.workflow.questions.play') %></p>
     	<p class="question small">
     	  <%#= t('workflows.tutorial.workflow.questions.help_button')%>
-    	  The bottom panel will show the current zoom area.
+    	  The bottom panel will show the current zoom focus area. Try dragging it too!
     	</p	>
       <div class="actions">
         <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
@@ -87,14 +128,29 @@
     <div class="step stepAnnotate">
       <p class="question"><%= t('workflows.tutorial.workflow.questions.can_you_spot_transit') %></p>
       <p class="question small">
-        Mark a transit by clicking twice on the graph. 
+        You can mark a transit by clicking twice on the graph. 
+      </p>
+      <p class="question small">
         Click once to select the center of a transit, and move your mouse.
-        Click again to mark the height and width.</p>
+      </p>
+      <p class="question small">
+        Click again to mark the height and width.
+      </p>
+    </div>
+
+    <div class="step stepAnnotateCont">
+      <p class="question">Great!</p>
+      <p class="question small">
+        You've just marked your first transit. Wasn't that easy?
+      </p>
+      <p class="question small">
+        Keep searching, and click 'Finish' when you think you've found them all.
+      </p>
       <div class="actions">
         <div class="edit">
           <a class="button transit" href="#" title="0">0</a>
           <%# <a class="button add" href="#" title="+">&nbsp;</a> %>
-        </div>
+        </div>        
         <a class="button finish" href="#" title="<%= t('workflows.tutorial.workflow.actions.finish') %>">
           <%= t('workflows.tutorial.workflow.actions.finish') %>
         </a>
@@ -102,22 +158,24 @@
     </div>
 
     <div class="step stepShowTransits">
-      <p class="question small"><%= t('workflows.tutorial.workflow.questions.did_you_spot') %></p>
-      <p class="question"><%= t('workflows.tutorial.workflow.questions.transit_locations') %></p>
-    	<p class="question small"><%= t('workflows.tutorial.workflow.questions.dont_worry')%></p	>
+      <p class="question small"><%= t('workflows.tutorial.workflow.questions.transit_locations') %></p>
+      <p class="question"><%= t('workflows.tutorial.workflow.questions.did_you_spot') %></p>
+    	<p class="question small">
+    	  In most light curves, you won't see this many transits, and you often won't see any at all.
+    	  Planets are rare and hard to come by!
+    	</p>
       <div class="actions">
         <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
           <%= t('workflows.tutorial.workflow.actions.next') %>
         </a>
       </div>
-    </div>
-  
+    </div>  
   
     <div class="step stepFinal">
-      <p class="question"><%= t('workflows.tutorial.workflow.questions.final') %></p>
+      <p class="question">Now that you know what you're looking for, let's jump in to some real data!</p>
       <p class="question small"><%= t('workflows.tutorial.workflow.questions.good_luck') %></p>
       <div class="actions">
-        <a class="button finish" href="/classify" title="<%= t('workflows.tutorial.workflow.actions.finish') %>">
+        <a class="button finish" href="#" title="<%= t('workflows.tutorial.workflow.actions.finish') %>">
           <%= t('workflows.tutorial.workflow.actions.finish') %>
         </a>
       </div>

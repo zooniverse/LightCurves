@@ -14,27 +14,33 @@ class Tutorial extends Spine.Controller
     "#mag_glass": "mag_glass"
   
     ".dialog .stepIntro": "intro"
+    ".dialog .stepExposition": "exposition"
     ".dialog .stepDescribe": "describe"
     ".dialog .stepExample": "example"
+    ".dialog .stepExampleZoom": "exampleZoom"
     ".dialog .stepFalsePos": "falsePos"
     ".dialog .stepFlare": "flare"
-    ".dialog .stepAnnotate": "annotate"
-    ".dialog .stepShowTransits": "showTransits"
     ".dialog .stepShowGaps": "showGaps"
     ".dialog .stepZoomInst": "zoomInst"
+    ".dialog .stepAnnotate": "annotate"
+    ".dialog .stepAnnotateCont": "annotateCont"
+    ".dialog .stepShowTransits": "showTransits"
     ".dialog .stepFinal": "final"
 
   events:
-    "click .dialog .stepIntro .button": 'stepIntro'
-    "click .dialog .stepDescribe .button": 'stepDescribe'
-    "click .dialog .stepExample .button": 'stepExample'
-    "click .dialog .stepFalsePos .button": 'stepFalsePos'
-    "click .dialog .stepFlare .button": 'stepFlare'
-    "click .dialog .stepAnnotate .finish": 'stepAnnotate'
-    "click .dialog .stepShowTransits .button": 'stepShowTransits'
-    "click .dialog .stepShowGaps .button": 'stepShowGaps'
-    "click .dialog .stepZoomInst .button": 'stepZoomInst'
-    "click .dialog .stepFinal .finish": 'stepFinal'
+    "click .dialog .stepIntro .button": 'finishIntro'
+    "click .dialog .stepExposition .button": 'finishExposition'
+    "click .dialog .stepDescribe .button": 'finishDescribe'
+    "click .dialog .stepExample .button": 'finishExample'
+    "click .dialog .stepExampleZoom .button": 'finishExampleZoom'
+    "click .dialog .stepFalsePos .button": 'finishFalsePos'
+    "click .dialog .stepFlare .button": 'finishFlare'
+    "click .dialog .stepShowGaps .button": 'finishShowGaps'
+    "click .dialog .stepZoomInst .button": 'finishZoomInst'
+#    "click .dialog .stepAnnotate .finish": 'finishAnnotate'
+    "click .dialog .stepAnnotateCont .finish": 'finishAnnotateCont'
+    "click .dialog .stepShowTransits .button": 'finishShowTransits'
+    "click .dialog .stepFinal .finish": 'finishFinal'
 
   constructor: ->
     super
@@ -43,6 +49,8 @@ class Tutorial extends Spine.Controller
     @viewer = new Viewer
       containerSelector: "#tutorial.lightcurve"
       allow_annotations: false
+      allow_zoom: false
+      addTransitCallback: => @finishAnnotate()
 
   active: (params) ->
     super
@@ -75,24 +83,39 @@ class Tutorial extends Spine.Controller
     @viewer.loadData @lightcurve
     
   nextStep: (ev, element) ->
-    ev.preventDefault()
-    $(ev.target).closest('.step').fadeOut(-> element.fadeIn())
+    ev.preventDefault?()
+    $(ev.target || ev).closest('.step').fadeOut(-> element.fadeIn())
     
-  stepIntro: (ev) ->     
+  finishIntro: (ev) ->     
+    @nextStep ev, @exposition    
+
+  finishExposition: (ev) ->     
     @nextStep ev, @describe    
 
-  stepDescribe: (ev) -> 
+  finishDescribe: (ev) -> 
     @nextStep ev, @example
-    @viewer.animateZoom [11.2, 14.6]
+    
     @mag_glass.show()
     .html(t('workflows.tutorial.workflow.questions.in_planet_hunters'))
     .animate
-      top: 150
-      left: 300,
+      top: 160
+      left: 215,
       1000
 
-  stepExample: (ev) -> 
+  finishExample: (ev) -> 
+    @nextStep ev, @exampleZoom
+    
+    @viewer.animateZoom [11.6, 15.1]
+    @mag_glass.show()
+    .html('A transit shows up as a sequence of low dots when you zoom in')
+    .animate
+      top: 150
+      left: 215,
+      1000
+
+  finishExampleZoom: (ev) -> 
     @nextStep ev, @falsePos
+    
     @viewer.animateZoom [9.6, 13.2]
     @mag_glass.show()
     .html("This is probably not a transit, and just a measurement error")
@@ -101,18 +124,20 @@ class Tutorial extends Spine.Controller
       left: 280,
       1000
 
-  stepFalsePos: (ev) -> 
+  finishFalsePos: (ev) -> 
     @nextStep ev, @flare
+    
     @viewer.animateZoom [3, 10]
     @mag_glass.show()
     .html("Don't mistake these solar flares for transits!")
     .animate
       top: -50
-      left: 290,
+      left: 285,
       1000
   
-  stepFlare: (ev) ->
+  finishFlare: (ev) ->
     @nextStep ev, @showGaps
+    
     @viewer.animateZoom [17.4, 24.2]
     @mag_glass.show()
     .html(t('workflows.tutorial.workflow.questions.gaps_tooltip'))
@@ -121,26 +146,34 @@ class Tutorial extends Spine.Controller
       left: 290,
       1000
 
-  stepShowGaps: (ev) -> 
+  finishShowGaps: (ev) -> 
     @nextStep ev, @zoomInst
-    @viewer.animateZoom [0, 35]
+    
     @mag_glass.hide()
+    @viewer.animateZoom [0, 35]
+    @viewer.setZoomEnabled true
+    @viewer.show_tooltips()
 
-  stepZoomInst: (ev) -> 
+  finishZoomInst: (ev) -> 
     @nextStep ev, @annotate
+    
     @viewer.animateZoom [0, 35]
     @viewer.allow_annotations = true
     
-  stepAnnotate: (ev) -> 
+  finishAnnotate: (ev) -> 
+    @nextStep @annotate, @annotateCont
+  
+  finishAnnotateCont: (ev) ->  
     @nextStep ev, @showTransits
+    
     @viewer.animateZoom [0, 35]
     @viewer.show_simulations = true
-    @viewer.graph_zoom()
+    @viewer.redraw()
     
-  stepShowTransits: (ev) -> 
+  finishShowTransits: (ev) -> 
     @nextStep ev, @final
         
-  stepFinal: (ev) -> 
+  finishFinal: (ev) -> 
     ev.preventDefault()
     @navigate '/classify', 'APH10154043'
     

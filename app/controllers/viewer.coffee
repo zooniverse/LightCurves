@@ -9,19 +9,23 @@ class Viewer extends Spine.Controller
     
   events:
     # Why are these not working? Something to do with d3, probably.
-    'click #zoom a': 'zoom'
-    'mouseenter #zoom a': -> $("#yZoom_help").show()
+    'click #zoom a': 'zoomYAxis'
+    'mouseenter #zoom a': => return unless @allow_zoom; $("#yZoom_help").show()
     'mouseleave #zoom a': -> $("#yZoom_help").delay(1600).fadeOut 1600
     
-    'mouseenter .context': -> $("#xZoom_help").show()
+    'mouseenter .context': => return unless @allow_zoom; $("#xZoom_help").show()
     'mouseleave .context': -> $("#xZoom_help").delay(1600).fadeOut 1600
       
   constructor: ->
     super
     @el.attr("id", "graph")
     @containerSelector ?= ".lightcurve"
+    
+    # Default options, also can be set dynamically
     @allow_annotations ?= true
     @show_simulations ?= false
+    @allow_zoom ?= true
+    @addTransitCallback ?= null
 
     # Copied variables from stylus, fix in future
     @left_margin = 50
@@ -54,8 +58,39 @@ class Viewer extends Spine.Controller
     # TODO: Better job of clean things up 
     @canvas_2d?.clearRect(0, 0, @width, @h_graph)
     @svg?.empty()
+
+  setZoomEnabled: (b) ->
+    @allow_zoom = b
+    
+    # Functions called by behaviors    
+    if @allow_zoom
+      @zoom_graph_beh
+        .on("zoom", @redraw)        
+      @drag_leftdot_beh
+        .on("drag", @leftDotDrag)
+      @drag_context_beh
+        .on("drag", @contextDrag)
+      @drag_rightdot_beh
+        .on("drag", @rightDotDrag)
+        
+      @context_drag.style("cursor": null) 
+      @context_leftDot.style("cursor": null) 
+      @context_rightDot.style("cursor": null)   
+    else
+      @zoom_graph_beh
+        .on("zoom", null)        
+      @drag_leftdot_beh
+        .on("drag", null)
+      @drag_context_beh
+        .on("drag", null)
+      @drag_rightdot_beh
+        .on("drag", null)
+        
+      @context_drag.style("cursor": "auto") 
+      @context_leftDot.style("cursor": "auto") 
+      @context_rightDot.style("cursor": "auto") 
   
-  zoom: (ev) ->
+  zoomYAxis: (ev) ->
     ev.preventDefault()
     alert "click"
     # do stuff
@@ -162,30 +197,19 @@ class Viewer extends Spine.Controller
       .attr("transform", "translate(" + @left_margin + "," + @top_padding + ")")
 
     # Defined behaviors
-    @zoom_graph = d3.behavior.zoom()
+    @zoom_graph_beh = d3.behavior.zoom()
       .x(@x_scale)
       .scaleExtent([1, @max_zoom])
       
-    drag_context = d3.behavior.drag().origin(Object)
-    drag_leftdot = d3.behavior.drag().origin(Object)    
-    drag_rightdot = d3.behavior.drag().origin(Object)
+    @drag_context_beh = d3.behavior.drag().origin(Object)
+    @drag_leftdot_beh = d3.behavior.drag().origin(Object)    
+    @drag_rightdot_beh = d3.behavior.drag().origin(Object)
     
     @drag_transit = d3.behavior.drag().origin((d) => x: @x_scale(d.x), y: @y_scale(d.y))
     # Null is actually better than an explicit origin accessor, to preserve cursor consistency
     @resize_transit = d3.behavior.drag().origin(null)
     @resize_transit_ew = d3.behavior.drag().origin(null)
     @resize_transit_ns = d3.behavior.drag().origin(null)
-
-    # Functions called by behaviors
-    @zoom_graph
-      .on("zoom", @graph_zoom)
-      
-    drag_leftdot
-      .on("drag", @leftDotDrag)
-    drag_context
-      .on("drag", @contextDrag)
-    drag_rightdot
-      .on("drag", @rightDotDrag)
 
     @drag_transit
       .on("drag", @transitDrag)
@@ -198,32 +222,35 @@ class Viewer extends Spine.Controller
 
     # What we do with the behaviors    
     @svg
-      .call(@zoom_graph)
+      .call(@zoom_graph_beh)
       .on("click", @plot_click )
       .on("mousemove", @plot_mousemove )
       .on("mousedown.drag", @plot_drag )
       .on("touchstart.drag", @plot_drag )
       
     @context_drag
-      .call(drag_context)
+      .call(@drag_context_beh)
     @context_leftDot
-      .call(drag_leftdot)
+      .call(@drag_leftdot_beh)
     @context_rightDot
-      .call(drag_rightdot)
+      .call(@drag_rightdot_beh)
     
     # Global event detectors
     d3.select("body")      
       .on("mouseup.drag", @mouseup)
       .on("touchend.drag", @mouseup)      
-        
-    @show_tooltips()
+
+
+    @setZoomEnabled @allow_zoom        
+    @show_tooltips() if @allow_zoom
         
     # Call draw function once 
     # it runs fast and can be called for changes/animations
-    @graph_zoom()
+    @redraw()
     
   # When plot is dragged
   plot_drag: -> 
+    return unless @allow_zoom
     d3.select("body").style("cursor", "move")
   
   # When mouse is released     
@@ -317,6 +344,7 @@ class Viewer extends Spine.Controller
       @transits.push @current_box
       @redraw_transits @current_box
       @current_box = null
+      @addTransitCallback?()
     else
       d3.select("body").style("cursor", "crosshair")
       @current_box = @svg_annotations
@@ -336,6 +364,12 @@ class Viewer extends Spine.Controller
   plot_mousemove: =>
     return unless @current_box
     [x, y] = d3.mouse(@canvas)
+
+    # Cancel the box and fix the cursor        
+    if x < 0 or x > @width or y < 0 or y > @h_graph
+      d3.select("body").style("cursor", "auto")
+      @current_box.remove()
+      @current_box = null
 
     if @current_box
       d = @current_box.datum()      
@@ -403,12 +437,12 @@ class Viewer extends Spine.Controller
     return if current_dom[0] == target_dom[0] and current_dom[1] == target_dom[1]
         
     # FIXME: disable zoom and other events during this
-    gz = @graph_zoom
+    rd = @redraw
     @svg.transition()
       .duration(1000)
       .tween "zoom", -> 
           interp = d3.interpolate(current_dom, target_dom)
-          (t) -> gz interp(t)
+          (t) -> rd interp(t)
   
   transitZoom: (d) =>
     # Stop a second box from being drawn
@@ -453,7 +487,7 @@ class Viewer extends Spine.Controller
     dom[1] = @x_bottom.invert(d.x + context_width)
     @x_scale.domain(dom)
     
-    @graph_zoom()    
+    @redraw()    
 
   # Drag left dot (zoom) with limit on right
   leftDotDrag: (d) =>
@@ -463,7 +497,7 @@ class Viewer extends Spine.Controller
     dom[0] = @x_bottom.invert d.x
     @x_scale.domain dom
     
-    @graph_zoom()
+    @redraw()
 
   # Drag right dot (zoom) with limit on left
   rightDotDrag: (d) =>
@@ -473,7 +507,7 @@ class Viewer extends Spine.Controller
     dom[1] = @x_bottom.invert d.x
     @x_scale.domain dom
     
-    @graph_zoom()
+    @redraw()
 
   getZoomPanFix: (dom) ->
     # Make consistent scales and zoom to enforce panning extent
@@ -503,13 +537,13 @@ class Viewer extends Spine.Controller
     
     [dom, new_scale]
 
-  graph_zoom: (target_dom) =>
+  redraw: (target_dom) =>
     target_dom ?= @x_scale.domain()
     [dom, new_scale] = @getZoomPanFix target_dom
 
     # Set domain and fix zoom translation vector accordingly
     @x_scale.domain(dom)
-    @zoom_graph
+    @zoom_graph_beh
       .scale( new_scale )
       .translate([ -@x_bottom(dom[0]) * new_scale , 0])
     
