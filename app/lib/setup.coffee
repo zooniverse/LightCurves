@@ -8,13 +8,17 @@ require('spine/lib/ajax')
 require('spine/lib/manager')
 require('spine/lib/route')
 
-require 'lib/jquery.jsonp-2.4.0.min'
-
-# Something is wrong with d3, we just take the js file
 require 'd3/d3.v2'
-#require 'd3'
+
+###
+Other stuff not in NPM...
+###
+require 'lib/jquery.jsonp-2.4.0.min'
 
 # Temporary hack for getting EN strings.
 require 'lib/en'
 require 'lib/simple_trans'
 
+# For more responsiveness in laggy browsers (I'm looking at you, Firefox!)
+# FIXME: This causes IE to use the fallback, which is sub-optimal
+require 'lib/animframe'

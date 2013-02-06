@@ -487,7 +487,7 @@ class Viewer extends Spine.Controller
     dom[1] = @x_bottom.invert(d.x + context_width)
     @x_scale.domain(dom)
     
-    @redraw()    
+    requestAnimFrame => @redraw()    
 
   # Drag left dot (zoom) with limit on right
   leftDotDrag: (d) =>
@@ -497,7 +497,7 @@ class Viewer extends Spine.Controller
     dom[0] = @x_bottom.invert d.x
     @x_scale.domain dom
     
-    @redraw()
+    requestAnimFrame => @redraw()
 
   # Drag right dot (zoom) with limit on left
   rightDotDrag: (d) =>
@@ -507,7 +507,7 @@ class Viewer extends Spine.Controller
     dom[1] = @x_bottom.invert d.x
     @x_scale.domain dom
     
-    @redraw()
+    requestAnimFrame => @redraw()
 
   getZoomPanFix: (dom) ->
     # Make consistent scales and zoom to enforce panning extent
