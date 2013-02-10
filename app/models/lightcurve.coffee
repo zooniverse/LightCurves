@@ -14,20 +14,24 @@ class Lightcurve extends Spine.Model
   constructor: ->
     super
   
-  fetch: (metaCallback, dataCallback) =>
-    unless @tutorial 
-      alert 'Fetching of light curves via ajax still needs to be implemented.'
-      return
-    
+  fetch: (metaCallback, dataCallback) =>    
     @dataCallback = dataCallback
       
-    $.jsonp
-      url: '/tutorial_light_curve.json'
-      callback: 'light_curve_data'
-      error: -> alert(t('lightcurve.failed_to_get') + 'tutorial')
-      success: @loadData
-    
-    metaCallback()  
+    unless @tutorial
+      @metaCallback = metaCallback
+      jqxhr = $.getJSON('http://' + window.location.hostname + ':8080/light_curves/' + @zooniverse_id)
+      jqxhr.success (data) =>
+        unless data
+          alert("Failed to get metadata for " + @zooniverse_id)
+          return
+        @fetchData data
+    else
+      $.jsonp
+        url: '/tutorial_light_curve.json'
+        callback: 'light_curve_data'
+        error: -> alert(t('lightcurve.failed_to_get') + 'tutorial')
+        success: @loadData    
+      metaCallback()  
     
   fetchWithProxy: (metaCallback, dataCallback) =>
     if @tutorial
@@ -37,7 +41,7 @@ class Lightcurve extends Spine.Model
     @metaCallback = metaCallback
     @dataCallback = dataCallback
     
-    uri = "http://www.planethunters.org/light_curves/next_light_curve?lightcurve_id=#{ @zooniverse_id }&format=json"      
+    uri = "http://www.planethunters.org/light_curves/next_light_curve?id=#{ @zooniverse_id }&format=json"      
     
     jqxhr = $.getJSON \
       "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" \
@@ -78,8 +82,12 @@ class Lightcurve extends Spine.Model
     # FIXME: Only minor preprocessing done here.
     i = 0
     while i < @data.length
-      if @data[i].y > 0             
-        point = @data[i]
+      point = @data[i]
+      if point.y > 0
+        # Fix textual values in synthetics.
+        point.y = point.y * 1
+        point.dy = point.dy * 1
+        point.tr = Math.floor(point.tr)
         
         ymax = point.y if point.y > ymax
         ymin = point.y if point.y < ymin

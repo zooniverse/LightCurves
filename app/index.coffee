@@ -10,7 +10,7 @@ class App extends Spine.Controller
     
     @main = new Main
     
-    Spine.Route.setup()
-
+    Spine.Route.setup()    
+    
 module.exports = App
     

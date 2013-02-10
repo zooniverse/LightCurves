@@ -1,8 +1,9 @@
 Spine = require('spine')
 
 Lightcurve = require 'models/lightcurve'
-
 Viewer = require 'controllers/viewer'
+
+TSClient = require 'turkserver-js-client'
 
 class Classify extends Spine.Controller
   className: "lightcurve"
@@ -13,11 +14,18 @@ class Classify extends Spine.Controller
     
     @viewer = new Viewer
       containerSelector: "#classify.lightcurve"
+      
+      
 
   active: (params) ->
     super
-    @zooniverse_id = params.zooniverse_id
-    @refresh()
+    if params.zooniverse_id
+      @zooniverse_id = params.zooniverse_id
+      @refresh()
+    else
+      console.log TSClient.params
+      TSClient.init "planethunters", ""
+      console.log "test"
 
   deactivate: ->
     super

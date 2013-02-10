@@ -29,7 +29,7 @@ class Sources extends Spine.Controller
     return unless @isActive() and @zooniverse_id
     
     @lightcurve = new Lightcurve(zooniverse_id: @zooniverse_id)
-    @lightcurve.fetchWithProxy @lcMetaLoaded, @lcDataLoaded    
+    @lightcurve.fetch @lcMetaLoaded, @lcDataLoaded    
   
   render: ->
     @html require('views/source')(@)

@@ -25,6 +25,7 @@ class Main extends Spine.Stack
   routes:
     '/': 'home'
     '/tutorial': 'tutorial'
+    '/classify': 'classify'
     '/classify/:zooniverse_id': 'classify'
     '/sources/:zooniverse_id': 'sources'
     
