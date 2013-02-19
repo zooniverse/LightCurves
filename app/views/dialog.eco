@@ -1,0 +1,22 @@
+
+<div class="workflow">  
+
+  <div class="actions">
+    <div class="edit">
+      <a class="button transit" href="#" title="0">0</a>
+      <%# <a class="button add" href="#" title="+">&nbsp;</a> %>
+    </div>
+    
+    <a class="button red prev" href="#" title="Back">
+      Back
+    </a>
+    <a class="button next" href="#" title="<%= t('workflows.tutorial.workflow.actions.next') %>">
+      <%= t('workflows.tutorial.workflow.actions.next') %>
+    </a>                
+    <a class="button finish" href="#" title="<%= t('workflows.tutorial.workflow.actions.finish') %>">
+      <%= t('workflows.tutorial.workflow.actions.finish') %>
+    </a>    
+  </div>
+
+</div>
+

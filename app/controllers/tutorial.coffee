@@ -1,5 +1,6 @@
 Spine = require('spine')
 
+Dialog = require 'controllers/dialog'
 Lightcurve = require 'models/lightcurve'
 
 Viewer = require 'controllers/viewer'
@@ -12,45 +13,44 @@ class Tutorial extends Spine.Controller
 
   elements:
     "#mag_glass": "mag_glass"
-  
-    ".dialog .stepIntro": "intro"
-    ".dialog .stepExposition": "exposition"
-    ".dialog .stepDescribe": "describe"
-    ".dialog .stepExample": "example"
-    ".dialog .stepExampleZoom": "exampleZoom"
-    ".dialog .stepFalsePos": "falsePos"
-    ".dialog .stepFlare": "flare"
-    ".dialog .stepShowGaps": "showGaps"
-    ".dialog .stepZoomInst": "zoomInst"
-    ".dialog .stepAnnotate": "annotate"
-    ".dialog .stepAnnotateCont": "annotateCont"
-    ".dialog .stepShowTransits": "showTransits"
-    ".dialog .stepFinal": "final"
+    
+    ".dialog .button.prev": "buttonPrev"
+    ".dialog .button.next": "buttonNext"
 
-  events:
-    "click .dialog .stepIntro .button": 'finishIntro'
-    "click .dialog .stepExposition .button": 'finishExposition'
-    "click .dialog .stepDescribe .button": 'finishDescribe'
-    "click .dialog .stepExample .button": 'finishExample'
-    "click .dialog .stepExampleZoom .button": 'finishExampleZoom'
-    "click .dialog .stepFalsePos .button": 'finishFalsePos'
-    "click .dialog .stepFlare .button": 'finishFlare'
-    "click .dialog .stepShowGaps .button": 'finishShowGaps'
-    "click .dialog .stepZoomInst .button": 'finishZoomInst'
-#    "click .dialog .stepAnnotate .finish": 'finishAnnotate'
-    "click .dialog .stepAnnotateCont .finish": 'finishAnnotateCont'
-    "click .dialog .stepShowTransits .button": 'finishShowTransits'
-    "click .dialog .stepFinal .finish": 'finishFinal'
+  events:    
+    "click .dialog .button.prev": 'clickPrev'
+    "click .dialog .button.next": 'clickNext'
 
   constructor: ->
     super
     @el.attr('id', 'tutorial')
     
+    @stepIndex = 0
+    
+    @dialog = new Dialog
+      tutorial: true
     @viewer = new Viewer
       containerSelector: "#tutorial.lightcurve"
       allow_annotations: false
       allow_zoom: false
-      addTransitCallback: => @finishAnnotate()
+      dialog: @dialog
+      addTransitCallback: => @clickNext() # TODO: needs fixing
+
+    @steps = [
+      ['stepIntro', @intro],
+      ['stepExposition', @exposition],
+      ['stepDescribe', @describe],
+      ['stepExample', @example],
+      ['stepExampleZoom', @exampleZoom],
+      ['stepFalsePos', @falsePos],
+      ['stepFlare', @flare],
+      ['stepShowGaps', @showGaps],
+      ['stepZoomInst', @zoomInst],
+      ['stepAnnotate', @annotate],
+      ['stepAnnotateCont', @annotateCont],
+      ['stepShowTransits', @showTransits],
+      ['stepFinal', @final]
+    ] 
 
   active: (params) ->
     super
@@ -69,53 +69,70 @@ class Tutorial extends Spine.Controller
   
   render: ->
     @html require('views/tutorial')(@)
+    @append @dialog
     @append @viewer
+    
     @viewer.render()
+    @dialog.render()
     
-    @workflow_container = @el.find(".dialog .workflow")
-    
-    @workflow_container.find(".stepIntro").fadeIn('fast')
+    @showStep()
   
   lcMetaLoaded: =>
     @render()
     
   lcDataLoaded: =>
     @viewer.loadData @lightcurve
+  
+  teardownStep: ->
+    stepclass = @steps[@stepIndex][0]
     
-  nextStep: (ev, element) ->
-    ev.preventDefault?()
-    $(ev.target || ev).closest('.step').fadeOut(-> element.fadeIn())
+    @dialog.el.find(".workflow .#{stepclass}").hide()
+    # .fadeOut(-> element.fadeIn())    
+  
+  showStep: -> 
+    stepclass = @steps[@stepIndex][0]
     
-  finishIntro: (ev) ->     
-    @nextStep ev, @exposition    
+    @dialog.el.find(".workflow .#{stepclass}").fadeIn('fast')
+    @steps[@stepIndex][1]?()
+    
+  clickPrev: (ev, element) ->
+    ev?.preventDefault()
+    @teardownStep()
+    @stepIndex -= 1
+    @showStep()    
+    
+  clickNext: (ev, element) ->
+    ev?.preventDefault()
+    @teardownStep()
+    @stepIndex += 1
+    @showStep()
+    
+  intro: =>     
 
-  finishExposition: (ev) ->     
-    @nextStep ev, @describe    
+  exposition: =>     
 
-  finishDescribe: (ev) -> 
-    @nextStep ev, @example
-    
+  describe: =>
+    @mag_glass.hide() 
+
+  example: => 
+    @viewer.animateZoom [0, 35]
     @mag_glass.show()
     .html(t('workflows.tutorial.workflow.questions.in_planet_hunters'))
     .animate
       top: 160
       left: 215,
       1000
-
-  finishExample: (ev) -> 
-    @nextStep ev, @exampleZoom
     
+  exampleZoom: => 
     @viewer.animateZoom [11.6, 15.1]
     @mag_glass.show()
     .html('A transit shows up as a sequence of low dots when you zoom in')
     .animate
       top: 150
       left: 215,
-      1000
+      1000    
 
-  finishExampleZoom: (ev) -> 
-    @nextStep ev, @falsePos
-    
+  falsePos: => 
     @viewer.animateZoom [9.6, 13.2]
     @mag_glass.show()
     .html("This is probably not a transit, and just a measurement error")
@@ -123,10 +140,8 @@ class Tutorial extends Spine.Controller
       top: 150
       left: 280,
       1000
-
-  finishFalsePos: (ev) -> 
-    @nextStep ev, @flare
-    
+      
+  flare: =>
     @viewer.animateZoom [3, 10]
     @mag_glass.show()
     .html("Don't mistake these solar flares for transits!")
@@ -134,47 +149,47 @@ class Tutorial extends Spine.Controller
       top: -50
       left: 285,
       1000
-  
-  finishFlare: (ev) ->
-    @nextStep ev, @showGaps
     
+  showGaps: => 
     @viewer.animateZoom [17.4, 24.2]
     @mag_glass.show()
     .html(t('workflows.tutorial.workflow.questions.gaps_tooltip'))
     .animate
       top: 100
       left: 290,
-      1000
-
-  finishShowGaps: (ev) -> 
-    @nextStep ev, @zoomInst
+      1000    
     
+    @viewer.setZoomEnabled false    
+    
+  zoomInst: =>     
     @mag_glass.hide()
     @viewer.animateZoom [0, 35]
     @viewer.setZoomEnabled true
     @viewer.show_tooltips()
-
-  finishZoomInst: (ev) -> 
-    @nextStep ev, @annotate
     
+    @dialog.backNextMode()
+        
+  annotate: =>     
     @viewer.animateZoom [0, 35]
     @viewer.allow_annotations = true
+        
+    @dialog.hideButtons()
+
+  annotateCont: =>  
+    @viewer.show_simulations = false
+    @viewer.redraw()
     
-  finishAnnotate: (ev) -> 
-    @nextStep @annotate, @annotateCont
-  
-  finishAnnotateCont: (ev) ->  
-    @nextStep ev, @showTransits
-    
+    @dialog.editMode()
+        
+  showTransits: => 
     @viewer.animateZoom [0, 35]
     @viewer.show_simulations = true
     @viewer.redraw()
     
-  finishShowTransits: (ev) -> 
-    @nextStep ev, @final
+    @dialog.backNextMode()
         
-  finishFinal: (ev) -> 
-    ev.preventDefault()
-    @navigate '/classify', 'APH10154043'
+  final: => 
+    @dialog.backFinishMode()
+    # @navigate '/classify', 'APH10154043'
     
 module.exports = Tutorial

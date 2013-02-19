@@ -1,5 +1,6 @@
 Spine = require('spine')
 
+Dialog = require 'controllers/dialog'
 Lightcurve = require 'models/lightcurve'
 Viewer = require 'controllers/viewer'
 
@@ -12,11 +13,11 @@ class Classify extends Spine.Controller
     super
     @el.attr('id', 'classify')
     
+    @dialog = new Dialog
     @viewer = new Viewer
       containerSelector: "#classify.lightcurve"
-      
-      
-
+      dialog: @dialog
+            
   active: (params) ->
     super
     if params.zooniverse_id
@@ -35,7 +36,7 @@ class Classify extends Spine.Controller
     return unless @isActive() and @zooniverse_id
     
     @lightcurve = new Lightcurve(zooniverse_id: @zooniverse_id)
-    @lightcurve.fetchWithProxy @lcMetaLoaded, @lcDataLoaded    
+    @lightcurve.fetch @lcMetaLoaded, @lcDataLoaded    
   
   render: ->
     @html require('views/classify')(@)
@@ -47,10 +48,5 @@ class Classify extends Spine.Controller
     
   lcDataLoaded: =>
     @viewer.loadData @lightcurve 
-    
-  round_float: (x, n) ->
-    n = 0  unless parseInt(n)
-    return false  unless parseFloat(x)
-    Math.round(x * Math.pow(10, n)) / Math.pow(10, n)
     
 module.exports = Classify

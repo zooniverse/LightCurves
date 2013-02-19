@@ -25,6 +25,7 @@ class Viewer extends Spine.Controller
     @allow_annotations ?= true
     @show_simulations ?= false
     @allow_zoom ?= true
+    @dialog ?= null
     @addTransitCallback ?= null
 
     # Copied variables from stylus, fix in future
