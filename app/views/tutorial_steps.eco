@@ -95,15 +95,11 @@
   <p class="question small">
     Keep searching, and click 'Finish' when you think you've found them all.
   </p>
-  <div class="actions">
-     
-
-  </div>
 </div>
 
 <div class="step stepShowTransits">
-  <p class="question small"><%= t('workflows.tutorial.workflow.questions.transit_locations') %></p>
   <p class="question"><%= t('workflows.tutorial.workflow.questions.did_you_spot') %></p>
+  <p class="question small"><%= t('workflows.tutorial.workflow.questions.transit_locations') %></p>
 	<p class="question small">
 	  In most light curves, you won't see this many transits, and you often won't see any at all.
 	  Planets are rare and hard to come by!
@@ -113,5 +109,4 @@
 <div class="step stepFinal">
   <p class="question">Now that you know what you're looking for, let's jump in to some real data!</p>
   <p class="question small"><%= t('workflows.tutorial.workflow.questions.good_luck') %></p>
-
 </div>

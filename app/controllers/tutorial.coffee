@@ -20,6 +20,7 @@ class Tutorial extends Spine.Controller
   events:    
     "click .dialog .button.prev": 'clickPrev'
     "click .dialog .button.next": 'clickNext'
+    "click .dialog .button.finish": 'clickFinish'
 
   constructor: ->
     super
@@ -34,7 +35,7 @@ class Tutorial extends Spine.Controller
       allow_annotations: false
       allow_zoom: false
       dialog: @dialog
-      addTransitCallback: => @clickNext() # TODO: needs fixing
+      addTransitCallback: => @clickNext() if @steps[@stepIndex][0] is 'stepAnnotate'
     @dialog.viewer = @viewer      
 
     @steps = [
@@ -108,6 +109,13 @@ class Tutorial extends Spine.Controller
     @stepIndex += 1
     @showStep()
     
+  clickFinish: (ev, element) ->
+    ev?.preventDefault()
+    if @stepIndex < @steps.length - 1
+      @clickNext()
+    else
+      @navigate '/classify', 'APH10154043'
+    
   intro: =>     
 
   exposition: =>     
@@ -167,6 +175,7 @@ class Tutorial extends Spine.Controller
     @viewer.animateZoom [0, 35]
     @viewer.setZoomEnabled true
     @viewer.show_tooltips()
+    @viewer.allow_annotations = false
     
     @dialog.backNextMode()
         
@@ -174,7 +183,7 @@ class Tutorial extends Spine.Controller
     @viewer.animateZoom [0, 35]
     @viewer.allow_annotations = true
         
-    @dialog.hideButtons()
+    @dialog.backOnlyMode()
 
   annotateCont: =>  
     @viewer.show_simulations = false
@@ -191,6 +200,5 @@ class Tutorial extends Spine.Controller
         
   final: => 
     @dialog.backFinishMode()
-    # @navigate '/classify', 'APH10154043'
     
 module.exports = Tutorial

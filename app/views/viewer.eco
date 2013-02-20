@@ -1,15 +1,15 @@
 
 <img src="images/spinner.gif" class="spinner">
 
-<div id="zoom">
+<div class="zoom">
   <a class="more" href="#"></a>
 </div>
 
-<canvas id="graph_canvas"></canvas>
-<svg id="graph_svg"</svg>
+<canvas class="graph_canvas"></canvas>
+<svg class="graph_svg"</svg>
 
-<div id="yZoom_help"><%=t('lightcurve.y_zoom_help')%></div>
-<div id="xZoom_help"><%=t('lightcurve.x_zoom_help')%></div>
-<div id="drag_help"><%=t('lightcurve.drag_help')%></div>
+<div class="yZoom_help"><%=t('lightcurve.y_zoom_help')%></div>
+<div class="xZoom_help"><%=t('lightcurve.x_zoom_help')%></div>
+<div class="drag_help"><%=t('lightcurve.drag_help')%></div>
 
 

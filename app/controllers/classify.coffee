@@ -40,10 +40,10 @@ class Classify extends Spine.Controller
     @lightcurve.fetch @lcMetaLoaded, @lcDataLoaded    
   
   render: ->
-    @html require('views/classify')(@)
+    @append require('views/classify')(@)
     @append @dialog
     @append @viewer
-    
+
     @viewer.render()
     @dialog.render()
     

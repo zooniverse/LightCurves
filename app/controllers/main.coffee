@@ -5,14 +5,15 @@ Tutorial = require 'controllers/tutorial'
 Classify = require 'controllers/classify'
 Sources = require 'controllers/sources'
 
+Payment = require 'controllers/payment'
+
 class Main extends Spine.Stack
-  el: "#content"  
   className: "main stack"
 
   constructor: ->
-    # remove browser warnings before calling super
-    $(@el).empty()
     super
+    # remove browser warning
+    $(@el).children("h3").remove()
 
   controllers:
     home: Home

@@ -3,6 +3,7 @@ Spine = require('spine')
 Lightcurve = require 'models/lightcurve'
 
 class Viewer extends Spine.Controller
+  className: "graph"
   
   elements:
     '#zoom': 'zoomBtn'
@@ -18,8 +19,6 @@ class Viewer extends Spine.Controller
       
   constructor: ->
     super
-    @el.attr("id", "graph")
-    @containerSelector ?= ".lightcurve"
     
     # Default options, also can be set dynamically
     @allow_annotations ?= true
@@ -129,7 +128,8 @@ class Viewer extends Spine.Controller
       .ticks(@n_yticks)
       .tickSize(-@width, 0, 0)
 
-    @svg = d3.select(@containerSelector).select("#graph_svg")
+    graph = d3.select(@el.context)
+    @svg = graph.select(".graph_svg")
       .attr("width", @width + @left_margin + @right_margin)
       .attr("height", @height + @top_padding + @bottom_padding)
       
@@ -142,7 +142,7 @@ class Viewer extends Spine.Controller
       .attr("transform", "translate(" + @left_margin + "," + @top_padding + ")")
 
     # Size canvas and position at right spot relative to SVG - done in CSS
-    @canvas = d3.select(@containerSelector).select("#graph_canvas")   
+    @canvas = graph.select(".graph_canvas")   
       .attr("width", @width)
       .attr("height", @h_graph)
     .node()
@@ -494,7 +494,7 @@ class Viewer extends Spine.Controller
   transitResize: (d) =>
     d.dx = Math.abs(@x_scale.invert(d3.event.x) - @x_scale.invert(0))
     d.dy = Math.abs(@y_scale.invert(d3.event.y) - @y_scale.invert(0))
-    @redraw_transits @transits[d.num]
+    @redraw_transits @transits[d.num-1]
 
   transitResizeEW: (d) =>
     d.dx = Math.abs(@x_scale.invert(d3.event.x) - @x_scale.invert(0))
