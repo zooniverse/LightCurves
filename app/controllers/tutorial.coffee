@@ -35,6 +35,7 @@ class Tutorial extends Spine.Controller
       allow_zoom: false
       dialog: @dialog
       addTransitCallback: => @clickNext() # TODO: needs fixing
+    @dialog.viewer = @viewer      
 
     @steps = [
       ['stepIntro', @intro],

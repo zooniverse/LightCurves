@@ -1,6 +1,12 @@
 
 <div class="workflow">  
 
+  <div class="step classify">
+    <p class="question small">
+      Mark transits by clicking once to select the center, and clicking again to mark the height and width.
+    </p>
+  </div>
+
   <div class="actions">
     <div class="edit">
       <a class="button transit" href="#" title="0">0</a>

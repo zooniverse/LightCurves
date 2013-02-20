@@ -25,6 +25,7 @@ class Lightcurve extends Spine.Model
           alert("Failed to get metadata for " + @zooniverse_id)
           return
         @fetchData data
+      jqxhr.error => alert("Failed to get metadata for " + @zooniverse_id)
     else
       $.jsonp
         url: '/tutorial_light_curve.json'

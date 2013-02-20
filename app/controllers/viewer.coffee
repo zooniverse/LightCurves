@@ -241,7 +241,6 @@ class Viewer extends Spine.Controller
       .on("mouseup.drag", @mouseup)
       .on("touchend.drag", @mouseup)      
 
-
     @setZoomEnabled @allow_zoom        
     @show_tooltips() if @allow_zoom
         
@@ -271,7 +270,13 @@ class Viewer extends Spine.Controller
       d = @current_box.datum()
       d.dx = Math.abs(@x_scale.invert(x) - d.x)
       d.dy = Math.abs(@y_scale.invert(y) - d.y)
-      d.num = @transits.length
+      
+      # Find least unused number for this box    
+      d.num = $.inArray(undefined, @transits)
+      if d.num < 0
+        d.num = @transits.length + 1
+      else
+        d.num += 1
       
       @current_box
         .attr("class", "transit")
@@ -341,11 +346,17 @@ class Viewer extends Spine.Controller
         .attr("width", @resize_half_width * 2)
         .attr("height", @resize_half_width * 2)
         .call(@resize_transit)
-
-      @transits.push @current_box
-      @redraw_transits @current_box
+      
+      @transits[d.num-1] = @current_box      
+      @redraw_transits @current_box      
       @current_box = null
+      
+      @dialog?.addTransit(d.num)
+      # @transitZoom(d)
+      @dialog?.highlightButton(d.num)
+      
       @addTransitCallback?()
+      
     else
       d3.select("body").style("cursor", "crosshair")
       @current_box = @svg_annotations
@@ -378,6 +389,19 @@ class Viewer extends Spine.Controller
       d.dy = Math.abs(@y_scale.invert(y) - d.y)
       
       @redraw_transits @current_box
+
+  focusTransit: (number) ->
+    transit = @transits[number-1]
+    return unless transit
+    
+    @transitZoom(transit.datum())
+  
+  removeTransit: (number) ->
+    transit = @transits[number-1]
+    return unless transit
+    
+    transit.remove()
+    @transits[number-1] = undefined
 
   redraw_transits: (selection) =>
     selection ?= @svg_annotations.selectAll("g")
@@ -447,7 +471,9 @@ class Viewer extends Spine.Controller
   
   transitZoom: (d) =>
     # Stop a second box from being drawn
-    d3.event.stopPropagation()
+    if d3.event
+      d3.event.stopPropagation()      
+      @dialog?.highlightButton d.num
 
     # Arbitrary rule: scale transit to 1/7 of horz area
 
@@ -463,7 +489,7 @@ class Viewer extends Spine.Controller
     
     d.x = @x_scale.invert x
     d.y = @y_scale.invert y
-    @transits[d.num].attr("transform", "translate(" + x + "," + y + ")")
+    @transits[d.num-1].attr("transform", "translate(" + x + "," + y + ")")
     
   transitResize: (d) =>
     d.dx = Math.abs(@x_scale.invert(d3.event.x) - @x_scale.invert(0))
@@ -472,11 +498,11 @@ class Viewer extends Spine.Controller
 
   transitResizeEW: (d) =>
     d.dx = Math.abs(@x_scale.invert(d3.event.x) - @x_scale.invert(0))
-    @redraw_transits @transits[d.num]
+    @redraw_transits @transits[d.num-1]
     
   transitResizeNS: (d) =>
     d.dy = Math.abs(@y_scale.invert(d3.event.y) - @y_scale.invert(0))
-    @redraw_transits @transits[d.num]
+    @redraw_transits @transits[d.num-1]
       
   # Drag context (pan) with boundaries
   contextDrag: (d) =>

@@ -17,6 +17,7 @@ class Classify extends Spine.Controller
     @viewer = new Viewer
       containerSelector: "#classify.lightcurve"
       dialog: @dialog
+    @dialog.viewer = @viewer
             
   active: (params) ->
     super
@@ -40,8 +41,14 @@ class Classify extends Spine.Controller
   
   render: ->
     @html require('views/classify')(@)
+    @append @dialog
     @append @viewer
+    
     @viewer.render()
+    @dialog.render()
+    
+    @dialog.editMode()
+    @dialog.el.find(".step.classify").show()
   
   lcMetaLoaded: =>
     @render()

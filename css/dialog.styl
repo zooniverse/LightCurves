@@ -1,8 +1,20 @@
+.dialog .workflow
+  padding-top: 40px
+
 .dialog .step
   display: none
 
-.dialog .workflow
-  padding-top: 50px
+.dialog .step .question
+  color: #333333
+  font-size: 21px
+  margin: 10px auto
+  text-align: center
+  text-shadow: 0 1px 0 #FFFFFF
+  width: 245px
+
+.dialog .step .question.small
+  font-size: 17px
+  margin: 10px auto
 
 .dialog .actions
   width: 168px
@@ -10,11 +22,9 @@
   text-align: center
 
 .dialog .actions .edit
-  width: 270px
-  display: inline-block
+  display: block
   vertical-align: top
   zoom: 1
-  *display: inline
   margin: 0 auto
 
 .dialog .actions .button
@@ -24,7 +34,6 @@
   background-repeat: no-repeat
   display: inline-block
   position: relative
-  margin: 0 -9px
   text-align: center
   color: #ffffff
   text-decoration: none
@@ -61,8 +70,8 @@
   width: 40px
   line-height: 40px
   background-image: url("/images/sprites/add.png")
+  background-position: 0 0
   text-shadow: 0 -1px 0 #0066AA
-  margin-top: 3px
   color: white
   
 .dialog .actions .button.add:hover
@@ -72,13 +81,11 @@
   background-image: url("/images/sprites/add_active.png")  
 
 .dialog .actions .button.transit
-  font-size: 14px
   height: 40px
   width: 40px
   line-height: 40px
-  margin-right: 10px
-  margin-top: 3px
   background-image: url("/images/sprites/transit_small.png")
+  background-position: 0 0
   color: #666666
   display: none
 
