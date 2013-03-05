@@ -2,6 +2,8 @@ Spine = require('spine')
 
 Lightcurve = require 'models/lightcurve'
 
+Network = require 'lib/network'
+
 class Viewer extends Spine.Controller
   className: "graph"
   
@@ -16,6 +18,22 @@ class Viewer extends Spine.Controller
     
     'mouseenter .context': => return unless @allow_zoom; $("#xZoom_help").show()
     'mouseleave .context': -> $("#xZoom_help").delay(1600).fadeOut 1600
+  
+  # Settings
+  
+  # Copied variables from stylus, fix in future
+  left_margin: 50
+  right_margin: 10
+  top_padding: 5
+  bottom_padding: 20
+  
+  # Graph settings
+  n_xticks: 10
+  n_yticks: 6
+  n_contextticks: 7
+  
+  # Stuff for marking transits  
+  resize_half_width: 3
       
   constructor: ->
     super
@@ -26,12 +44,6 @@ class Viewer extends Spine.Controller
     @allow_zoom ?= true
     @dialog ?= null
     @addTransitCallback ?= null
-
-    # Copied variables from stylus, fix in future
-    @left_margin = 50
-    @right_margin = 10
-    @top_padding = 5
-    @bottom_padding = 20
     
     @width ?= 670
     @height ?= 450
@@ -41,23 +53,22 @@ class Viewer extends Spine.Controller
     
     @h_to_context = @top_padding + @height - @h_bottom
           
-    @n_xticks = 10
-    @n_yticks = 6
-    @n_contextticks = 7
-      
-    # Stuff for marking transits  
-    @resize_half_width = 3
-
+    # Reset data structures
     @transits = []
     @current_box = null
+    @resize_box = null
     
   render: =>    
     @html require('views/viewer')(@)          
   
   teardown: -> 
-    # TODO: Better job of clean things up 
+    # TODO: Better job of cleaning things up 
     @canvas_2d?.clearRect(0, 0, @width, @h_graph)
     @svg?.empty()
+    
+    @transits = []
+    @current_box = null
+    @resize_box = null
 
   setZoomEnabled: (b) ->
     @allow_zoom = b
@@ -214,12 +225,16 @@ class Viewer extends Spine.Controller
 
     @drag_transit
       .on("drag", @transitDrag)
+      .on("dragend", @editTransit)
     @resize_transit
       .on("drag", @transitResize)
+      .on("dragend", @editTransit)
     @resize_transit_ew
       .on("drag", @transitResizeEW)
+      .on("dragend", @editTransit)
     @resize_transit_ns
       .on("drag", @transitResizeNS)
+      .on("dragend", @editTransit)
 
     # What we do with the behaviors    
     @svg
@@ -271,7 +286,8 @@ class Viewer extends Spine.Controller
       d.dx = Math.abs(@x_scale.invert(x) - d.x)
       d.dy = Math.abs(@y_scale.invert(y) - d.y)
       
-      # Find least unused number for this box    
+      # Find least unused number for this box
+      # TODO: why do we need to empty other viewers to make sure this works properly?
       d.num = $.inArray(undefined, @transits)
       if d.num < 0
         d.num = @transits.length + 1
@@ -355,7 +371,8 @@ class Viewer extends Spine.Controller
       # @transitZoom(d)
       @dialog?.highlightButton(d.num)
       
-      @addTransitCallback?()
+      @addTransitCallback?()      
+      Network.addTransit(d)
       
     else
       d3.select("body").style("cursor", "crosshair")
@@ -390,6 +407,9 @@ class Viewer extends Spine.Controller
       
       @redraw_transits @current_box
 
+  editTransit: (d) ->
+    Network.editTransit d
+
   focusTransit: (number) ->
     transit = @transits[number-1]
     return unless transit
@@ -402,6 +422,7 @@ class Viewer extends Spine.Controller
     
     transit.remove()
     @transits[number-1] = undefined
+    Network.removeTransit(transit.datum())
 
   redraw_transits: (selection) =>
     selection ?= @svg_annotations.selectAll("g")
@@ -632,6 +653,9 @@ class Viewer extends Spine.Controller
     # Draw dots
     canvas.lineWidth = 0
     if @show_simulations then @drawDotsSimul() else @drawDotsNormal()
+    
+    # Reset inactivity timer, if necessary
+    Network.resetInactivity()
 
   # Faster when we don't have to draw transits
   drawDotsNormal: ->

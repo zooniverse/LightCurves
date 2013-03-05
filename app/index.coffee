@@ -5,6 +5,8 @@ Spine = require('spine')
 Header = require 'controllers/header'
 Main = require 'controllers/main'
 
+Network = require 'lib/network'
+
 class App extends Spine.Controller
   constructor: ->
     super
@@ -14,9 +16,11 @@ class App extends Spine.Controller
     
     @main = new Main
       el: "#content"
+
+    Network.init(@header.payment)
     
-    Spine.Route.setup()    
-    @header.active()
+    Spine.Route.setup()
+    @header.active()    
     
 module.exports = App
     

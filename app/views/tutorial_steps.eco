@@ -6,8 +6,9 @@
 </div>
 
 <div class="step stepExposition">
+  <p class="question">Light curves</p>
   <p class="question small">
-    The graph that you see is a 'light curve', a chart showing the brightness of a star.
+    The chart that you see is a 'light curve', a graph showing the brightness of a star.
     This was measured by a telescope over about a month of time.
   </p>
   <p class="question small">
@@ -16,6 +17,7 @@
 </div>
 
 <div class="step stepDescribe">
+  <p class="question">Transits</p>
   <p class="question small">
   As a planet passes in front of the star and partially obscures it, the measured brightness drops.
   </p>
@@ -25,7 +27,6 @@
 </div>
 
 <div class="step stepExample">
-  <p class="question">Transits</p>
   <p class="question small">
     Here's what a planet transit looks like. When zoomed out, it looks like a 'stick' below the light curve.
   </p>

@@ -20,6 +20,8 @@ class Sources extends Spine.Controller
     super
     @zooniverse_id = params.zooniverse_id
     @refresh()
+    
+    @viewer.active()    
 
   deactivate: ->
     super
@@ -34,6 +36,7 @@ class Sources extends Spine.Controller
   render: ->
     @html require('views/source')(@)
     @append @viewer
+    
     @viewer.render()
   
   lcMetaLoaded: =>

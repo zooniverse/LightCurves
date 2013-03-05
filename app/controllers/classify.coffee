@@ -4,10 +4,15 @@ Dialog = require 'controllers/dialog'
 Lightcurve = require 'models/lightcurve'
 Viewer = require 'controllers/viewer'
 
-TSClient = require 'turkserver-js-client'
+Network = require 'lib/network'
 
 class Classify extends Spine.Controller
   className: "lightcurve"
+  
+  events: 
+    "click .dialog .button.finish": (ev) -> 
+      ev.preventDefault()
+      Network.finishTask()
   
   constructor: ->
     super
@@ -21,13 +26,13 @@ class Classify extends Spine.Controller
             
   active: (params) ->
     super
+    
+    @dialog.active()
+    @viewer.active()
+    
     if params.zooniverse_id
-      @zooniverse_id = params.zooniverse_id
+      @zooniverse_id = params.zooniverse_id    
       @refresh()
-    else
-      console.log TSClient.params
-      TSClient.init "planethunters", ""
-      console.log "test"
 
   deactivate: ->
     super
@@ -40,7 +45,7 @@ class Classify extends Spine.Controller
     @lightcurve.fetch @lcMetaLoaded, @lcDataLoaded    
   
   render: ->
-    @append require('views/classify')(@)
+    @html require('views/classify')(@)
     @append @dialog
     @append @viewer
 

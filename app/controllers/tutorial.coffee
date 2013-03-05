@@ -57,6 +57,9 @@ class Tutorial extends Spine.Controller
   active: (params) ->
     super
     @refresh()
+    
+    @dialog.active()
+    @viewer.active()    
 
   deactivate: ->
     super

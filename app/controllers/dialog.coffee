@@ -1,5 +1,7 @@
 Spine = require('spine')
 
+Network = require 'lib/network'
+
 class Dialog extends Spine.Controller
   className: "dialog"
 
@@ -21,7 +23,8 @@ class Dialog extends Spine.Controller
     
   active: ->
     super
-    @render()
+    # @render()
+    @delegateEvents()
     
   render: ->
     @html require('views/dialog')(@)          

@@ -16,6 +16,4 @@ class Header extends Spine.Controller
     @append @payment
     @payment.render()
     
-    setInterval @payment.updatePay, 1000
-    
 module.exports = Header

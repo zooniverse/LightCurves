@@ -17,10 +17,7 @@ class Payment extends Spine.Controller
   render: ->
     @html require('views/payment')
     
-  updatePay: =>
-    currentTime = new Date().getTime()
-    
-    @paymentAmount.html( Util.round_float((currentTime - @startTime) / 1000 / 60 * 0.1, 2) )
-    
+  updatePay: (amount) =>    
+    @paymentAmount.html( Util.round_float(amount, 2) )    
     
 module.exports = Payment

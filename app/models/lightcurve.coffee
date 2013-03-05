@@ -1,5 +1,7 @@
 Spine = require('spine')
 
+Network = require 'lib/network'
+
 Source = require 'models/source'
 
 class Lightcurve extends Spine.Model
@@ -19,7 +21,7 @@ class Lightcurve extends Spine.Model
       
     unless @tutorial
       @metaCallback = metaCallback
-      jqxhr = $.getJSON('http://' + window.location.hostname + ':8080/light_curves/' + @zooniverse_id)
+      jqxhr = $.getJSON('http://' + Network.serverport + '/light_curves/' + @zooniverse_id)
       jqxhr.success (data) =>
         unless data
           alert("Failed to get metadata for " + @zooniverse_id)
