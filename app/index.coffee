@@ -16,7 +16,7 @@ class App extends Spine.Controller
     
     @main = new Main
       el: "#content"
-
+    
     Network.init(@header.payment)
     
     Spine.Route.setup()

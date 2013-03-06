@@ -3,7 +3,7 @@ Spine = require('spine')
 class Home extends Spine.Controller
 
   events:
-    "click .start_hunting .button": "start"
+    "click .start_hunting .big-button": "start"
 
   constructor: ->
     super

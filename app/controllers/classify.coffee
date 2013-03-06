@@ -26,17 +26,18 @@ class Classify extends Spine.Controller
             
   active: (params) ->
     super
-    
+            
     @dialog.active()
-    @viewer.active()
-    
+    @viewer.active()  
+
     if params.zooniverse_id
       @zooniverse_id = params.zooniverse_id    
       @refresh()
-
+      
   deactivate: ->
     super
-    @viewer?.teardown()
+    Network.setViewer(null)
+    @viewer?.teardown()    
   
   refresh: =>
     return unless @isActive() and @zooniverse_id
@@ -59,6 +60,9 @@ class Classify extends Spine.Controller
     @render()
     
   lcDataLoaded: =>
-    @viewer.loadData @lightcurve 
+    @viewer.loadData @lightcurve
+    
+    # On reload: can't draw annotations until this loads    
+    Network.setViewer(@viewer)
     
 module.exports = Classify

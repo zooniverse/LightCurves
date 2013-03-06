@@ -1,1 +1,20 @@
-EXIT SURVEY
+
+
+<h2>Thank you for your work! We appreciate your comments to help us improve this task.</h2>
+
+<form>
+
+<p>What do you think of the tutorial, and the interface? What confused you?</p>
+<textarea rows="5" cols="100" id="uiComments"></textarea>
+
+<p>Briefly explain how you approached finding planets. Did you consider the effects of your payment?</p>
+<textarea rows="5" cols="100" id="strategyComments"></textarea>
+
+<p>If you experienced any bugs, in the task, please write them below.</p>
+<textarea rows="5" cols="100" id="bugComments"></textarea>
+
+<div style="width: 300px">
+  <a class="big-button" id="submitTask" href="#">Submit the Task</a>
+</div>
+</form>
+

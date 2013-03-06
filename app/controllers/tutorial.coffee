@@ -1,9 +1,11 @@
 Spine = require('spine')
 
 Dialog = require 'controllers/dialog'
+Viewer = require 'controllers/viewer'
+
 Lightcurve = require 'models/lightcurve'
 
-Viewer = require 'controllers/viewer'
+Network = require 'lib/network'
 
 # Tutorial controller
 # Shows a bunch of features on the tutorial lightcurve
@@ -57,9 +59,10 @@ class Tutorial extends Spine.Controller
   active: (params) ->
     super
     @refresh()
-    
+            
     @dialog.active()
     @viewer.active()    
+    Network.startTutorial()
 
   deactivate: ->
     super
@@ -117,7 +120,7 @@ class Tutorial extends Spine.Controller
     if @stepIndex < @steps.length - 1
       @clickNext()
     else
-      @navigate '/classify', 'APH10154043'
+      Network.finishTutorial()
     
   intro: =>     
 

@@ -1,8 +1,8 @@
 Spine = require('spine')
 
-Lightcurve = require 'models/lightcurve'
-
 Network = require 'lib/network'
+
+Lightcurve = require 'models/lightcurve'
 
 class Viewer extends Spine.Controller
   className: "graph"
@@ -106,7 +106,10 @@ class Viewer extends Spine.Controller
     alert "click"
     # do stuff
     
-  loadData: (lightcurve) =>    
+  loadData: (lightcurve) =>
+    # Destroy old data, if any
+    @teardown()
+    
     $(".spinner")?.remove()
     @lightcurve = lightcurve
     
@@ -294,74 +297,7 @@ class Viewer extends Spine.Controller
       else
         d.num += 1
       
-      @current_box
-        .attr("class", "transit")
-
-      # Center dot  
-      @current_box
-      .append("svg:circle")
-        .attr("class", "transit-center")
-        .attr("r", 2)
-      # Top circle and label
-      @current_box
-      .append("svg:circle")
-        .attr("class", "transit-label")
-        .attr("r", 10)        
-      @current_box
-      .append("svg:text")
-        .attr("class", "transit-text")
-        .attr("text-anchor", "middle")
-        .text((d) -> d.num)
-      # Drag and resize handles
-      @current_box
-        .call(@drag_transit)
-        .on("click", @transitZoom)
-              
-      @current_box
-      .append("svg:rect") # Top handle
-        .attr("class", "n-resize")
-        .attr("height", @resize_half_width * 2)
-        .call(@resize_transit_ns)
-      @current_box
-      .append("svg:rect") # Bottom handle
-        .attr("class", "s-resize")
-        .attr("height", @resize_half_width * 2)
-        .call(@resize_transit_ns)
-      @current_box
-      .append("svg:rect") # Right handle
-        .attr("class", "e-resize")
-        .attr("width", @resize_half_width * 2)
-        .call(@resize_transit_ew)
-      @current_box
-      .append("svg:rect") # Left handle
-        .attr("class", "w-resize")
-        .attr("width", @resize_half_width * 2)
-        .call(@resize_transit_ew)
-
-      @current_box
-      .append("svg:rect") # Top right handle
-        .attr("class", "ne-resize")
-        .attr("width", @resize_half_width * 2)
-        .attr("height", @resize_half_width * 2)
-        .call(@resize_transit)
-      @current_box
-      .append("svg:rect") # Bot right handle
-        .attr("class", "se-resize")
-        .attr("width", @resize_half_width * 2)
-        .attr("height", @resize_half_width * 2)
-        .call(@resize_transit)
-      @current_box
-      .append("svg:rect") # Top right handle
-        .attr("class", "sw-resize")
-        .attr("width", @resize_half_width * 2)
-        .attr("height", @resize_half_width * 2)
-        .call(@resize_transit)
-      @current_box
-      .append("svg:rect") # Top right handle
-        .attr("class", "nw-resize")
-        .attr("width", @resize_half_width * 2)
-        .attr("height", @resize_half_width * 2)
-        .call(@resize_transit)
+      @decorate_box @current_box
       
       @transits[d.num-1] = @current_box      
       @redraw_transits @current_box      
@@ -389,6 +325,91 @@ class Viewer extends Spine.Controller
       @current_box
       .append("svg:rect")
         .attr("class", "transit-rect")
+  
+  addTransitExternal: (d) =>   
+    current_box = @svg_annotations
+      .append("svg:g")
+      .attr("class", "transit-temp")
+      .attr("transform", "translate(" + @x_scale(d.x) + "," + @y_scale(d.y) + ")")
+      .datum(d)
+    
+    current_box
+    .append("svg:rect")
+        .attr("class", "transit-rect")
+        
+    @decorate_box current_box
+    @transits[d.num-1] = current_box            
+    @dialog?.addTransit(d.num)
+  
+  decorate_box: (current_box) ->
+    current_box
+      .attr("class", "transit")
+
+    # Center dot  
+    current_box
+    .append("svg:circle")
+      .attr("class", "transit-center")
+      .attr("r", 2)
+    # Top circle and label
+    current_box
+    .append("svg:circle")
+      .attr("class", "transit-label")
+      .attr("r", 10)        
+    current_box
+    .append("svg:text")
+      .attr("class", "transit-text")
+      .attr("text-anchor", "middle")
+      .text((d) -> d.num)
+    # Drag and resize handles
+    current_box
+      .call(@drag_transit)
+      .on("click", @transitZoom)
+            
+    current_box
+    .append("svg:rect") # Top handle
+      .attr("class", "n-resize")
+      .attr("height", @resize_half_width * 2)
+      .call(@resize_transit_ns)
+    current_box
+    .append("svg:rect") # Bottom handle
+      .attr("class", "s-resize")
+      .attr("height", @resize_half_width * 2)
+      .call(@resize_transit_ns)
+    current_box
+    .append("svg:rect") # Right handle
+      .attr("class", "e-resize")
+      .attr("width", @resize_half_width * 2)
+      .call(@resize_transit_ew)
+    current_box
+    .append("svg:rect") # Left handle
+      .attr("class", "w-resize")
+      .attr("width", @resize_half_width * 2)
+      .call(@resize_transit_ew)
+
+    current_box
+    .append("svg:rect") # Top right handle
+      .attr("class", "ne-resize")
+      .attr("width", @resize_half_width * 2)
+      .attr("height", @resize_half_width * 2)
+      .call(@resize_transit)
+    current_box
+    .append("svg:rect") # Bot right handle
+      .attr("class", "se-resize")
+      .attr("width", @resize_half_width * 2)
+      .attr("height", @resize_half_width * 2)
+      .call(@resize_transit)
+    current_box
+    .append("svg:rect") # Top right handle
+      .attr("class", "sw-resize")
+      .attr("width", @resize_half_width * 2)
+      .attr("height", @resize_half_width * 2)
+      .call(@resize_transit)
+    current_box
+    .append("svg:rect") # Top right handle
+      .attr("class", "nw-resize")
+      .attr("width", @resize_half_width * 2)
+      .attr("height", @resize_half_width * 2)
+      .call(@resize_transit)
     
   plot_mousemove: =>
     return unless @current_box
