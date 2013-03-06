@@ -14,6 +14,7 @@ require 'd3/d3.v2'
 Other stuff not in NPM...
 ###
 require 'lib/jquery.jsonp-2.4.0.min'
+require 'lib/jQuery.XDomainRequest' # IE 8+ CORS support when testing
 
 # Temporary hack for getting EN strings.
 require 'lib/en'

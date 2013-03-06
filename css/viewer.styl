@@ -14,6 +14,7 @@ left-margin = 50px
 .lightcurve .graph svg
   z-index: 1
   position: absolute
+  overflow: hidden
   top: 0px
   left: 0px
 
@@ -51,6 +52,8 @@ transit-solid-opacity = 0.9
 .chart-annotations .transit .transit-text
   font: 14px sans-serif
   dominant-baseline: central
+  // TODO: needs another hax due to IE9 sucking
+  // baseline-shift: -30%
 
 .chart-annotations .transit .n-resize
 .chart-annotations .transit .s-resize

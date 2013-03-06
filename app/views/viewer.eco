@@ -6,7 +6,7 @@
 </div>
 
 <canvas class="graph_canvas"></canvas>
-<svg class="graph_svg"</svg>
+<svg class="graph_svg"></svg>
 
 <div class="yZoom_help"><%=t('lightcurve.y_zoom_help')%></div>
 <div class="xZoom_help"><%=t('lightcurve.x_zoom_help')%></div>

@@ -8,16 +8,22 @@ class Viewer extends Spine.Controller
   className: "graph"
   
   elements:
-    '#zoom': 'zoomBtn'
-    
+    ".yZoom_help": "yZoomHelp"
+    ".xZoom_help": "xZoomHelp"
+  # TODO: report bug: spine doesn't like underscores in bound events
+  
   events:
-    # Why are these not working? Something to do with d3, probably.
-    'click #zoom a': 'zoomYAxis'
-    'mouseenter #zoom a': => return unless @allow_zoom; $("#yZoom_help").show()
-    'mouseleave #zoom a': -> $("#yZoom_help").delay(1600).fadeOut 1600
-    
-    'mouseenter .context': => return unless @allow_zoom; $("#xZoom_help").show()
-    'mouseleave .context': -> $("#xZoom_help").delay(1600).fadeOut 1600
+    'click .zoom a': 'zoomYAxis'
+    'mouseenter .zoom a': -> 
+      return unless @allow_zoom
+      @yZoomHelp.show()
+    'mouseleave .zoom a': -> 
+      @yZoomHelp.delay(1600).fadeOut(1600)    
+    'mouseenter .context': -> 
+      return unless @allow_zoom
+      @xZoomHelp.show()
+    'mouseleave .context': -> 
+      @xZoomHelp.delay(1600).fadeOut(1600)
   
   # Settings
   
@@ -34,6 +40,15 @@ class Viewer extends Spine.Controller
   
   # Stuff for marking transits  
   resize_half_width: 3
+  drag_click_dist: 6
+  cancel_size: 5
+  cancel_bound: 10
+      
+  # State
+  transits: []
+  current_box: null
+  resize_box: null
+  dragStart: null
       
   constructor: ->
     super
@@ -51,12 +66,7 @@ class Viewer extends Spine.Controller
     @h_bottom ?= 30
     @max_zoom ?= 10
     
-    @h_to_context = @top_padding + @height - @h_bottom
-          
-    # Reset data structures
-    @transits = []
-    @current_box = null
-    @resize_box = null
+    @h_to_context = @top_padding + @height - @h_bottom          
     
   render: =>    
     @html require('views/viewer')(@)          
@@ -146,6 +156,13 @@ class Viewer extends Spine.Controller
     @svg = graph.select(".graph_svg")
       .attr("width", @width + @left_margin + @right_margin)
       .attr("height", @height + @top_padding + @bottom_padding)
+      
+    # Put a clear rect at the first layer of the SVG to catch click events for IE.
+    @svg.append("rect")
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .attr("fill", "none")
+      .attr("pointer-events", "all")
       
     @svg_xaxis = @svg.append("g")
       .attr("class", "chart-xaxis")
@@ -242,7 +259,7 @@ class Viewer extends Spine.Controller
     # What we do with the behaviors    
     @svg
       .call(@zoom_graph_beh)
-      .on("click", @plot_click )
+      # .on("click", @plot_click ) # try drag only events now
       .on("mousemove", @plot_mousemove )
       .on("mousedown.drag", @plot_drag )
       .on("touchstart.drag", @plot_drag )
@@ -267,25 +284,40 @@ class Viewer extends Spine.Controller
     @redraw()
     
   # When plot is dragged
-  plot_drag: -> 
+  plot_drag: => 
     return unless @allow_zoom
     d3.select("body").style("cursor", "move")
+    @dragStart = d3.mouse(@canvas)
   
   # When mouse is released     
-  mouseup: ->
+  mouseup: =>
     d3.select("body").style("cursor", "auto")
+    if @dragStart
+      dragEnd = d3.mouse(@canvas)
+      dist = Math.abs(dragEnd[0] - @dragStart[0]) + Math.abs(dragEnd[1] - @dragStart[1])
+      @plot_click() if dist < @drag_click_dist
+      @dragStart = null
+    else if @current_box # clicks outside of the plot
+      @current_box.remove()
+      @current_box = null
   
   plot_click: =>
     return unless @allow_annotations
     # calculate coords relative to canvas  
     [x, y] = d3.mouse(@canvas)
 
-    if @current_box 
-      # Make box permanent
-      d3.select("body").style("cursor", "auto")      
-      # TODO: cancel if box is too small (square size)
-      
+    if @current_box       
+      d3.select("body").style("cursor", "auto")     
       d = @current_box.datum()
+             
+      # cancel if box is too small (square size)
+      if Math.abs(x - @x_scale(d.x)) < @cancel_size or
+      Math.abs(y - @y_scale(d.y)) < @cancel_size 
+        @current_box.remove()
+        @current_box = null
+        return
+      
+      # Make box permanent
       d.dx = Math.abs(@x_scale.invert(x) - d.x)
       d.dy = Math.abs(@y_scale.invert(y) - d.y)
       
@@ -416,7 +448,8 @@ class Viewer extends Spine.Controller
     [x, y] = d3.mouse(@canvas)
 
     # Cancel the box and fix the cursor        
-    if x < 0 or x > @width or y < 0 or y > @h_graph
+    if x < -@cancel_bound or x > @width + @cancel_bound or
+     y < -@cancel_bound or y > @h_graph + @cancel_bound
       d3.select("body").style("cursor", "auto")
       @current_box.remove()
       @current_box = null

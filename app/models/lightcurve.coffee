@@ -21,10 +21,11 @@ class Lightcurve extends Spine.Model
       
     unless @tutorial
       @metaCallback = metaCallback
-      jqxhr = $.getJSON('http://' + Network.serverport + '/light_curves/' + @zooniverse_id)
+      url = 'http://' + Network.serverport + '/light_curves/' + @zooniverse_id
+      jqxhr = $.getJSON(url)
       jqxhr.success (data) =>
         unless data
-          alert("Failed to get metadata for " + @zooniverse_id)
+          alert("Successful metadata request, but data missing for " + @zooniverse_id)
           return
         @fetchData data
       jqxhr.error => alert("Failed to get metadata for " + @zooniverse_id)
