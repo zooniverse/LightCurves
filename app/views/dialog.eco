@@ -1,9 +1,16 @@
 
 <div class="workflow">  
 
+  
+
   <div class="step classify">
+    <a href="#" class="help">Help</a>
+    <a href="#" class="restart">Restart</a>
+    <p class="question">
+      Search for planets...
+    </p>
     <p class="question small">
-      Mark transits by clicking once to select the center, and clicking again to mark the height and width.
+      Clicking once to select the center of a transit, then click elsewhere to mark the height and width.
     </p>
   </div>
 
@@ -11,8 +18,8 @@
     <div class="edit">
       <a class="button transit" href="#" title="0">0</a>
       <%# <a class="button add" href="#" title="+">&nbsp;</a> %>
-    </div>
-    
+    </div>    
+    <br />    
     <a class="button red prev" href="#" title="Back">
       Back
     </a>

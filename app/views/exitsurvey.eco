@@ -13,7 +13,7 @@
 <p>If you experienced any bugs, in the task, please write them below.</p>
 <textarea rows="5" cols="100" id="bugComments"></textarea>
 
-<div style="width: 300px">
+<div style="width: 300px" class="start_hunting">
   <a class="big-button" id="submitTask" href="#">Submit the Task</a>
 </div>
 </form>

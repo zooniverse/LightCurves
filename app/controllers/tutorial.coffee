@@ -180,7 +180,7 @@ class Tutorial extends Spine.Controller
     @mag_glass.hide()
     @viewer.animateZoom [0, 35]
     @viewer.setZoomEnabled true
-    @viewer.show_tooltips()
+    @viewer.show_zoomtips()
     @viewer.allow_annotations = false
     
     @dialog.backNextMode()
@@ -188,7 +188,8 @@ class Tutorial extends Spine.Controller
   annotate: =>     
     @viewer.animateZoom [0, 35]
     @viewer.allow_annotations = true
-        
+
+    @viewer.show_zoomtips()        
     @dialog.backOnlyMode()
 
   annotateCont: =>  

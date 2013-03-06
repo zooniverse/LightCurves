@@ -4,15 +4,6 @@ body
   color: white
   overflow-x: hidden
 
-.centered
-  margin: 0 auto
-  width: 960px
-  text-align: center
-  padding: 20px
-  
-.centered p
-  margin-top: 10px
-
 .background
   position: fixed
   top: 0
@@ -33,6 +24,51 @@ body
 
 .big-button:hover
   background: url("/images/sprites/css_sprites.png") no-repeat scroll -312px -337px transparent
+  
+.textpage h1
+  font-size: 55px
+  font-weight: lighter
+  width: 850px
+
+.textpage h2
+  font-size: 25px
+  font-weight: lighter
+  line-height: 2
+
+.textpage
+  position: relative
+  display: inline-block
+  vertical-align: top
+  zoom: 1
+  *display: inline
+  margin: 100px auto
+  width: 960px
+  
+.textpage ul
+  list-style: disc
+
+.textpage ul > li
+  margin-top: 10px
+  
+.textpage p
+  margin-top: 10px
+
+// TODO: move this somewhere with the big-button
+
+.textpage .start_hunting
+  position: absolute
+  top: 200px
+  right: 102px
+
+.textpage .start_hunting p
+  font-family: Arial
+  font-size: 13px
+  font-weight: lighter
+  margin: 10px 15px
+  text-align: right
+
+.textpage .start_hunting p a
+  color: #0099CC
 
 /* STAR FIELD aka LAGGY AS BALLS */
 /*
@@ -99,6 +135,10 @@ body
   position: relative
   clear: both
 
+#content > h3 // Browser warning
+  font-size: 90%
+  clear: both
+  
 #zooniverse
   background: transparent url('/images/bg/zooniverse_bar.jpg') repeat-x scroll center center
   width: 100%
@@ -315,10 +355,6 @@ ul.browsers li
 
 ul.browsers li:hover
   color: #fff
-
-#home h2.browsers
-  font-size: 90%
-  clear: both
 
 #top_bar
   height: 36px

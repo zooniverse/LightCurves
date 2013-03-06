@@ -10,8 +10,8 @@ class Viewer extends Spine.Controller
   elements:
     ".yZoom_help": "yZoomHelp"
     ".xZoom_help": "xZoomHelp"
-  # TODO: report bug: spine doesn't like underscores in bound events
-  
+    ".drag_help": "dragHelp"
+
   events:
     'click .zoom a': 'zoomYAxis'
     'mouseenter .zoom a': -> 
@@ -40,9 +40,9 @@ class Viewer extends Spine.Controller
   
   # Stuff for marking transits  
   resize_half_width: 3
-  drag_click_dist: 6
+  drag_click_dist: 10
   cancel_size: 5
-  cancel_bound: 10
+  cancel_bound: 50
       
   # State
   transits: []
@@ -292,10 +292,11 @@ class Viewer extends Spine.Controller
   # When mouse is released     
   mouseup: =>
     d3.select("body").style("cursor", "auto")
-    if @dragStart
+    if @dragStart # Turn small drags into clicks
       dragEnd = d3.mouse(@canvas)
-      dist = Math.abs(dragEnd[0] - @dragStart[0]) + Math.abs(dragEnd[1] - @dragStart[1])
-      @plot_click() if dist < @drag_click_dist
+      dx = dragEnd[0] - @dragStart[0]
+      dy = dragEnd[1] - @dragStart[1]
+      @plot_click() if Math.sqrt(dx * dx + dy * dy) < @drag_click_dist
       @dragStart = null
     else if @current_box # clicks outside of the plot
       @current_box.remove()
@@ -307,7 +308,7 @@ class Viewer extends Spine.Controller
     [x, y] = d3.mouse(@canvas)
 
     if @current_box       
-      d3.select("body").style("cursor", "auto")     
+      d3.select("body").style("cursor", "auto")
       d = @current_box.datum()
              
       # cancel if box is too small (square size)
@@ -336,7 +337,7 @@ class Viewer extends Spine.Controller
       @current_box = null
       
       @dialog?.addTransit(d.num)
-      # @transitZoom(d)
+      # @transitZoom(d) # currently happens in the dialog
       @dialog?.highlightButton(d.num)
       
       @addTransitCallback?()      
@@ -764,7 +765,12 @@ class Viewer extends Spine.Controller
     canvas.fill()
 
   show_tooltips: ->
-    $("#xZoom_help").show().delay(3200).fadeOut 1600
-    $("#yZoom_help").show().delay(3200).fadeOut 1600
+    @xZoomHelp.show().delay(3200).fadeOut 1600
+    @yZoomHelp.show().delay(3200).fadeOut 1600
+    @dragHelp.show().delay(3200).fadeOut 1600
+
+  show_zoomtips: ->
+    @xZoomHelp.show().delay(3200).fadeOut 1600
+    @yZoomHelp.show().delay(3200).fadeOut 1600
           
 module.exports = Viewer

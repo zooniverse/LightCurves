@@ -13,11 +13,12 @@ class Network
   @serverport = null
   @tutorial = false
   @viewer = null
+  @payment = null
 
   @init: (payment, viewer) ->
     if not TSClient.params.assignmentId
       console.log "no parameters; ignoring network"
-      @serverport = window.location.hostname + ':' + '8080'
+      @serverport = window.location.hostname + ':' + '9876'
       TSClient.initLocal()
       return
 
@@ -25,12 +26,16 @@ class Network
 
     TSClient.QuizRequired ->
       Spine.Route.navigate("/")
+    
+    TSClient.StartExperiment ->
+      Spine.Route.navigate("/taskrules")
 
     TSClient.BroadcastMessage (data) =>      
       if data.task
         Spine.Route.navigate("/classify/" + data.task)
         
       if data.payment
+        @payment.el.show()
         payment.updatePay(data.payment)
         
       if data.annotations        
@@ -50,9 +55,12 @@ class Network
       switch status
         when Codec.status_completed
           Spine.Route.navigate "/exitsurvey"      
-
+  
+    # hide payment initially
+    payment.el.hide()
+    @payment = payment
+    
     @serverport = window.location.hostname + ':' + TSClient.params.port
-    console.log "trying network"    
     TSClient.init "planethunters", ""
   
   @setViewer: (viewer) =>
@@ -60,12 +68,22 @@ class Network
       viewer.addTransitExternal(ann) for ann in @annotations
       viewer.redraw_transits()
       @annotations = null
-    
-    console.log "viewer set"  
+          
     @viewer = viewer    
   
   @startTutorial: ->
-    @tutorial = true    
+    @tutorial = true
+  
+  @startTasks: ->
+    msg =
+      action: "starttasks"
+    TSClient.sendExperimentBroadcast(msg)
+  
+  # Ask for annotations to be re-sent over the wire
+  @requestUpdate: ->
+    msg = 
+      action: "requestupdate" 
+    TSClient.sendExperimentBroadcast(msg)
     
   @addTransit: (transit) ->
     console.log "added "
@@ -117,7 +135,6 @@ class Network
     TSClient.sendExperimentBroadcast(msg)
     
   @resetInactivity: ->
-    @lastInactive = Date.now()
-    
+    @lastInactive = Date.now()    
 
 module.exports = Network

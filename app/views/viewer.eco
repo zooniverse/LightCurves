@@ -10,6 +10,6 @@
 
 <div class="yZoom_help"><%=t('lightcurve.y_zoom_help')%></div>
 <div class="xZoom_help"><%=t('lightcurve.x_zoom_help')%></div>
-<div class="drag_help"><%=t('lightcurve.drag_help')%></div>
+<div class="drag_help">Click to mark transits</div>
 
 

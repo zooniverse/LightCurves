@@ -11,7 +11,7 @@
 <div class="graph_background"></div> 
 <div id ="starmap"></div>
 
-<div id="star_info">
+<div class="star_info">
 <% if @lightcurve: %>
   <h3 class="name"></h3>
   <ul>

@@ -8,6 +8,7 @@
   <%= t('workflows.floor_splash.start_hunting') %></a>
   <p class="login_signup">
     <%#= get_welcome_or_login %>
+    <h2>Complete a short tutorial to get started.</h2>
   </p>
 </div>
 

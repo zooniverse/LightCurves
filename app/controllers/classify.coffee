@@ -60,9 +60,12 @@ class Classify extends Spine.Controller
     @render()
     
   lcDataLoaded: =>
+    # TODO: do something consistent after active
+    # Network.requestUpdate()
     @viewer.loadData @lightcurve
     
     # On reload: can't draw annotations until this loads    
     Network.setViewer(@viewer)
+
     
 module.exports = Classify

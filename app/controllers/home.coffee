@@ -1,13 +1,13 @@
 Spine = require('spine')
 
 class Home extends Spine.Controller
+  className: "textpage"
 
   events:
     "click .start_hunting .big-button": "start"
 
   constructor: ->
     super
-    @el.attr('id', 'home')
 
   active: ->
     super
