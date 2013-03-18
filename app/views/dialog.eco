@@ -1,11 +1,9 @@
 
 <div class="workflow">  
 
-  
-
   <div class="step classify">
     <a href="#" class="help">Help</a>
-    <a href="#" class="restart">Restart</a>
+    <%# a href="#" class="restart">Restart</a %>
     <p class="question">
       Search for planets...
     </p>

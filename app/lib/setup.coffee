@@ -26,3 +26,8 @@ require 'lib/animframe'
 
 window.Util = require 'lib/util'
 
+# Fix IE logging issues
+if not window.console
+  window.console = 
+    log: ->
+  

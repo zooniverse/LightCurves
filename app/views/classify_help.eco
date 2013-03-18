@@ -1,0 +1,14 @@
+
+<div class="help">
+  <h2>Controls:</h2>
+
+  <p>Zoom: Mouse wheel, or drag context handles</p>
+  <p>Pan: Drag graph or context area</p>
+  <p>Draw Transits: Click to mark the center; click again to mark the boundary</p>
+  <p>Focus: Click any marked transit, or a number on the right</p>
+  <p>Delete Transit: Focus on transit, then click the X at right</p>
+  <p>Continue to next light curve: Click FINISH button</p>
+  <p>Finish and submit HIT</p>
+  <a class="big-button">Return to Task</a>
+</div>
+

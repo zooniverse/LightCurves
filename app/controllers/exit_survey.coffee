@@ -1,7 +1,7 @@
 Spine = require('spine')
 
 class ExitSurvey extends Spine.Controller
-  className: "textpage"
+  className: "textpage darkened"
   
   constructor: ->
     super  

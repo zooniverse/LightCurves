@@ -133,6 +133,10 @@ class Network
     msg = 
       action: "finishtask"
     TSClient.sendExperimentBroadcast(msg)
+  
+  @finishExp: ->
+    console.log "all done"  
+    # TODO: send all-done to server and go to exit survey
     
   @resetInactivity: ->
     @lastInactive = Date.now()    

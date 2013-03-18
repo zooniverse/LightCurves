@@ -25,3 +25,6 @@
 <% end %>
 </div>
 
+<div class="finish_button">
+  <a class="big-button" href="#">Finish and Submit</a>
+</div>

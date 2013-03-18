@@ -105,6 +105,7 @@ class Tutorial extends Spine.Controller
     
   clickPrev: (ev, element) ->
     ev?.preventDefault()
+    return if @stepIndex is 0
     @teardownStep()
     @stepIndex -= 1
     @showStep()    

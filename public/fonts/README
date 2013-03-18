@@ -1,0 +1,6 @@
+These fonts are not actually used; they were not working in all browsers.
+
+Currently loaded with Google Web Fonts API, which generates cross-browser fonts.
+PH team: might want to use local fonts in production.
+
+

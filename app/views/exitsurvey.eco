@@ -1,19 +1,59 @@
-
-
-<h2>Thank you for your work! We appreciate your comments to help us improve this task.</h2>
+<h2>Thank you for your work! Please fill out the following to submit the HIT.</h2>
 
 <form>
 
-<p>What do you think of the tutorial, and the interface? What confused you?</p>
-<textarea rows="5" cols="100" id="uiComments"></textarea>
+<p>
+How enjoyable was this task?
+</p>
 
-<p>Briefly explain how you approached finding planets. Did you consider the effects of your payment?</p>
-<textarea rows="5" cols="100" id="strategyComments"></textarea>
+<fieldset>
+<input type="radio" name="enjoyable" id="enjoyable1" value="1"><label for="enjoyable1">Very boring</label>
+<input type="radio" name="enjoyable" id="enjoyable2" value="2"><label for="enjoyable2">Somewhat boring</label>
+<input type="radio" name="enjoyable" id="enjoyable3" value="3"><label for="enjoyable3">Average</label>
+<input type="radio" name="enjoyable" id="enjoyable4" value="4"><label for="enjoyable4">Somewhat fun</label>
+<input type="radio" name="enjoyable" id="enjoyable5" value="5"><label for="enjoyable5">Very fun</label>
+</fieldset>
+<br />
 
-<p>If you experienced any bugs, in the task, please write them below.</p>
-<textarea rows="5" cols="100" id="bugComments"></textarea>
+<p>
+How difficult was this task?
+</p>
+<fieldset>
+<input type="radio" name="difficulty" id="difficulty1" value="1"><label for="difficulty1">Very easy</label>
+<input type="radio" name="difficulty" id="difficulty2" value="2"><label for="difficulty2">Somewhat easy</label>
+<input type="radio" name="difficulty" id="difficulty3" value="3"><label for="difficulty3">Average</label>
+<input type="radio" name="difficulty" id="difficulty4" value="4"><label for="difficulty4">Somewhat hard</label>
+<input type="radio" name="difficulty" id="difficulty5" value="5"><label for="difficulty5">Very hard</label>
+</fieldset>
+<br />
 
-<div style="width: 300px" class="start_hunting">
+<p>
+How likely are you to do the task again if you were paid the same way?
+</p>
+<fieldset>
+<input type="radio" name="payment" id="payment1" value="1"><label for="payment1">Very unlikely</label>
+<input type="radio" name="payment" id="payment2" value="2"><label for="payment2">Somewhat unlikely</label>
+<input type="radio" name="payment" id="payment3" value="3"><label for="payment3">Average</label>
+<input type="radio" name="payment" id="payment4" value="4"><label for="payment4">Somewhat likely</label>
+<input type="radio" name="payment" id="payment5" value="5"><label for="payment5">Very likely</label>
+</fieldset>
+<br />
+
+<p>Was there anything confusing or hard to understand about the tutorial and the interface?</p>
+<textarea rows="4" cols="100" id="uiComments"></textarea>
+
+<p>How did you look for planet transits? Did the method of payment affect your decisions?</p>
+<textarea rows="4" cols="100" id="strategyComments"></textarea>
+
+<p>How did you decide to stop working on the task? Is there something that would have made you continue for longer?</p>
+<textarea rows="4" cols="100" id="engagementComments"></textarea>
+
+<p>If you experienced any bugs, in the task, please let us know below.</p>
+<textarea rows="4" cols="100" id="bugComments"></textarea>
+
+<br />
+
+<div style="width: 300px">
   <a class="big-button" id="submitTask" href="#">Submit the Task</a>
 </div>
 </form>

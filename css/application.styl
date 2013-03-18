@@ -1,6 +1,6 @@
 body
   background-color: black
-  font-family: 'TitilliumText14L600wt', 'Myriad Pro', 'Arial'
+  font-family: 'Titillium Web', sans-serif
   color: white
   overflow-x: hidden
 
@@ -25,6 +25,31 @@ body
 .big-button:hover
   background: url("/images/sprites/css_sprites.png") no-repeat scroll -312px -337px transparent
   
+.help-overlay
+  visibility: hidden
+  position: absolute
+  left: 0px
+  top: 0px
+  width: 100%
+  height: 100%
+  text-align: center
+  z-index: 1000
+  background: rgba(0,0,0,0.4)
+  
+.help-overlay .help
+  width: 500px
+  margin: 200px auto
+  background-color: #000
+  border: 1px solid #fff
+  padding: 15px
+  text-align: left
+  
+.help-overlay p
+  margin: 5px auto
+
+.darkened
+  background-color: rgba(0,0,0,0.6)
+    
 .textpage h1
   font-size: 55px
   font-weight: lighter
@@ -41,7 +66,8 @@ body
   vertical-align: top
   zoom: 1
   *display: inline
-  margin: 100px auto
+  margin: 50px auto
+  padding: 25px
   width: 960px
   
 .textpage ul
@@ -58,7 +84,7 @@ body
 .textpage .start_hunting
   position: absolute
   top: 200px
-  right: 102px
+  right: 50px
 
 .textpage .start_hunting p
   font-family: Arial

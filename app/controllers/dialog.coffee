@@ -15,7 +15,7 @@ class Dialog extends Spine.Controller
   events:
     "click .button.transit": "focusTransit"
     "click .button.transit .delete": "removeTransit"
-    "click .step .help": "showHelpModal"
+    "click .step .help": (ev) -> ev.preventDefault(); $("#help-overlay").css("visibility", "visible")
     "click .step .restart": (ev) -> ev.preventDefault(); alert("Not implemented yet")
 
   constructor: ->
@@ -26,16 +26,13 @@ class Dialog extends Spine.Controller
   active: ->
     super
     # @render()
-    @delegateEvents()
+    # @delegateEvents()
     
   render: ->
-    @html require('views/dialog')(@)          
+    @html require('views/dialog')(@)
+        
     @workflowContainer.prepend(require('views/tutorial_steps')) if @tutorial    
-    @backNextMode()
-    
-  showHelpModal: (ev) ->
-    ev.preventDefault();
-    alert("TODO: dialog with controls and hints")
+    @backNextMode()  
     
   addTransit: (number) ->
     button = @editActions.find(".transit:first-child")

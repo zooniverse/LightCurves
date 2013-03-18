@@ -3,7 +3,7 @@ Spine = require('spine')
 Network = require 'lib/network'
 
 class TaskRules extends Spine.Controller
-  className: "textpage"
+  className: "textpage darkened"
   
   events:
     "click .big-button": 'startClassifying'

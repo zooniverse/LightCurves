@@ -2,6 +2,7 @@ require('lib/setup')
 
 Spine = require('spine')
 
+ClassifyHelp = require 'controllers/classify_help'
 Header = require 'controllers/header'
 Main = require 'controllers/main'
 
@@ -10,6 +11,9 @@ Network = require 'lib/network'
 class App extends Spine.Controller
   constructor: ->
     super
+    
+    @classify_help = new ClassifyHelp
+      el: "#help-overlay"
     
     @header = new Header
       el: "#header"
@@ -20,6 +24,8 @@ class App extends Spine.Controller
     Network.init(@header.payment)
     
     Spine.Route.setup()
+    
+    @classify_help.active()
     @header.active()    
     
 module.exports = App

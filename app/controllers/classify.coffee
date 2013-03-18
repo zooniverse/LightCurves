@@ -13,6 +13,12 @@ class Classify extends Spine.Controller
     "click .dialog .button.finish": (ev) -> 
       ev.preventDefault()
       Network.finishTask()
+    "click .finish_button .big-button": (ev) ->
+      ev.preventDefault()
+      if confirm('Are you sure you want to take your current payment and finish?')
+        Network.finishExp()
+      else
+        console.log "cancel"
   
   constructor: ->
     super
