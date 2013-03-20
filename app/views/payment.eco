@@ -3,5 +3,7 @@
 
 <p class="payment-method">In this HIT, you are being paid $<strong>0.10 per minute</strong>.</p>
 
+<p class="payment-increment"></p>
+
 <p class="payment-amount">If you stop now, you will earn $<strong>...</strong>.</p>
 

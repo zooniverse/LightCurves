@@ -15,7 +15,7 @@ class Network
   @viewer = null
   @payment = null
 
-  @init: (payment, viewer) ->
+  @init: (payment) ->
     if not TSClient.params.assignmentId
       console.log "no parameters; ignoring network"
       @serverport = window.location.hostname + ':' + '9876'
@@ -32,11 +32,12 @@ class Network
 
     TSClient.BroadcastMessage (data) =>      
       if data.task
-        Spine.Route.navigate("/classify/" + data.task)
+        # Don't update hash fragment here
+        Spine.Route.navigate "/classify", data.task
         
-      if data.payment
+      if "payment" of data
         @payment.el.show()
-        payment.updatePay(data.payment)
+        @payment.updatePay(data.payment)
         
       if data.annotations        
         if @viewer is null
@@ -48,13 +49,14 @@ class Network
           @viewer.addTransitExternal(ann) for ann in data.annotations
           @viewer.redraw_transits()
 
-    TSClient.FinishExperiment -> Spine.Route.navigate("/exitsurvey")
+    TSClient.FinishExperiment -> 
+      Spine.Route.navigate("/exitsurvey")
 
     TSClient.ErrorMessage (status, msg) ->
-      alert(msg)
       switch status
         when Codec.status_completed
           Spine.Route.navigate "/exitsurvey"      
+      alert(msg) if msg
   
     # hide payment initially
     payment.el.hide()
@@ -135,8 +137,9 @@ class Network
     TSClient.sendExperimentBroadcast(msg)
   
   @finishExp: ->
-    console.log "all done"  
-    # TODO: send all-done to server and go to exit survey
+    console.log "all done"
+    TSClient.sendExperimentBroadcast
+      action: "finishexp"
     
   @resetInactivity: ->
     @lastInactive = Date.now()    

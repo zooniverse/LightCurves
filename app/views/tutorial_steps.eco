@@ -100,10 +100,10 @@
 
 <div class="step stepShowTransits">
   <p class="question"><%= t('workflows.tutorial.workflow.questions.did_you_spot') %></p>
-  <p class="question small"><%= t('workflows.tutorial.workflow.questions.transit_locations') %></p>
+  <p class="question small"><%= t('workflows.tutorial.workflow.questions.transit_locations') %>.</p>
 	<p class="question small">
-	  In most light curves, you won't see this many transits, and you often won't see any at all.
-	  Planets are rare and hard to come by!
+	  In most light curves, you won't see many transits, and you often won't see any at all.
+	  Skip light curves where you don't see any transits.
 	</p>
 </div>  
 

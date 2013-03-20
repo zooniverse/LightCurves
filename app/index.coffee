@@ -7,6 +7,7 @@ Header = require 'controllers/header'
 Main = require 'controllers/main'
 
 Network = require 'lib/network'
+TSClient = require 'turkserver-js-client'
 
 class App extends Spine.Controller
   constructor: ->
@@ -23,7 +24,8 @@ class App extends Spine.Controller
     
     Network.init(@header.payment)
     
-    Spine.Route.setup()
+    Spine.Route.setup
+      shim: not TSClient.localMode
     
     @classify_help.active()
     @header.active()    

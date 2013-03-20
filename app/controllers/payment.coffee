@@ -8,7 +8,6 @@ class Payment extends Spine.Controller
   
   constructor: ->
     super
-    @startTime = new Date().getTime()
     
   active: ->
     super
@@ -18,6 +17,6 @@ class Payment extends Spine.Controller
     @html require('views/payment')
     
   updatePay: (amount) =>    
-    @paymentAmount.html( Util.round_float(amount, 2) )    
+    @paymentAmount.html( +Util.round_float(amount, 2) )    
     
 module.exports = Payment

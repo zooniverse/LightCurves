@@ -1,15 +1,16 @@
 
-<h1>You're ready to start!</h1>
+<h1>You're almost ready to start!</h1>
 
-<h2>Just keep these simple rules in mind:</h2>
+<h2>Please keep the following in mind:</h2>
 
 <ul>
-<li>This HIT works slightly differently than others. You will be paid as you work.
-<li>The bar at the top of the screen shows how much you will be paid.
-<li>You can submit and take your payment anytime, but you may only do this HIT once.
+<li>Your primary payment for this HIT will be a bonus, which updates as you work.
+<li>The bar above shows how much your current bonus is, and how it is calculated.
+<li>You can submit and take your bonus anytime, but you may only do this HIT once per week.
 <li>If you do nothing for several minutes, we will ask you to submit the HIT.
 </ul>
 
-<div style="width: 300px" class="start_hunting">
-  <a class="big-button" href="#">Let's Go!</a>
-</div>
+<br />
+
+<a class="big-button" href="#">I understand, let's go!</a>
+

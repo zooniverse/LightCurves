@@ -8,7 +8,10 @@
       Search for planets...
     </p>
     <p class="question small">
-      Clicking once to select the center of a transit, then click elsewhere to mark the height and width.
+      Click 'HELP' above if you need more instructions.
+    </p>
+    <p class="question small">
+      Click 'FINISH' if you are done or don't see any planet transits.
     </p>
   </div>
 
