@@ -4,14 +4,11 @@
   <div class="step classify">
     <a href="#" class="help">Help</a>
     <%# a href="#" class="restart">Restart</a %>
-    <p class="question">
-      Search for planets...
+    <p class="question small">
+      Mark planet transits. For more instructions, click 'HELP'.
     </p>
     <p class="question small">
-      Click 'HELP' above if you need more instructions.
-    </p>
-    <p class="question small">
-      Click 'FINISH' if you are done or don't see any planet transits.
+      Click 'NEXT' to proceed if you are done or don't see any more transits.
     </p>
   </div>
 

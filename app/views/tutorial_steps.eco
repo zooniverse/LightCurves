@@ -78,13 +78,13 @@
 <div class="step stepAnnotate">
   <p class="question"><%= t('workflows.tutorial.workflow.questions.can_you_spot_transit') %></p>
   <p class="question small">
-    You can mark a transit by clicking twice on the graph. 
+    You can mark a transit by clicking on the graph.
   </p>
   <p class="question small">
-    Click once to select the center of a transit, and move your mouse.
+    Click once to select the center of a transit.
   </p>
   <p class="question small">
-    Click again to mark the height and width.
+    Move your mouse and click again to mark the height and width.
   </p>
 </div>
 
@@ -94,15 +94,17 @@
     You've just marked your first transit. Wasn't that easy?
   </p>
   <p class="question small">
-    Keep searching, and click 'Finish' when you think you've found them all.
+    Keep searching, and click 'NEXT' when you think you've found them all.
   </p>
 </div>
 
 <div class="step stepShowTransits">
   <p class="question"><%= t('workflows.tutorial.workflow.questions.did_you_spot') %></p>
-  <p class="question small"><%= t('workflows.tutorial.workflow.questions.transit_locations') %>.</p>
+  <p class="question small"><%= t('workflows.tutorial.workflow.questions.transit_locations') %>.
+    Try to be as precise as possible when you mark them.
+  </p>
 	<p class="question small">
-	  In most light curves, you won't see many transits, and you often won't see any at all.
+	  In many light curves, you will see few or no transits at all. Planets are rare!
 	  Skip light curves where you don't see any transits.
 	</p>
 </div>  

@@ -4,7 +4,7 @@ Network = require 'lib/network'
 
 Source = require 'models/source'
 
-class Lightcurve extends Spine.Model
+class Lightcurve extends Spine.Model    
   @configure 'Lightcurve', 'zooniverse_id', 'meta', 'source', 'data'  
   
   # Random meta fields used in old viewer:

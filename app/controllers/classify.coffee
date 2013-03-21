@@ -10,7 +10,7 @@ class Classify extends Spine.Controller
   className: "lightcurve"
   
   events: 
-    "click .dialog .button.finish": (ev) -> 
+    "click .dialog .button.next": (ev) -> 
       ev.preventDefault()
       Network.finishTask()
     "click .finish_button .big-button": (ev) ->

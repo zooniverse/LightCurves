@@ -30,7 +30,10 @@ class Network
     TSClient.StartExperiment ->
       Spine.Route.navigate("/taskrules")
 
-    TSClient.BroadcastMessage (data) =>      
+    TSClient.BroadcastMessage (data) =>
+      if data.error
+        alert data.error
+          
       if data.task
         # Don't update hash fragment here
         Spine.Route.navigate "/classify", data.task
@@ -54,8 +57,8 @@ class Network
 
     TSClient.ErrorMessage (status, msg) ->
       switch status
-        when Codec.status_completed
-          Spine.Route.navigate "/exitsurvey"      
+        when Codec.status_completed, Codec.status_expfinished
+          Spine.Route.navigate "/exitsurvey"
       alert(msg) if msg
   
     # hide payment initially
@@ -140,6 +143,10 @@ class Network
     console.log "all done"
     TSClient.sendExperimentBroadcast
       action: "finishexp"
+  
+  @submitExitSurvey: (data) ->
+    console.log "submitting survey"
+    TSClient.submitHIT data
     
   @resetInactivity: ->
     @lastInactive = Date.now()    

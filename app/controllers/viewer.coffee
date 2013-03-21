@@ -26,6 +26,7 @@ class Viewer extends Spine.Controller
       @xZoomHelp.delay(1600).fadeOut(1600)
   
   # Settings
+  max_annotations: 8
   
   # Copied variables from stylus, fix in future
   left_margin: 50
@@ -323,12 +324,18 @@ class Viewer extends Spine.Controller
       d.dy = Math.abs(@y_scale.invert(y) - d.y)
       
       # Find least unused number for this box
-      # TODO: why do we need to empty other viewers to make sure this works properly?
-      d.num = $.inArray(undefined, @transits)
-      if d.num < 0
-        d.num = @transits.length + 1
-      else
-        d.num += 1
+      for i in [1 .. @transits.length]
+        if not @transits[i-1]
+          d.num = i
+          break          
+      d.num = @transits.length + 1 if not d.num
+      
+      # Cancel if too many annotations
+      if d.num > @max_annotations
+        @current_box.remove()
+        @current_box = null
+        alert("You can mark up to #{@max_annotations} transits. Try to refine your existing work.")
+        return
       
       @decorate_box @current_box
       
@@ -340,8 +347,11 @@ class Viewer extends Spine.Controller
       # @transitZoom(d) # currently happens in the dialog
       @dialog?.highlightButton(d.num)
       
-      @addTransitCallback?()      
-      Network.addTransit(d)
+      @addTransitCallback?()
+      Network.addTransit(d)      
+      
+      # Don't cause auto zoom
+      d3.event.preventDefault()
       
     else
       d3.select("body").style("cursor", "crosshair")

@@ -110,6 +110,6 @@ class Dialog extends Spine.Controller
     @editActions.show()
     @prevButton.hide()
     @nextButton.hide()
-    @finishButton.show()        
+    @nextButton.show()        
     
 module.exports = Dialog
