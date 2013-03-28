@@ -56,7 +56,7 @@ class Tutorial extends Spine.Controller
       ['stepFinal', @final]
     ] 
 
-  active: (params) ->
+  active: ->
     super
     @refresh()
             
@@ -77,13 +77,14 @@ class Tutorial extends Spine.Controller
   
   render: ->
     @html require('views/tutorial')(@)
-    @append @dialog
-    @append @viewer
     
-    @viewer.render()
-    @dialog.render()
+    @append @dialog.render()
+    @append @viewer.render()
     
-    @showStep()
+#    @viewer.render()
+#    @dialog.render()
+    
+    @showStep()      
   
   lcMetaLoaded: =>
     @render()

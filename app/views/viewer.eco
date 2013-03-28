@@ -1,4 +1,4 @@
-
+<div class="graph">
 <img src="images/spinner.gif" class="spinner">
 
 <div class="zoom">
@@ -11,5 +11,4 @@
 <div class="yZoom_help"><%=t('lightcurve.y_zoom_help')%></div>
 <div class="xZoom_help"><%=t('lightcurve.x_zoom_help')%></div>
 <div class="drag_help">Click to mark transits</div>
-
-
+</div>

@@ -3,7 +3,7 @@ Spine = require('spine')
 Network = require 'lib/network'
 
 class Dialog extends Spine.Controller
-  className: "dialog"
+  # className: "dialog"
 
   elements:
     ".workflow": "workflowContainer"
@@ -15,24 +15,23 @@ class Dialog extends Spine.Controller
   events:
     "click .button.transit": "focusTransit"
     "click .button.transit .delete": "removeTransit"
-    "click .step .help": (ev) -> ev.preventDefault(); $("#help-overlay").css("visibility", "visible")
-    "click .step .restart": (ev) -> ev.preventDefault(); alert("Not implemented yet")
+    "click .step .help": (ev) -> 
+      ev.preventDefault()
+      $("#help-overlay").css("visibility", "visible")
+    # "click .step .restart": (ev) -> ev.preventDefault(); alert("Not implemented yet")
 
   constructor: ->
     super    
     @tutorial ?= false    
-    @viewer ?= undefined # set after constructing
-    
-  active: ->
-    super
-    # @render()
-    # @delegateEvents()
+    @viewer ?= undefined # set after constructing    
     
   render: ->
-    @html require('views/dialog')(@)
+    @replace require('views/dialog')(@)
         
     @workflowContainer.prepend(require('views/tutorial_steps')) if @tutorial    
-    @backNextMode()  
+    @backNextMode()
+        
+    @el
     
   addTransit: (number) ->
     button = @editActions.find(".transit:first-child")
@@ -90,26 +89,26 @@ class Dialog extends Spine.Controller
 
   backOnlyMode: ->
     @editActions.hide()
-    @prevButton.show()
+    @prevButton.css('display', '')
     @nextButton.hide()
     @finishButton.hide()
     
   backNextMode: ->
     @editActions.hide()
-    @prevButton.show()
-    @nextButton.show()
+    @prevButton.css('display', '')
+    @nextButton.css('display', '')
     @finishButton.hide()
 
   backFinishMode: ->
     @editActions.hide()
-    @prevButton.show()
+    @prevButton.css('display', '')
     @nextButton.hide()
-    @finishButton.show()
+    @finishButton.css('display', '')
   
   editMode: ->
-    @editActions.show()
+    @editActions.css('display', '')
     @prevButton.hide()
     @nextButton.hide()
-    @nextButton.show()        
+    @nextButton.css('display', '')
     
 module.exports = Dialog

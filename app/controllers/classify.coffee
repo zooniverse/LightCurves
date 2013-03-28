@@ -30,15 +30,15 @@ class Classify extends Spine.Controller
       dialog: @dialog
     @dialog.viewer = @viewer
             
-  activate: (params) ->
+  active: (params) ->
     super
             
-    @dialog.active()
-    @viewer.active()  
-
+    # @dialog.active()
+    # @viewer.active()
+    
     if params.zooniverse_id
       @zooniverse_id = params.zooniverse_id    
-      @refresh()
+      @refresh()    
       
   deactivate: ->
     super
@@ -53,12 +53,14 @@ class Classify extends Spine.Controller
   
   render: ->
     @html require('views/classify')(@)
-    @append @dialog
-    @append @viewer
 
-    @viewer.render()
-    @dialog.render()
-    
+    # Double append seems to be getting rid of events
+    @append @dialog.render()
+    @append @viewer.render()
+
+    # @viewer.render()
+    # @dialog.render()    
+
     @dialog.editMode()
     @dialog.el.find(".step.classify").show()
   

@@ -1,14 +1,33 @@
 
 <div class="help">
-  <h2>Controls:</h2>
+  <h2>Helpful hints:</h2>
+  
+  <br/>
+  
+  <p>
+    Draw boxes where you see transits. 
+    Click to mark the center and click again to mark the boundary.
+    Try to be as precise as possible.
+  </p>
+  
+  <p>To focus on a box, click it once or click the corresponding number at the right.</p>
+  
+  <p>Delete boxes that you may have made a mistake on.
+     Click on a box or the number at right for the box, then 'X' above the number.
+  </p>
+  
+  <p>Zoom to get a better look at possible transits.
+     Use your mouse wheel, or drag the white context handles at botton.
+   </p>
+  
+  <p>When zoomed in, you can pan from side to side. Drag graph the or the bottom context area.</p>
 
-  <p>Zoom: Mouse wheel, or drag context handles</p>
-  <p>Pan: Drag graph or context area</p>
-  <p>Draw Transits: Click to mark the center; click again to mark the boundary</p>
-  <p>Focus: Click any marked transit, or a number on the right</p>
-  <p>Delete Transit: Focus on transit, then click the X at right</p>
-  <p>Continue to next light curve: Click FINISH button</p>
-  <p>Finish and submit HIT</p>
+  <p>To continue to the next light curve, Click the 'NEXT' button. 
+  You should also click this if you don't see any transits.</p>
+  
+  <p>To finish all your work and take your payment, click the big 'SUBMIT' button.</p>
+  
+  <br/>
   <a class="big-button">Return to Task</a>
 </div>
 

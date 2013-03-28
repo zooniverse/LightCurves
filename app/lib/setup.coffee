@@ -8,7 +8,7 @@ require('spine/lib/ajax')
 require('spine/lib/manager')
 require('spine/lib/route')
 
-require 'd3/d3.v2'
+require('d3/d3')
 
 ###
 Other stuff not in NPM...

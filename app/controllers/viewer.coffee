@@ -5,9 +5,10 @@ Network = require 'lib/network'
 Lightcurve = require 'models/lightcurve'
 
 class Viewer extends Spine.Controller
-  className: "graph"
+  # className: "graph"
   
   elements:
+    ".zoom a": "zoomButton"
     ".yZoom_help": "yZoomHelp"
     ".xZoom_help": "xZoomHelp"
     ".drag_help": "dragHelp"
@@ -50,6 +51,9 @@ class Viewer extends Spine.Controller
   current_box: null
   resize_box: null
   dragStart: null
+  
+  scaled: false
+  animRequest: null
       
   constructor: ->
     super
@@ -67,16 +71,18 @@ class Viewer extends Spine.Controller
     @h_bottom ?= 30
     @max_zoom ?= 10
     
-    @h_to_context = @top_padding + @height - @h_bottom          
-    
+    @h_to_context = @top_padding + @height - @h_bottom
+  
   render: =>    
-    @html require('views/viewer')(@)          
+    @replace require('views/viewer')(@)
+    @el
   
   teardown: -> 
     # TODO: Better job of cleaning things up 
     @canvas_2d?.clearRect(0, 0, @width, @h_graph)
     @svg?.empty()
     
+    @scaled = false
     @transits = []
     @current_box = null
     @resize_box = null
@@ -87,7 +93,7 @@ class Viewer extends Spine.Controller
     # Functions called by behaviors    
     if @allow_zoom
       @zoom_graph_beh
-        .on("zoom", @redraw)        
+        .on("zoom", @scheduleRedraw)        
       @drag_leftdot_beh
         .on("drag", @leftDotDrag)
       @drag_context_beh
@@ -112,10 +118,15 @@ class Viewer extends Spine.Controller
       @context_leftDot.style("cursor": "auto") 
       @context_rightDot.style("cursor": "auto") 
   
-  zoomYAxis: (ev) ->
+  zoomYAxis: (ev) =>
     ev.preventDefault()
-    alert "click"
+    return unless @allow_zoom
+
     # do stuff
+    @scaled = not @scaled
+    @zoomButton.toggleClass "more"
+    @zoomButton.toggleClass "less"    
+    @scheduleRedraw()
     
   loadData: (lightcurve) =>
     # Destroy old data, if any
@@ -153,11 +164,11 @@ class Viewer extends Spine.Controller
       .ticks(@n_yticks)
       .tickSize(-@width, 0, 0)
 
-    graph = d3.select(@el.context)
+    graph = d3.select(@el[0])
     @svg = graph.select(".graph_svg")
       .attr("width", @width + @left_margin + @right_margin)
       .attr("height", @height + @top_padding + @bottom_padding)
-      
+    
     # Put a clear rect at the first layer of the SVG to catch click events for IE.
     @svg.append("rect")
       .attr("width", "100%")
@@ -282,7 +293,7 @@ class Viewer extends Spine.Controller
         
     # Call draw function once 
     # it runs fast and can be called for changes/animations
-    @redraw()
+    @scheduleRedraw()
     
   # When plot is dragged
   plot_drag: => 
@@ -548,7 +559,7 @@ class Viewer extends Spine.Controller
     return if current_dom[0] == target_dom[0] and current_dom[1] == target_dom[1]
         
     # FIXME: disable zoom and other events during this
-    rd = @redraw
+    rd = @redraw # This seems to already use requestAnimationFrame so we don't need to do it ourselves
     @svg.transition()
       .duration(1000)
       .tween "zoom", -> 
@@ -600,7 +611,7 @@ class Viewer extends Spine.Controller
     dom[1] = @x_bottom.invert(d.x + context_width)
     @x_scale.domain(dom)
     
-    requestAnimFrame => @redraw()    
+    @scheduleRedraw()
 
   # Drag left dot (zoom) with limit on right
   leftDotDrag: (d) =>
@@ -610,7 +621,7 @@ class Viewer extends Spine.Controller
     dom[0] = @x_bottom.invert d.x
     @x_scale.domain dom
     
-    requestAnimFrame => @redraw()
+    @scheduleRedraw()
 
   # Drag right dot (zoom) with limit on left
   rightDotDrag: (d) =>
@@ -620,7 +631,12 @@ class Viewer extends Spine.Controller
     dom[1] = @x_bottom.invert d.x
     @x_scale.domain dom
     
-    requestAnimFrame => @redraw()
+    @scheduleRedraw()
+    
+  scheduleRedraw: =>
+    # Stop a previous request if it hasn't executed yet
+    cancelAnimationFrame(@animRequest) if @animRequest 
+    @animRequest = requestAnimationFrame => @redraw()
 
   getZoomPanFix: (dom) ->
     # Make consistent scales and zoom to enforce panning extent
@@ -650,7 +666,9 @@ class Viewer extends Spine.Controller
     
     [dom, new_scale]
 
+  # called from animFrame only
   redraw: (target_dom) =>
+    @animRequest = null
     target_dom ?= @x_scale.domain()
     [dom, new_scale] = @getZoomPanFix target_dom
 
@@ -659,6 +677,26 @@ class Viewer extends Spine.Controller
     @zoom_graph_beh
       .scale( new_scale )
       .translate([ -@x_bottom(dom[0]) * new_scale , 0])
+
+    # Premature optimization right here:
+    xs = @x_scale
+    ys = @y_scale
+    data = @lightcurve.data
+      
+    # Adjust scaling
+    if @scaled
+      scale = data.length / @lightcurve.end
+      idx = Math.round(xs.invert(0) * scale)
+      idxEnd = Math.round(xs.invert(@width) * scale)
+      ymin = data[idx].y
+      ymax = data[idx].y
+      while ++idx < idxEnd
+        ymin = Math.min(data[idx].y, ymin)
+        ymax = Math.max(data[idx].y, ymax)
+      yrange = ymax - ymin
+      @y_scale.domain([ymin - 0.10 * yrange, ymax + 0.10 * yrange])
+    else
+      @y_scale.domain([@lightcurve.ymin, @lightcurve.ymax])
     
     # Adjust context area stuff, with data for drag handling
     l_px = @x_bottom(dom[0])
@@ -691,12 +729,7 @@ class Viewer extends Spine.Controller
   
     # Plot dots!
     # FIXME: may only want to draw viewport dots for even faster!
-    # Premature optimization right here:
-    xs = @x_scale
-    ys = @y_scale
-    canvas = @canvas_2d
-    data = @lightcurve.data
-        
+    canvas = @canvas_2d        
     canvas.clearRect(0, 0, @width, @h_graph)
     
     h = @h_graph
@@ -738,6 +771,7 @@ class Viewer extends Spine.Controller
       cx = xs(d.x)
       cy = ys(d.y)  
       canvas.moveTo(cx, cy)
+      # canvas.lineTo(cx+5, cy+5)
       canvas.arc(cx, cy, 2.5, 0, twopi)      
     canvas.fillStyle = "#FFFFFF"
     canvas.fill()

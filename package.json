@@ -14,13 +14,12 @@
   },
   "dependencies": {
     "serveup": "~0.0.5",
-    "hem": "~0.1.8",
-    "es5-shimify": "~0.0.1",
-    "json2ify": "~0.0.1",
-    "jqueryify": "~0.0.1",
-    "spine": "~1.0.7",
-    "clean-css": "0.6.0",
-    "d3": "~2.10.1"
+    "es5-shimify": "~2.0.5",
+    "json2ify": "~0.0.3",
+    "jqueryify": "~1.9.1",
+    "spine": "~1.0.9",
+    "clean-css": "~0.10.2",
+    "d3": "~3.1.4"
   },
   "devDependencies": {
     "jasmine-phantom-node": "git://github.com/edpaget/jasmine-phantom-node.git"

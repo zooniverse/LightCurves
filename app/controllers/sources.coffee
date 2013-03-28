@@ -35,9 +35,10 @@ class Sources extends Spine.Controller
   
   render: ->
     @html require('views/source')(@)
-    @append @viewer
     
-    @viewer.render()
+    @append @viewer.render()
+    
+    # @viewer.render()
   
   lcMetaLoaded: =>
     @render()
