@@ -55,6 +55,8 @@ class Classify extends Spine.Controller
     @html require('views/classify')(@)
 
     # Double append seems to be getting rid of events
+    # Fixed via https://github.com/spine/spine/issues/444: sub-controllers use replace 
+    
     @append @dialog.render()
     @append @viewer.render()
 

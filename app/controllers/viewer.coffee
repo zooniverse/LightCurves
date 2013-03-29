@@ -635,8 +635,11 @@ class Viewer extends Spine.Controller
     
   scheduleRedraw: =>
     # Stop a previous request if it hasn't executed yet
-    cancelAnimationFrame(@animRequest) if @animRequest 
+    if @animRequest 
+      cancelAnimationFrame(@animRequest)      
+      console.log "canceled " + @animRequest
     @animRequest = requestAnimationFrame => @redraw()
+    console.log "scheduled " + @animRequest
 
   getZoomPanFix: (dom) ->
     # Make consistent scales and zoom to enforce panning extent
@@ -668,6 +671,7 @@ class Viewer extends Spine.Controller
 
   # called from animFrame only
   redraw: (target_dom) =>
+    console.log "drawing " + @animRequest
     @animRequest = null
     target_dom ?= @x_scale.domain()
     [dom, new_scale] = @getZoomPanFix target_dom
@@ -694,7 +698,7 @@ class Viewer extends Spine.Controller
         ymin = Math.min(data[idx].y, ymin)
         ymax = Math.max(data[idx].y, ymax)
       yrange = ymax - ymin
-      @y_scale.domain([ymin - 0.10 * yrange, ymax + 0.10 * yrange])
+      @y_scale.domain([ymin - 0.10 * yrange, ymax])
     else
       @y_scale.domain([@lightcurve.ymin, @lightcurve.ymax])
     

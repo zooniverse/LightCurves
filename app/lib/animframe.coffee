@@ -28,6 +28,10 @@ do ->
         targetTime = 0
         w.requestAnimationFrame = (callback) ->
             targetTime = Math.max targetTime + 16, currentTime = +new Date
-            w.setTimeout (-> callback +new Date), targetTime - currentTime
+            # console.log "set timeout " + (targetTime - currentTime)            
+            w.setTimeout (-> callback +new Date), targetTime - currentTime            
 
-        w.cancelAnimationFrame = (id) -> clearTimeout id
+        w.cancelAnimationFrame = (id) ->
+            targetTime -= 16
+            clearTimeout id
+
