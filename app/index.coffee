@@ -11,10 +11,10 @@ TSClient = require 'turkserver-js-client'
 
 class App extends Spine.Controller
   constructor: ->
-    super
+    super        
     
-    if( $.browser.msie )
-      return
+    if $.browser.msie
+      return false
         
     # Remove browser warnings
     $("#content").empty()

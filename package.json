@@ -16,7 +16,7 @@
     "serveup": "~0.0.5",
     "es5-shimify": "~2.0.5",
     "json2ify": "~0.0.3",
-    "jqueryify": "~1.9.1",
+    "jqueryify": "~1.8.3",
     "spine": "~1.0.9",
     "clean-css": "~0.10.2",
     "d3": "~3.1.4"
