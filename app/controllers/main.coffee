@@ -15,8 +15,6 @@ class Main extends Spine.Stack
 
   constructor: ->
     super
-    # remove browser warning
-    $(@el).children("h3").remove()
 
   controllers:
     home: Home

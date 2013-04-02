@@ -198,7 +198,7 @@ class Tutorial extends Spine.Controller
     @viewer.show_simulations = false
     @viewer.redraw()
     
-    @dialog.editMode()
+    @dialog.editMode(true)
         
   showTransits: => 
     @viewer.animateZoom [0, 35]

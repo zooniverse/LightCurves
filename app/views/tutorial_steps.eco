@@ -19,7 +19,7 @@
 <div class="step stepDescribe">
   <p class="question">Transits</p>
   <p class="question small">
-  As a planet passes in front of the star and partially obscures it, the measured brightness drops.
+  As a planet passes in front of the star and partially obscures it, the measured brightness of the star drops.
   </p>
   <p class="question small">
   These events are called 'transits' and show up as dips in the light curve.
@@ -49,7 +49,7 @@
     Some things look like transits, but can fool you. For example, you may see a single dot below the light curve by itself.
   </p>
   <p class="question small">
-    This it is usually caused by natural measurement error in the telescope, and is not a transit.
+    This is usually caused by natural measurement error in the telescope, and is not a transit.
   </p>
 </div>
 

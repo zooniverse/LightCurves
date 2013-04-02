@@ -13,6 +13,12 @@ class App extends Spine.Controller
   constructor: ->
     super
     
+    if( $.browser.msie )
+      return
+        
+    # Remove browser warnings
+    $("#content").empty()
+    
     @classify_help = new ClassifyHelp
       el: "#help-overlay"
     
