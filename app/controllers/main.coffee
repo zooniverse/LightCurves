@@ -6,6 +6,7 @@ Classify = require 'controllers/classify'
 Sources = require 'controllers/sources'
 TaskRules = require 'controllers/task_rules'
 ExitSurvey = require 'controllers/exit_survey'
+Error = require 'controllers/error'
 
 Payment = require 'controllers/payment'
 
@@ -24,6 +25,7 @@ class Main extends Spine.Stack
     sources: Sources
     taskrules: TaskRules
     exitsurvey: ExitSurvey
+    error: Error
     
   default: 'home'
     
@@ -35,5 +37,6 @@ class Main extends Spine.Stack
     '/sources/:zooniverse_id': 'sources'
     '/taskrules': 'taskrules'
     '/exitsurvey': 'exitsurvey'
+    '/error/:msg': 'error'
     
 module.exports = Main

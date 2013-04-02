@@ -40,7 +40,7 @@ class Network
         
       if "payment" of data
         @payment.el.show()
-        @payment.updatePay(data.payment)
+        @payment.updatePay(data)
         
       if data.annotations        
         if @viewer is null
@@ -59,6 +59,8 @@ class Network
       switch status
         when Codec.status_completed, Codec.status_expfinished
           Spine.Route.navigate "/exitsurvey"
+        else
+          Spine.Route.navigate "/error", msg
       alert(msg) if msg
   
     # hide payment initially
@@ -129,8 +131,13 @@ class Network
   @finishTutorial: ->
     console.log "tutorial done"
     @tutorial = false
-    TSClient.sendQuizResults 1, 1, ""      
-    # fake finish tutorial
+    
+    if TSClient.hitIsViewing()
+      alert("This is a preview. Please accept the HIT to do the task.")      
+    else
+      TSClient.sendQuizResults 1, 1, ""      
+      
+    # fake finish tutorial      
     Spine.Route.navigate '/classify', 'APH10154043' if TSClient.localMode
     
   @finishTask: ->

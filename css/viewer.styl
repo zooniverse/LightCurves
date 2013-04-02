@@ -51,9 +51,8 @@ transit-solid-opacity = 0.9
 
 .chart-annotations .transit .transit-text
   font: 14px sans-serif
-  dominant-baseline: central
-  // TODO: needs another hax due to IE9 sucking
-  // baseline-shift: -30%
+  // This would work except for IE9 sucking. Currently applying transform to text.
+  // dominant-baseline: central
 
 .chart-annotations .transit .n-resize
 .chart-annotations .transit .s-resize

@@ -413,6 +413,7 @@ class Viewer extends Spine.Controller
     .append("svg:text")
       .attr("class", "transit-text")
       .attr("text-anchor", "middle")
+      .attr("transform", "translate(0, 5)") # A hack since IE9 doesn't support dominant-baseline: central in CSS
       .text((d) -> d.num)
     # Drag and resize handles
     current_box
@@ -637,9 +638,9 @@ class Viewer extends Spine.Controller
     # Stop a previous request if it hasn't executed yet
     if @animRequest 
       cancelAnimationFrame(@animRequest)      
-      console.log "canceled " + @animRequest
+      # console.log "canceled " + @animRequest
     @animRequest = requestAnimationFrame => @redraw()
-    console.log "scheduled " + @animRequest
+    # console.log "scheduled " + @animRequest
 
   getZoomPanFix: (dom) ->
     # Make consistent scales and zoom to enforce panning extent
@@ -671,7 +672,7 @@ class Viewer extends Spine.Controller
 
   # called from animFrame only
   redraw: (target_dom) =>
-    console.log "drawing " + @animRequest
+    # console.log "drawing " + @animRequest
     @animRequest = null
     target_dom ?= @x_scale.domain()
     [dom, new_scale] = @getZoomPanFix target_dom
@@ -695,6 +696,7 @@ class Viewer extends Spine.Controller
       ymin = data[idx].y
       ymax = data[idx].y
       while ++idx < idxEnd
+        if data[idx].y <= 0 then continue
         ymin = Math.min(data[idx].y, ymin)
         ymax = Math.max(data[idx].y, ymax)
       yrange = ymax - ymin
