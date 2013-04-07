@@ -67,11 +67,12 @@
 
 <div class="step stepZoomInst">
 	<%# <a href="#" id="help">Help</a> %>
-  <p class="question small">You can use the bottom sliders or your mouse wheel to zoom, then drag the chart to pan.</p>
+  <p class="question small">You can use the white handles or your mouse/touchpad scroll to zoom.</p>
+  <p class="question small">Drag the chart to pan.</p>
   <p class="question small"><%= t('workflows.tutorial.workflow.questions.play') %></p>
 	<p class="question small">
 	  <%#= t('workflows.tutorial.workflow.questions.help_button')%>
-	  The bottom panel will show the current zoom focus area. Try dragging it too!
+	  The bottom area shows the current zoom focus. Try dragging it too!
 	</p	>
 </div>
 
@@ -89,12 +90,14 @@
 </div>
 
 <div class="step stepAnnotateCont">
-  <p class="question">Great!</p>
   <p class="question small">
     You've just marked your first transit. Wasn't that easy?
   </p>
   <p class="question small">
-    Keep searching, and click 'NEXT' when you think you've found them all.
+    Click 'NEXT' when you think you've marked them all.
+  </p>
+  <p class="question small">
+    Delete a transit by clicking the 'X' above its number.
   </p>
 </div>
 

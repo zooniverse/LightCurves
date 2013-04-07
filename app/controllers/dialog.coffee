@@ -15,10 +15,9 @@ class Dialog extends Spine.Controller
   events:
     "click .button.transit": "focusTransit"
     "click .button.transit .delete": "removeTransit"
-    "click .step .help": (ev) -> 
-      ev.preventDefault()
-      $("#help-overlay").css("visibility", "visible")
-    # "click .step .restart": (ev) -> ev.preventDefault(); alert("Not implemented yet")
+    "click .step .help": "helpClick"
+
+  buttons: []
 
   constructor: ->
     super    
@@ -33,7 +32,13 @@ class Dialog extends Spine.Controller
         
     @el
     
+  helpClick: (ev) ->
+    ev.preventDefault()
+    $("#help-overlay").css("visibility", "visible")
+    Network.activity "Help Clicked"
+    
   addTransit: (number) ->
+    # TODO: the below mess was copied from the original PH. To be put into a view eventually
     button = @editActions.find(".transit:first-child")
       .clone()
       .attr("title", number)
@@ -46,13 +51,19 @@ class Dialog extends Spine.Controller
         title: "delete"
       ))
     
-    # insert this button in the list
-    # TODO: broken when a higher number is in the list
-    existing = @editActions.find(".transit[title=#{number+1}]")
-    if existing.length > 0 
-      existing.before button
+    # insert this button in the list        
+    # existing = @editActions.find(".transit[title=#{number+1}]")
+    
+    i = 0
+    while( ++i < number )
+      existing = @buttons[i] if @buttons[i]        
+    
+    if existing 
+      existing.after button
     else
-      @editActions.append button
+      @editActions.prepend button
+      
+    @buttons[number] = button
   
   focusTransit: (ev) =>
     ev.preventDefault()
@@ -79,6 +90,7 @@ class Dialog extends Spine.Controller
      number = button.attr("title")
      @viewer?.removeTransit number
      
+     @buttons[number] = null
      button.fadeOut -> button.remove()
     
   hideButtons: ->  

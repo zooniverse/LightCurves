@@ -14,6 +14,9 @@ class Network
   @tutorial = false
   @viewer = null
   @payment = null
+  
+  # After how long to display a warning
+  @inactiveWarningMillis = 120000  
 
   @init: (payment) ->
     if not TSClient.params.assignmentId
@@ -51,6 +54,9 @@ class Network
           console.log "redrawing annotations"
           @viewer.addTransitExternal(ann) for ann in data.annotations
           @viewer.redraw_transits()
+          
+        # start inactivity monitor on a reload
+        TSClient.startInactivityMonitor(@checkInactivity)
 
     TSClient.FinishExperiment -> 
       Spine.Route.navigate("/exitsurvey")
@@ -85,13 +91,16 @@ class Network
     msg =
       action: "starttasks"
     TSClient.sendExperimentBroadcast(msg)
-  
-  # Ask for annotations to be re-sent over the wire
-  @requestUpdate: ->
-    msg = 
-      action: "requestupdate" 
-    TSClient.sendExperimentBroadcast(msg)
     
+    TSClient.startInactivityMonitor(@checkInactivity)    
+  
+  @activity: (description) ->
+    TSClient.sendExperimentBroadcast
+      action: "activity"
+      type: description
+  
+    TSClient.resetInactivity()
+  
   @addTransit: (transit) ->
     console.log "added "
     console.log transit
@@ -102,7 +111,7 @@ class Network
     $.extend(msg, transit)
     TSClient.sendExperimentBroadcast(msg)
 
-    @resetInactivity()
+    TSClient.resetInactivity()
 
   @editTransit: (transit) ->
     console.log "resized "
@@ -114,7 +123,7 @@ class Network
     $.extend(msg, transit)
     TSClient.sendExperimentBroadcast(msg)
     
-    @resetInactivity()
+    TSClient.resetInactivity()
 
   @removeTransit: (transit) ->
     console.log "removed "
@@ -126,7 +135,7 @@ class Network
     $.extend(msg, transit)
     TSClient.sendExperimentBroadcast(msg)
 
-    @resetInactivity()
+    TSClient.resetInactivity()
   
   @finishTutorial: ->
     console.log "tutorial done"
@@ -145,17 +154,27 @@ class Network
     msg = 
       action: "finishtask"
     TSClient.sendExperimentBroadcast(msg)
+    
+    TSClient.resetInactivity()
   
   @finishExp: ->
     console.log "all done"
     TSClient.sendExperimentBroadcast
       action: "finishexp"
+      
+    TSClient.stopInactivityMonitor()
   
   @submitExitSurvey: (data) ->
     console.log "submitting survey"
-    TSClient.submitHIT data
-    
+    TSClient.submitHIT data                  
+  
   @resetInactivity: ->
-    @lastInactive = Date.now()    
+    TSClient.resetInactivity()
+    
+  @checkInactivity: (inactiveTime) =>        
+    if inactiveTime > @inactiveWarningMillis
+      console.log "Inactive for " + inactiveTime
+      # TODO Display inactivity warning
+    
 
 module.exports = Network
