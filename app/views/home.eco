@@ -1,11 +1,29 @@
 
 
-<h2><%= t('workflows.floor_splash.welcome') %></h2>
-<h1><%= t('workflows.floor_splash.looking_for_planets') %></h1>
+<h2>
+<%= t('workflows.floor_splash.welcome') %>
+</h2>
+
+<h1>
+<%= t('workflows.floor_splash.looking_for_planets') %>.
+</h1>
+
+<p class="fine-print">The purpose of this research is to study online crowdsourcing tasks. After a brief tutorial, you will look for planets in astronomical light curve data by examining the brightness of stars. You may choose how much work you will do for this task, and the time required for this task will vary depending on your work. You will be paid a bonus for the amount of work you do and the amount of this bonus will be displayed to you and updated continually once the task starts.
+</p>
+
+<p class="fine-print">Your participation is voluntary and you may refuse to participate or withdraw at any time without penalty or loss of benefits to which you are otherwise entitled by returning this HIT. You may also choose to submit the HIT at any time to earn the base reward plus your earned bonus so far. You will always be paid for good-faith, non-spam work. Your work will be kept anonymous and research results will be aggregated and described in summary.
+</p>
+
+<p class="fine-print">If you have questions or concerns about this research, or would like to be contacted regarding research results, please contact Andrew Mao, mao@seas.harvard.edu. For any other questions, concerns, suggestions, or complaints about research-related harm, you may also contact the Committee on the Use of Human Subjects in Research at Harvard University, 1414 Massachusetts Avenue, Second Floor, Cambridge, MA, 02138. Phone: 617-496-2847, or email: cuhs@fas.harvard.edu.
+</p>
+
+<p class="fine-print">Please print or save a copy of this page for your records.
+</p>
 
 <div class="start_hunting">
   <a class="big-button" href="#" title="<%= t('workflows.floor_splash.start_hunting') %>">
-  <%= t('workflows.floor_splash.start_hunting') %></a>
+    <%= t('workflows.floor_splash.start_hunting') %>
+  </a>
   <p class="login_signup">
     <%#= get_welcome_or_login %>
     <h2>Complete a short tutorial to get started.</h2>

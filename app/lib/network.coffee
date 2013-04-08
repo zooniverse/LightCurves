@@ -35,7 +35,7 @@ class Network
 
     TSClient.BroadcastMessage (data) =>
       if data.error
-        alert data.error
+        Spine.trigger "showMessage", data.error
           
       if data.task
         # Don't update hash fragment here
@@ -58,16 +58,18 @@ class Network
         # start inactivity monitor on a reload
         TSClient.startInactivityMonitor(@checkInactivity)
 
-    TSClient.FinishExperiment -> 
+    TSClient.FinishExperiment ->     
       Spine.Route.navigate("/exitsurvey")
+      TSClient.stopInactivityMonitor()
 
     TSClient.ErrorMessage (status, msg) ->
       switch status
         when Codec.status_completed, Codec.status_expfinished
-          Spine.Route.navigate "/exitsurvey"
+          Spine.Route.navigate "/exitsurvey"          
         else
           Spine.Route.navigate "/error", msg
-      alert(msg) if msg
+          
+      Spine.trigger("showMessage", msg) if msg
   
     # hide payment initially
     payment.el.hide()
@@ -142,7 +144,7 @@ class Network
     @tutorial = false
     
     if TSClient.hitIsViewing()
-      alert("This is a preview. Please accept the HIT to do the task.")      
+      Spine.trigger("showMessage", "This is a preview. Please accept the HIT to do the task.")
     else
       TSClient.sendQuizResults 1, 1, ""      
       
@@ -173,8 +175,8 @@ class Network
     
   @checkInactivity: (inactiveTime) =>        
     if inactiveTime > @inactiveWarningMillis
-      console.log "Inactive for " + inactiveTime
-      # TODO Display inactivity warning
-    
+      # Display inactivity warning
+      Spine.trigger "showMessage", "Are you still there? Your session will end automatically if you do nothing for one minute."
+      console.log "Inactive for " + inactiveTime          
 
 module.exports = Network

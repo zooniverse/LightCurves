@@ -76,7 +76,7 @@
 	</p	>
 </div>
 
-<div class="step stepAnnotate">
+<div class="step stepAnnotate">  
   <p class="question"><%= t('workflows.tutorial.workflow.questions.can_you_spot_transit') %></p>
   <p class="question small">
     You can mark a transit by clicking on the graph.
@@ -89,7 +89,8 @@
   </p>
 </div>
 
-<div class="step stepAnnotateCont">
+<div class="step stepAnnotateCont classify">
+  <a href="#" class="help">Help</a>
   <p class="question small">
     You've just marked your first transit. Wasn't that easy?
   </p>

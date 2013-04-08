@@ -40,7 +40,7 @@ How likely are you to do the task again if you were paid as above?
 <br />
 
 <p>
-How many of the planet transits that you marked do you think were actual transits?
+Of the transits that you marked, how many do you think were actual planet transits?
 </p>
 <fieldset>
 <input type="radio" name="precision" id="precision1" value="1"><label for="precision1">0-20%</label>
@@ -52,7 +52,7 @@ How many of the planet transits that you marked do you think were actual transit
 <br />
 
 <p>
-How many of the actual planet transits do you think you spotted overall?
+How many of all the actual planet transits do you think you spotted or correctly identified?
 </p>
 <fieldset>
 <input type="radio" name="recall" id="recall1" value="1"><label for="recall1">0-20%</label>
@@ -66,10 +66,10 @@ How many of the actual planet transits do you think you spotted overall?
 <p>Describe how you searched for planet transits.</p>
 <textarea rows="4" cols="100" name="strategyComments"></textarea>
 
-<p>How did you decide to stop working on the task? Is there something that would have made you continue for longer?</p>
+<p>How did you decide to stop working on the task? What would have made you continue for longer?</p>
 <textarea rows="4" cols="100" name="engagementComments"></textarea>
 
-<p>What was confusing or hard to understand about the tutorial and the interface? Can anything be improved?</p>
+<p>What was confusing or hard to understand about the tutorial and the interface? What could be improved?</p>
 <textarea rows="4" cols="100" name="uiComments"></textarea>
 
 <p>If you experienced any bugs, in the task, please let us know below.</p>

@@ -25,6 +25,6 @@ class Survey extends Spine.Model
     unless @uiComments
       arr.push "Please comment on the tutorial and interface."
     
-    arr.join "\n"
+    arr.join "<br>"
       
 module.exports = Survey

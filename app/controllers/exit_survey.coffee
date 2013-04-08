@@ -32,7 +32,8 @@ class ExitSurvey extends Spine.Controller
     console.log JSON.stringify(survey)
 
     if msg = survey.validate()
-      return alert(msg)
+      Spine.trigger "showMessage", msg
+      return
     
     # Assemble into JSON and submit
     Network.submitExitSurvey JSON.stringify(survey)    

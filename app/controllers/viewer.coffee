@@ -345,7 +345,8 @@ class Viewer extends Spine.Controller
       if d.num > @max_annotations
         @current_box.remove()
         @current_box = null
-        alert("You can mark up to #{@max_annotations} transits. Try to refine your existing work.")
+        Spine.trigger "showMessage", "You can mark up to #{@max_annotations} transits. Try to refine your existing work."
+        Network.activity "Tried to draw more than #{@max_annotations} transits"
         return
       
       @decorate_box @current_box

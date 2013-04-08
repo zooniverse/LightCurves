@@ -3,7 +3,6 @@
 
 <p class="payment-method"></p>
 
-<p class="payment-increment"></p>
-
 <p class="payment-amount">If you stop now, you will earn $<strong>...</strong>.</p>
 
+<p class="payment-increment"></p>

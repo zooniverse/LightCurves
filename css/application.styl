@@ -4,6 +4,15 @@ body
   color: white
   overflow-x: hidden
 
+h1  
+  font-size: 2em
+
+h2
+  font-size: 1.5em
+
+h3
+  font-size: 1.25em
+
 .background
   position: fixed
   top: 0
@@ -27,7 +36,7 @@ body
   
 .help-overlay
   visibility: hidden
-  position: absolute
+  position: fixed
   left: 0px
   top: 0px
   width: 100%
@@ -37,8 +46,10 @@ body
   background: rgba(0,0,0,0.4)
   
 .help-overlay .help
-  width: 500px
-  margin: 200px auto
+  width: 700px
+  margin: 100px auto
+  max-height: 600px
+  overflow-y: auto
   background-color: #000
   border: 1px solid #fff
   padding: 15px
@@ -49,16 +60,10 @@ body
 
 .darkened
   background-color: rgba(0,0,0,0.6)
-    
-.textpage h1
-  font-size: 55px
-  font-weight: lighter
-  width: 850px
 
-.textpage h2
-  font-size: 25px
+.fine-print
+  font-size: 80%
   font-weight: lighter
-  line-height: 2
 
 .textpage
   position: relative
@@ -66,9 +71,17 @@ body
   vertical-align: top
   zoom: 1
   *display: inline
-  margin: 50px auto
+  margin: 25px auto
   padding: 25px
   width: 960px
+
+.textpage h1
+  width: 850px
+  line-height: 2
+  margin: 0px auto
+
+.textpage h2
+  line-height: 2  
   
 .textpage ul
   list-style: disc
@@ -77,14 +90,12 @@ body
   margin-top: 10px
   
 .textpage p
-  margin-top: 10px
+  margin-bottom: 10px
 
 // TODO: move this somewhere with the big-button
 
 .textpage .start_hunting
-  position: absolute
-  top: 200px
-  right: 50px
+  float: right  
 
 .textpage .start_hunting p
   font-family: Arial
@@ -159,10 +170,6 @@ body
   margin: 0 auto
   padding: 0
   position: relative
-  clear: both
-
-#content > h3 // Browser warning
-  font-size: 90%
   clear: both
   
 #zooniverse

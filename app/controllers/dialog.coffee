@@ -34,7 +34,7 @@ class Dialog extends Spine.Controller
     
   helpClick: (ev) ->
     ev.preventDefault()
-    $("#help-overlay").css("visibility", "visible")
+    Spine.trigger "showHelp"
     Network.activity "Help Clicked"
     
   addTransit: (number) ->
