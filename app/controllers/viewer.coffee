@@ -250,22 +250,35 @@ class Viewer extends Spine.Controller
     @drag_rightdot_beh = d3.behavior.drag().origin(Object)
     
     @drag_transit = d3.behavior.drag().origin((d) => x: @x_scale(d.x), y: @y_scale(d.y))
-    # Null is actually better than an explicit origin accessor, to preserve cursor consistency
-    @resize_transit = d3.behavior.drag().origin(null)
-    @resize_transit_ew = d3.behavior.drag().origin(null)
-    @resize_transit_ns = d3.behavior.drag().origin(null)
 
     @drag_transit
       .on("drag", @transitDrag)
       .on("dragend", @editTransit)
-    @resize_transit
-      .on("drag", @transitResize)
+    
+    # Null is actually better than an explicit origin accessor, to preserve cursor consistency
+    @resize_transit_n = d3.behavior.drag().origin(null)
+      .on("drag", @transitResizeN)
+      .on("dragend", @editTransit)      
+    @resize_transit_ne = d3.behavior.drag().origin(null)
+      .on("drag", @transitResizeNE)
       .on("dragend", @editTransit)
-    @resize_transit_ew
-      .on("drag", @transitResizeEW)
+    @resize_transit_e = d3.behavior.drag().origin(null)
+      .on("drag", @transitResizeE)
       .on("dragend", @editTransit)
-    @resize_transit_ns
-      .on("drag", @transitResizeNS)
+    @resize_transit_se = d3.behavior.drag().origin(null)
+      .on("drag", @transitResizeSE)
+      .on("dragend", @editTransit)
+    @resize_transit_s = d3.behavior.drag().origin(null)
+      .on("drag", @transitResizeS)
+      .on("dragend", @editTransit)
+    @resize_transit_sw = d3.behavior.drag().origin(null)
+      .on("drag", @transitResizeSW)
+      .on("dragend", @editTransit)
+    @resize_transit_w = d3.behavior.drag().origin(null)
+      .on("drag", @transitResizeW)
+      .on("dragend", @editTransit)
+    @resize_transit_nw = d3.behavior.drag().origin(null)
+      .on("drag", @transitResizeNW)
       .on("dragend", @editTransit)
 
     # What we do with the behaviors    
@@ -331,8 +344,13 @@ class Viewer extends Spine.Controller
         return
       
       # Make box permanent
-      d.dx = Math.abs(@x_scale.invert(x) - d.x)
-      d.dy = Math.abs(@y_scale.invert(y) - d.y)
+      d.x = (@x_scale.invert(x) + d.x_start) / 2
+      d.y = (@y_scale.invert(y) + d.y_start) / 2
+      d.dx = Math.abs(@x_scale.invert(x) - d.x_start)
+      d.dy = Math.abs(@y_scale.invert(y) - d.y_start)
+      
+      delete d.x_start
+      delete d.y_start
       
       # Find least unused number for this box
       for i in [1 .. @transits.length]
@@ -376,11 +394,33 @@ class Viewer extends Spine.Controller
           y: @y_scale.invert(y)
           dx: 0
           dy: 0
+          x_start: @x_scale.invert(x)
+          y_start: @y_scale.invert(y)
 
       @current_box
       .append("svg:rect")
         .attr("class", "transit-rect")
-  
+    
+  plot_mousemove: =>
+    return unless @current_box
+    [x, y] = d3.mouse(@canvas)
+
+    # Cancel the box and fix the cursor        
+    if x < -@cancel_bound or x > @width + @cancel_bound or
+     y < -@cancel_bound or y > @h_graph + @cancel_bound
+      d3.select("body").style("cursor", "auto")
+      @current_box.remove()
+      @current_box = null
+
+    if @current_box
+      d = @current_box.datum()      
+      d.x = (@x_scale.invert(x) + d.x_start) / 2
+      d.y = (@y_scale.invert(y) + d.y_start) / 2
+      d.dx = Math.abs(@x_scale.invert(x) - d.x_start)
+      d.dy = Math.abs(@y_scale.invert(y) - d.y_start)
+      
+      @redraw_transits @current_box
+        
   addTransitExternal: (d) =>   
     current_box = @svg_annotations
       .append("svg:g")
@@ -425,65 +465,47 @@ class Viewer extends Spine.Controller
     .append("svg:rect") # Top handle
       .attr("class", "n-resize")
       .attr("height", @resize_half_width * 2)
-      .call(@resize_transit_ns)
+      .call(@resize_transit_n)
     current_box
     .append("svg:rect") # Bottom handle
       .attr("class", "s-resize")
       .attr("height", @resize_half_width * 2)
-      .call(@resize_transit_ns)
+      .call(@resize_transit_s)
     current_box
     .append("svg:rect") # Right handle
       .attr("class", "e-resize")
       .attr("width", @resize_half_width * 2)
-      .call(@resize_transit_ew)
+      .call(@resize_transit_e)
     current_box
     .append("svg:rect") # Left handle
       .attr("class", "w-resize")
       .attr("width", @resize_half_width * 2)
-      .call(@resize_transit_ew)
+      .call(@resize_transit_w)
 
     current_box
     .append("svg:rect") # Top right handle
       .attr("class", "ne-resize")
       .attr("width", @resize_half_width * 2)
       .attr("height", @resize_half_width * 2)
-      .call(@resize_transit)
+      .call(@resize_transit_ne)
     current_box
     .append("svg:rect") # Bot right handle
       .attr("class", "se-resize")
       .attr("width", @resize_half_width * 2)
       .attr("height", @resize_half_width * 2)
-      .call(@resize_transit)
+      .call(@resize_transit_se)
     current_box
     .append("svg:rect") # Top right handle
       .attr("class", "sw-resize")
       .attr("width", @resize_half_width * 2)
       .attr("height", @resize_half_width * 2)
-      .call(@resize_transit)
+      .call(@resize_transit_sw)
     current_box
     .append("svg:rect") # Top right handle
       .attr("class", "nw-resize")
       .attr("width", @resize_half_width * 2)
       .attr("height", @resize_half_width * 2)
-      .call(@resize_transit)
-    
-  plot_mousemove: =>
-    return unless @current_box
-    [x, y] = d3.mouse(@canvas)
-
-    # Cancel the box and fix the cursor        
-    if x < -@cancel_bound or x > @width + @cancel_bound or
-     y < -@cancel_bound or y > @h_graph + @cancel_bound
-      d3.select("body").style("cursor", "auto")
-      @current_box.remove()
-      @current_box = null
-
-    if @current_box
-      d = @current_box.datum()      
-      d.dx = Math.abs(@x_scale.invert(x) - d.x)
-      d.dy = Math.abs(@y_scale.invert(y) - d.y)
-      
-      @redraw_transits @current_box
+      .call(@resize_transit_nw)
 
   editTransit: (d) ->
     Network.editTransit d
@@ -510,16 +532,22 @@ class Viewer extends Spine.Controller
     adj = @resize_half_width
     
     selection.each (d) ->
-      half_w = xs(d.dx) - xs(0)
-      half_h = ys(0) - ys(d.dy) # Because y-scale is reversed
+      width = xs(d.dx) - xs(0)
+      height = ys(0) - ys(d.dy) # Because y-scale is reversed
+      
+      half_w = width / 2
+      half_h = height / 2
           
       box = d3.select(this)
       
+      # Reposition box center
+      box.attr("transform", "translate(" + xs(d.x) + "," + ys(d.y) + ")")
+      
       box.select(".transit-rect")
+        .attr("width", width)
+        .attr("height", height)        
         .attr("x", -half_w)
         .attr("y", -half_h)
-        .attr("width", 2 * half_w)
-        .attr("height", 2 * half_h)        
       box.select("circle.transit-label")
         .attr("cx", half_w)
       box.select("text.transit-text")
@@ -528,19 +556,19 @@ class Viewer extends Spine.Controller
       box.select("rect.n-resize")
         .attr("x", -half_w)
         .attr("y", -half_h - adj)
-        .attr("width", 2 * half_w)
+        .attr("width", width)
       box.select("rect.s-resize")
         .attr("x", -half_w)
         .attr("y", half_h - adj)
-        .attr("width", 2 * half_w)
+        .attr("width", width)
       box.select("rect.e-resize")
         .attr("x", half_w - adj)
         .attr("y", -half_h)
-        .attr("height", 2 * half_h)
+        .attr("height", height)
       box.select("rect.w-resize")
         .attr("x", -half_w - adj)
         .attr("y", -half_h)
-        .attr("height", 2 * half_h)
+        .attr("height", height)
 
       box.select("rect.ne-resize")
         .attr("x", half_w - adj)
@@ -575,8 +603,7 @@ class Viewer extends Spine.Controller
       @dialog?.highlightButton d.num
 
     # Arbitrary rule: scale transit to 1/7 of horz area
-
-    box_w = 6 * d.dx
+    box_w = 3 * d.dx
     target_dom = [d.x - d.dx - box_w, d.x + d.dx + box_w]
     @animateZoom target_dom
     
@@ -586,23 +613,78 @@ class Viewer extends Spine.Controller
     x = Math.max(0, Math.min(x, @width))
     y = Math.max(0, Math.min(y, @h_graph))
     
-    d.x = @x_scale.invert x
-    d.y = @y_scale.invert y
+    d.x = @x_scale.invert(x)
+    d.y = @y_scale.invert(y)
     @transits[d.num-1].attr("transform", "translate(" + x + "," + y + ")")
+        
+  transitResizeN: (d) =>
+    [x, y] = d3.mouse(@canvas)    
+    @recompute_n d, y
+    @redraw_transits @transits[d.num-1]  
     
-  transitResize: (d) =>
-    d.dx = Math.abs(@x_scale.invert(d3.event.x) - @x_scale.invert(0))
-    d.dy = Math.abs(@y_scale.invert(d3.event.y) - @y_scale.invert(0))
+  transitResizeNE: (d) =>
+    [x, y] = d3.mouse(@canvas)    
+    @recompute_n d, y
+    @recompute_e d, x    
     @redraw_transits @transits[d.num-1]
 
-  transitResizeEW: (d) =>
-    d.dx = Math.abs(@x_scale.invert(d3.event.x) - @x_scale.invert(0))
+  transitResizeE: (d) =>
+    [x, y] = d3.mouse(@canvas)
+    @recompute_e d, x
     @redraw_transits @transits[d.num-1]
     
-  transitResizeNS: (d) =>
-    d.dy = Math.abs(@y_scale.invert(d3.event.y) - @y_scale.invert(0))
+  transitResizeSE: (d) =>
+    [x, y] = d3.mouse(@canvas)
+    @recompute_e d, x
+    @recompute_s d, y
     @redraw_transits @transits[d.num-1]
+    
+  transitResizeS: (d) =>
+    [x, y] = d3.mouse(@canvas)
+    @recompute_s d, y
+    @redraw_transits @transits[d.num-1] 
+  
+  transitResizeSW: (d) =>
+    [x, y] = d3.mouse(@canvas)
+    @recompute_w d, x
+    @recompute_s d, y
+    @redraw_transits @transits[d.num-1]
+
+  transitResizeW: (d) =>
+    [x, y] = d3.mouse(@canvas)
+    @recompute_w d, x
+    @redraw_transits @transits[d.num-1]
+  
+  transitResizeNW: (d) =>
+    [x, y] = d3.mouse(@canvas)
+    @recompute_n d, y    
+    @recompute_w d, x
+    @redraw_transits @transits[d.num-1]    
       
+  recompute_n: (d, y) ->
+    bot = d.y - d.dy / 2    
+    top = Math.max(bot, @y_scale.invert(y))
+    d.y = (top + bot) / 2
+    d.dy = top - bot  
+  
+  recompute_e: (d, x) ->
+    left = d.x - d.dx / 2
+    right = Math.max(left, @x_scale.invert(x))
+    d.x = (right + left) / 2
+    d.dx = right - left
+
+  recompute_s: (d, y) ->
+    top = d.y + d.dy / 2    
+    bot = Math.min(top, @y_scale.invert(y))
+    d.y = (top + bot) / 2
+    d.dy = top - bot  
+    
+  recompute_w: (d, x) ->
+    right = d.x + d.dx / 2    
+    left = Math.min(right, @x_scale.invert(x))
+    d.x = (right + left) / 2
+    d.dx = right - left 
+          
   # Drag context (pan) with boundaries
   contextDrag: (d) =>
     dom = @x_scale.domain()

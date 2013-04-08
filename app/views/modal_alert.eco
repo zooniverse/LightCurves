@@ -1,0 +1,6 @@
+<div class="help">
+  <h2><%- @ %></h2>
+  <br>    
+  <a class="big-button">Return to Task</a>
+</div>
+
