@@ -6,9 +6,10 @@ class ClassifyHelp extends Spine.Controller
   className: "help-overlay"
   
   events:
-    # not both of these should be called
-    "click": "close" # Should we allow closing anywhere?
-    "click a.big-button": "close"
+    "click": "close" # Allows closing anywhere, stop bubble up from immediates
+    "click a.cancel": "close"
+    "click a.big-button.close": "close"
+    "click a.big-button.confirm": "confirm"
   
   constructor: ->
     super
@@ -19,14 +20,26 @@ class ClassifyHelp extends Spine.Controller
       
     Spine.bind "showMessage", (msg) => 
       @html require('views/modal_alert')(msg)
-      @el.css("visibility", "visible")      
+      @el.css("visibility", "visible")
+     
+    Spine.bind "showConfirm", (msg, callback) =>
+      # Display confirm dialog
+      @html require('views/modal_confirm')(msg)
+      @el.css("visibility", "visible")
+      @confirm_cb = callback
   
   active: ->
     super
   
   render: ->
     @html require 'views/classify_help'    
-    
+  
+  confirm: (ev) =>
+    ev.preventDefault()
+    ev.stopPropagation()  
+    @el.css("visibility", "hidden")
+    @confirm_cb?()
+        
   close: (ev) =>
     ev.preventDefault()
     ev.stopPropagation() # don't be called twice if button is clicked

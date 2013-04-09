@@ -1,0 +1,8 @@
+<div class="help">
+  <h2><%- @ %></h2>
+  <br>
+  <h2><a href="#" class="cancel">No, take me back.</a></h2>
+  <br>
+  <a href="#" class="big-button confirm">OK!</a>    
+</div>
+

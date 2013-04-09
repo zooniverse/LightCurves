@@ -20,11 +20,7 @@ class Viewer extends Spine.Controller
       @yZoomHelp.show()
     'mouseleave .zoom a': -> 
       @yZoomHelp.delay(1600).fadeOut(1600)    
-    'mouseenter .context': -> 
-      return unless @allow_zoom
-      @xZoomHelp.show()
-    'mouseleave .context': -> 
-      @xZoomHelp.delay(1600).fadeOut(1600)
+    # x-axis context tooltip events handled directly, not delegated
   
   # Settings
   max_annotations: 8
@@ -195,12 +191,7 @@ class Viewer extends Spine.Controller
     @lcLine = d3.svg.line()
       .x( (d) -> @x_bottom(d.x) )
       .y( (d) -> @y_bottom(d.y) )
-        
-    @bottom = @svg.append("g")
-      .attr("class", "context")
-      .attr("transform", "translate(" + @left_margin + "," + @h_to_context + ")")
-    @bottom.append("svg:path").attr("d", @lcLine(@lightcurve.data))
-    
+
     @bottomAxis = d3.svg.axis()
       .orient("bottom")
       .scale(@x_bottom)
@@ -211,7 +202,19 @@ class Viewer extends Spine.Controller
       .attr("class", "context-xaxis")
       .attr("transform", "translate(" + @left_margin + "," + (@top_padding + @height) + ")")      
       .call(@bottomAxis)
-    
+        
+    @bottom = @svg.append("g")
+      .attr("class", "context")
+      .attr("transform", "translate(" + @left_margin + "," + @h_to_context + ")")
+    @bottom.append("svg:path").attr("d", @lcLine(@lightcurve.data))
+            
+    # Bind jQuery events directly to context since they can't be delegated
+    $(@bottom.node()).on 'mouseenter', => 
+      return unless @allow_zoom
+      @xZoomHelp.show()
+    $(@bottom.node()).on 'mouseleave', => 
+      @xZoomHelp.delay(1600).fadeOut(1600)
+        
     # Focus area and interaction on bottom      
     @context_drag = @bottom.append("svg:rect")
       .attr("class", "context-drag")
@@ -253,6 +256,7 @@ class Viewer extends Spine.Controller
 
     @drag_transit
       .on("drag", @transitDrag)
+      .on("dragstart", @moveTransitStart)
       .on("dragend", @editTransit)
     
     # Null is actually better than an explicit origin accessor, to preserve cursor consistency
@@ -297,7 +301,7 @@ class Viewer extends Spine.Controller
       .call(@drag_rightdot_beh)
     
     # Global event detectors
-    d3.select("body")      
+    d3.select("body")
       .on("mouseup.drag", @mouseup)
       .on("touchend.drag", @mouseup)      
 
@@ -313,7 +317,7 @@ class Viewer extends Spine.Controller
     return unless @allow_zoom
     d3.select("body").style("cursor", "move")
     @dragStart = d3.mouse(@canvas)
-  
+
   # When mouse is released     
   mouseup: =>
     d3.select("body").style("cursor", "auto")
@@ -325,8 +329,8 @@ class Viewer extends Spine.Controller
       @dragStart = null
     else if @current_box # clicks outside of the plot
       @current_box.remove()
-      @current_box = null
-  
+      @current_box = null  
+        
   plot_click: =>
     return unless @allow_annotations
     # calculate coords relative to canvas  
@@ -367,6 +371,9 @@ class Viewer extends Spine.Controller
         Network.activity "Tried to draw more than #{@max_annotations} transits"
         return
       
+      # Don't cause auto zoom ?
+      d3.event.preventDefault()
+      
       @decorate_box @current_box
       
       @transits[d.num-1] = @current_box      
@@ -378,10 +385,7 @@ class Viewer extends Spine.Controller
       @dialog?.highlightButton(d.num)
       
       @addTransitCallback?()
-      Network.addTransit(d)      
-      
-      # Don't cause auto zoom
-      d3.event.preventDefault()
+      Network.addTransit(d)          
       
     else
       d3.select("body").style("cursor", "crosshair")
@@ -459,7 +463,10 @@ class Viewer extends Spine.Controller
     # Drag and resize handles
     current_box
       .call(@drag_transit)
-      .on("click", @transitZoom)
+      
+    # Prevent automatic zooming due to strange d3 issue
+    tz = @transitZoom
+    setTimeout (-> current_box.on("click", tz)), 50
             
     current_box
     .append("svg:rect") # Top handle
@@ -507,8 +514,16 @@ class Viewer extends Spine.Controller
       .attr("height", @resize_half_width * 2)
       .call(@resize_transit_nw)
 
-  editTransit: (d) ->
-    Network.editTransit d
+  moveTransitStart: (d) => 
+    @dragStartCoords = 
+      x: d.x
+      y: d.y
+
+  editTransit: (d) =>
+    # Record edits only for changes to transits
+    if not @dragStartCoords or @dragStartCoords.x != d.x and @dragStartCoords.y != d.y
+      Network.editTransit d
+    @dragStartCoords = null  
 
   focusTransit: (number) ->
     transit = @transits[number-1]
@@ -600,12 +615,14 @@ class Viewer extends Spine.Controller
     # Stop a second box from being drawn
     if d3.event
       d3.event.stopPropagation()      
-      @dialog?.highlightButton d.num
+      @dialog?.highlightButton(d.num)
 
     # Arbitrary rule: scale transit to 1/7 of horz area
     box_w = 3 * d.dx
     target_dom = [d.x - d.dx - box_w, d.x + d.dx + box_w]
     @animateZoom target_dom
+    
+    Network.activity("Selected transit " + d.num)
     
   transitDrag: (d) =>
     [x, y] = [d3.event.x, d3.event.y]

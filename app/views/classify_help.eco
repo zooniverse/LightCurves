@@ -28,6 +28,6 @@
   <p>To finish all your work and take your payment, click the big 'SUBMIT' button.</p>
   
   <br/>
-  <a class="big-button">Return to Task</a>
+  <a href="#" class="big-button close">Return to Task</a>
 </div>
 

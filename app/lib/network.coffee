@@ -102,6 +102,9 @@ class Network
       type: description
   
     TSClient.resetInactivity()
+    
+    # For when modal dialog is closed
+    @warningShown = false
   
   @addTransit: (transit) ->
     console.log "added "
@@ -174,9 +177,17 @@ class Network
     TSClient.resetInactivity()
     
   @checkInactivity: (inactiveTime) =>        
-    if inactiveTime > @inactiveWarningMillis
+    if inactiveTime > @inactiveWarningMillis and not @warningShown              
+      @warningShown = true
+      
+      # Don't reset inactivity for this, duh
+      TSClient.sendExperimentBroadcast
+        action: "activity"
+        type: "Inactivity warning shown"
+
       # Display inactivity warning
       Spine.trigger "showMessage", "Are you still there? Your session will end automatically if you do nothing for one minute."
-      console.log "Inactive for " + inactiveTime          
+      
+      # console.log "Inactive for " + inactiveTime
 
 module.exports = Network

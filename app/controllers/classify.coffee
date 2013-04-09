@@ -15,10 +15,8 @@ class Classify extends Spine.Controller
       Network.finishTask()
     "click .finish_button .big-button": (ev) ->
       ev.preventDefault()
-      if confirm('Are you sure you want to take your current payment and finish?')
+      Spine.trigger "showConfirm", 'Are you sure you want to take your current payment and finish?', ->
         Network.finishExp()
-      else
-        console.log "cancel"
   
   constructor: ->
     super

@@ -10,5 +10,7 @@
 
 <div class="yZoom_help"><%=t('lightcurve.y_zoom_help')%></div>
 <div class="xZoom_help"><%=t('lightcurve.x_zoom_help')%></div>
-<div class="drag_help">Click to mark transits</div>
+<div class="drag_help">Click to mark transits. Drag or scroll to zoom.</div>
+<div class="viewer-y axis-label">Relative brightness</div>
+<div class="viewer-x axis-label">Time (days)</div>
 </div>
