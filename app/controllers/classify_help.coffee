@@ -8,6 +8,8 @@ class ClassifyHelp extends Spine.Controller
   events:
     "click": "close" # Allows closing anywhere, stop bubble up from immediates
     "click a.cancel": "close"
+    # Don't close if clicking inside the modal itself
+    "click .help": (ev) -> ev.stopPropagation()
     "click a.big-button.close": "close"
     "click a.big-button.confirm": "confirm"
   

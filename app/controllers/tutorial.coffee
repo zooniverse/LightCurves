@@ -124,9 +124,11 @@ class Tutorial extends Spine.Controller
     else
       Network.finishTutorial()
     
-  intro: =>     
+  intro: => 
+    @dialog.nextOnlyMode()    
 
-  exposition: =>     
+  exposition: =>
+    @dialog.backNextMode()
 
   describe: =>
     @mag_glass.hide() 

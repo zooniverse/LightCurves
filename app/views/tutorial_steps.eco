@@ -67,7 +67,7 @@
 
 <div class="step stepZoomInst">
 	<%# <a href="#" id="help">Help</a> %>
-  <p class="question small">You can use the white handles or your mouse/touchpad scroll to zoom.</p>
+  <p class="question small">You can drag the white handles below the graph or use your mouse/touchpad scroll to zoom.</p>
   <p class="question small">Drag the chart to pan.</p>
   <p class="question small"><%= t('workflows.tutorial.workflow.questions.play') %></p>
 	<p class="question small">
@@ -82,7 +82,7 @@
     You can mark a transit by clicking on the graph.
   </p>
   <p class="question small">
-    Click once to select the center of a transit.
+    Click once to begin marking a transit.
   </p>
   <p class="question small">
     Move your mouse and click again to mark the height and width.

@@ -99,6 +99,12 @@ class Dialog extends Spine.Controller
     @nextButton.hide()
     @finishButton.hide()
 
+  nextOnlyMode: ->
+    @editActions.hide()
+    @prevButton.hide()
+    @nextButton.css('display', '')
+    @finishButton.hide()
+
   backOnlyMode: ->
     @editActions.hide()
     @prevButton.css('display', '')

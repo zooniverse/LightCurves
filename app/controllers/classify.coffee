@@ -17,6 +17,7 @@ class Classify extends Spine.Controller
       ev.preventDefault()
       Spine.trigger "showConfirm", 'Are you sure you want to take your current payment and finish?', ->
         Network.finishExp()
+      Network.activity "Clicked Finish and Submit"
   
   constructor: ->
     super
