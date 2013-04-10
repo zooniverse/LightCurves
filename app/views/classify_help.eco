@@ -1,31 +1,39 @@
 
-<div class="help">
-  <h2>Helpful hints:</h2>
-  
-  <br/>
-  
+<div class="help">  
   <p>
-    Draw boxes where you see transits. 
+    Draw boxes where you see planet transits. 
     Click to mark the center and click again to mark the boundary.
     Try to be as precise as possible.
   </p>
   
-  <p>To focus on a box, click it once or click the corresponding number at the right.</p>
+  <img src="/images/help/markedtransit.png">
   
-  <p>Delete boxes that you may have made a mistake on.
-     Click on a box or the number at right for the box, then 'X' above the number.
+  <p>To focus on a box, click it once or click the corresponding number at the right. 
+    This will automatically zoom in on the box.</p>
+    
+  <p>Delete boxes that you marked accidentally or made a mistake on.
+     Focus on the box, then click the 'X' above the number at the right.
   </p>
   
+  <img src="/images/help/deletetransit.png">
+  
   <p>Zoom to get a better look at possible transits.
-     Use your mouse wheel, or drag the white context handles at botton.
-   </p>
+     Use your mouse wheel, or drag the white context handles at the botton.
+  </p>
   
-  <p>When zoomed in, you can pan from side to side. Drag the graph or the bottom context area.</p>
+  <p>When zoomed in, you can pan the graph from side to side. Drag the graph directly or the bottom context area.</p>
+  
+  <img src="/images/help/zoomcontext.png">  
 
-  <p>To continue to the next light curve, Click the 'NEXT' button. 
-  You should also click this if you don't see any transits.</p>
+  <p>Click the y-axis scale button at the top left to vertically scale the graph to the range that you currently see.</p>
+
+  <img src="/images/help/zoomyaxis.png">
+
+  <p>
+    To continue to the next light curve, Click the 'NEXT' button. 
+    You should also click this if you don't see any transits.</p>
   
-  <p>To finish all your work and take your payment, click the big 'SUBMIT' button.</p>
+  <p>To finish all your work and take your payment, click the big 'Finish and Submit' button.</p>
   
   <br/>
   <a href="#" class="big-button close">Return to Task</a>
