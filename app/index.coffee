@@ -34,7 +34,13 @@ class App extends Spine.Controller
       shim: not TSClient.localMode
     
     @classify_help.active()
-    @header.active()    
+    @header.active()
+    
+    # Set blur and focus events - not that great for detecting stuff
+#    $(window).focus ->
+#      console.log "focused"      
+#    $(window).blur ->
+#      console.log "blurred"
     
 module.exports = App
     
