@@ -15,7 +15,7 @@ class Classify extends Spine.Controller
       Network.finishTask()
     "click .finish_button .big-button": (ev) ->
       ev.preventDefault()
-      Spine.trigger "showConfirm", 'Are you sure you want to take your current payment and finish?', ->
+      Spine.trigger "showConfirm", 'Are you sure you want to take your current payment and submit?', ->
         Network.finishExp()
       Network.activity "Clicked Finish and Submit"
   

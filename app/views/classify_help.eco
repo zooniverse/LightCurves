@@ -1,39 +1,69 @@
 
 <div class="help">  
   <p>
-    Draw boxes where you see planet transits. 
-    Click to mark the center and click again to mark the boundary.
-    Try to be as precise as possible.
+    A planet transit occurs when an orbiting planet partially blocks a star, reducing its brightness from our point of view.
+    A big planet is easier to see than a small planet.
+  </p>
+
+  <img src="/images/help/transit.gif">
+  
+  <p>
+    That was a cartoon example. Planets are tiny compared to stars, they are hurtling through space very fast,
+    and our telescope is noisy. It's not easy to find planet transits, especially when the planet is very small relative to the star.
+    Planets also don't appear very often, and many stars won't have any transits at all.
+  </p>
+  
+  <p>
+    <strong>Draw boxes where you see planet transits</strong>. 
+    Click once to mark one corner, move your mouse, and click again to mark the boundary.
+    Try to be as precise as possible: you can <strong>drag the box to move it</strong> or <strong>drag any edge to resize it</strong>.
   </p>
   
   <img src="/images/help/markedtransit.png">
   
-  <p>To focus on a box, click it once or click the corresponding number at the right. 
-    This will automatically zoom in on the box.</p>
+  <p>To <strong>focus on a box, click on it</strong> or <strong>click the corresponding number</strong> at the right. 
+    This will automatically zoom in on the box. When you're zoomed in, you can also better see if you marked something correctly.</p>
+
+  <img src="/images/help/markedzoom.png">    
     
-  <p>Delete boxes that you marked accidentally or made a mistake on.
+  <p><strong>Delete boxes that you marked accidentally</strong> or made a mistake on.
      Focus on the box, then click the 'X' above the number at the right.
   </p>
   
   <img src="/images/help/deletetransit.png">
   
-  <p>Zoom to get a better look at possible transits.
-     Use your mouse wheel, or drag the white context handles at the botton.
-  </p>
+  <p>Use zoom to get a better look at possible transits.
+     <strong>Use your mouse or touchpad scroll</strong>, or <strong>drag the white context handles</strong> at the bottom.     
+  </p>  
   
-  <p>When zoomed in, you can pan the graph from side to side. Drag the graph directly or the bottom context area.</p>
+  <p>When zoomed in, you can pan the graph from side to side. <strong>Drag the graph or the bottom context area.</strong></p>
   
   <img src="/images/help/zoomcontext.png">  
 
-  <p>Click the y-axis scale button at the top left to vertically scale the graph to the range that you currently see.</p>
+  <p>Click the <strong>y-axis scale button</strong> at the top left to vertically scale the graph to the range that you currently see.</p>
 
   <img src="/images/help/zoomyaxis.png">
 
   <p>
-    To continue to the next light curve, Click the 'NEXT' button. 
-    You should also click this if you don't see any transits.</p>
+    Stars can have variable light patterns over time, and these will show up as big peaks and valleys.
+    You'll see these when you zoom in, but don't mistake them for planets - they are much too big and wide!
+  </p>
   
-  <p>To finish all your work and take your payment, click the big 'Finish and Submit' button.</p>
+  <p>
+    This star has a variable, constantly oscillating pattern, but the dips are not planets: 
+  </p>
+  <img src="/images/help/variable-example.png">
+  
+  <p>
+    This star has an irregular brightness that naturally changes a lot over different days. 
+  </p>
+  <img src="/images/help/irregular-example.png">
+
+  <p>
+    To continue to the next light curve, Click the 'NEXT' button. 
+    You should also click this if you don't see any transits at all.</p>
+  
+  <p>To finish all your work and take your payment, click the big 'Finish and Submit Work' button.</p>
   
   <br/>
   <a href="#" class="big-button close">Return to Task</a>

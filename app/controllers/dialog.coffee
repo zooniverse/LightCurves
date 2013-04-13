@@ -126,7 +126,7 @@ class Dialog extends Spine.Controller
   editMode: (enablePrev) ->
     @editActions.css('display', '')
     if enablePrev then @prevButton.css('display', '') else @prevButton.hide() 
-    @nextButton.hide()
     @nextButton.css('display', '')
+    @finishButton.hide()
     
 module.exports = Dialog

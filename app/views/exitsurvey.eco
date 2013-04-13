@@ -43,11 +43,11 @@ How likely are you to do the task again if you were paid as above?
 Of the transits that you marked, how many do you think were actual planet transits?
 </p>
 <fieldset>
-<input type="radio" name="precision" id="precision1" value="1"><label for="precision1">0-20%</label>
+<input type="radio" name="precision" id="precision1" value="1"><label for="precision1">0-20% (Very few)</label>
 <input type="radio" name="precision" id="precision2" value="2"><label for="precision2">20-40%</label>
 <input type="radio" name="precision" id="precision3" value="3"><label for="precision3">40-60%</label>
 <input type="radio" name="precision" id="precision4" value="4"><label for="precision4">60-80%</label>
-<input type="radio" name="precision" id="precision5" value="5"><label for="precision5">80-100%</label>
+<input type="radio" name="precision" id="precision5" value="5"><label for="precision5">80-100% (Almost all)</label>
 </fieldset>
 <br />
 
@@ -55,11 +55,11 @@ Of the transits that you marked, how many do you think were actual planet transi
 How many of all the actual planet transits do you think you spotted or correctly identified?
 </p>
 <fieldset>
-<input type="radio" name="recall" id="recall1" value="1"><label for="recall1">0-20%</label>
+<input type="radio" name="recall" id="recall1" value="1"><label for="recall1">0-20% (Very few)</label>
 <input type="radio" name="recall" id="recall2" value="2"><label for="recall2">20-40%</label>
 <input type="radio" name="recall" id="recall3" value="3"><label for="recall3">40-60%</label>
 <input type="radio" name="recall" id="recall4" value="4"><label for="recall4">60-80%</label>
-<input type="radio" name="recall" id="recall5" value="5"><label for="recall5">80-100%</label>
+<input type="radio" name="recall" id="recall5" value="5"><label for="recall5">80-100% (Almost all)</label>
 </fieldset>
 <br />
 
